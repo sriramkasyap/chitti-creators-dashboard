@@ -1,0 +1,24 @@
+@import '../../constants/variables.scss';
+
+.topBar {
+  height: 10vh;
+  color: $bright-black;
+  box-shadow: 0 3px 5px rgba(32, 32, 32, 0.3);
+
+  .topbarItem {
+    margin-right: 1.5em;
+
+    .topbarButton {
+      margin-left: 1.5em;
+      background-color: transparent;
+      color: $bright-black;
+      border-color: $bright-black;
+
+      &:hover {
+        background-color: $bright-black;
+        color: $bright-white;
+        border-color: $bright-black;
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.dashboardCard {
+  width: 30%;
+  height: 200px;
+  box-shadow: 0 0 3px 3px rgba(32, 32, 32, 0.3);
+
+  .iconContainer {
+    margin-top: -33px;
+    .icon {
+      background-color: #fff;
+      font-size: 7rem;
+      box-shadow: 0 0 3px 3px rgba(32, 32, 32, 0.3);
+      border-radius: 5px;
+    }
+  }
+}
