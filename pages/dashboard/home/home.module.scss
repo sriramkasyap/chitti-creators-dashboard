@@ -1,0 +1,78 @@
+@import '../../../constants/variables.scss';
+
+.sidebar {
+  width: 15%;
+  background-color: $bright-black;
+  color: $bright-white;
+  .sidebarItem {
+    color: $bright-gray;
+    font-size: large;
+    p {
+      margin-left: 1em;
+    }
+
+    &:hover {
+      p {
+        color: $bright-white;
+      }
+
+      svg {
+        color: $bright-white;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
+
+    .active {
+      color: $bright-white;
+    }
+
+    .activeIcon {
+      color: $bright-white;
+    }
+  }
+}
+
+.topBar {
+  height: 10vh;
+  color: $bright-black;
+  box-shadow: 0 3px 5px rgba(32, 32, 32, 0.3);
+
+  .topbarItem {
+    margin-right: 1.5em;
+
+    .topbarButton {
+      margin-left: 1.5em;
+      background-color: transparent;
+      color: $bright-black;
+      border-color: $bright-black;
+
+      &:hover {
+        background-color: $bright-black;
+        color: $bright-white;
+        border-color: $bright-black;
+      }
+
+      svg {
+        margin-left: 0.5em;
+      }
+    }
+  }
+}
+
+.mainContent {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-around;
+  height: 90vh;
+  margin-top: 5rem;
+
+  .dashboardCard {
+    width: 30%;
+    height: 150px;
+    background-image: linear-gradient(to top, $bright-white, $bright-black);
+    box-shadow: 0 3px 5px -1px rgba(32, 32, 32, 0.3);
+  }
+}
