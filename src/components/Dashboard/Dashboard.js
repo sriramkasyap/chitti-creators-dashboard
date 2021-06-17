@@ -1,5 +1,5 @@
-import Card from "../components/Card/Card";
-import { getCardsData } from "../helpers/cardsFetcher";
+import Card from "./Card/Card";
+import { getCardsData } from "../../helpers/cardsFetcher";
 
 const HomePage = () => {
   const cards = getCardsData();
