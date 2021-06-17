@@ -5,13 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "type": "pwa-node",
       "request": "launch",
       "name": "Launch via NPM",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run-script", "dev"],
-      "port": 9229,
-      "skipFiles": ["<node_internals>/**"]
+      "skipFiles": ["<node_internals>/**"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/", "!/node_modules/**"]
     }
   ]
 }
