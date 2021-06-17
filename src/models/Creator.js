@@ -25,8 +25,8 @@ const SubscrptionPlanSchema = new mongoose.Schema({
   planFee: Number,
   planFeatures: [String],
   planRZPid: { type: String, index: true },
-  createdAt: Number,
-  updatedAt: Number,
+  createdAt: VarDate,
+  updatedAt: Date,
 });
 
 const CreatorSchema = new mongoose.Schema({
