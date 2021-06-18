@@ -8,8 +8,9 @@ import Newsletter from "../../../src/models/Newsletter";
 
 export default async (req, res) => {
   try {
-    // Get newsletters by creator
     if (req.method === "GET") {
+      // Get newsletters by creator
+
       var creator = req.query.creatorId;
       // replace this with auth middleware
 
@@ -33,6 +34,8 @@ export default async (req, res) => {
         newsletters,
       });
     } else if (req.method === "POST") {
+      // Create a newsletter
+
       var creator = req.body.creatorId;
       // replace this with auth middleware
 
