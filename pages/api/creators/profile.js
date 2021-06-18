@@ -10,9 +10,6 @@ export default async (req, res) => {
       const { profile } = req.body;
       if (!profile) throw new Error("Invalid request");
 
-      delete profile.emailId;
-      delete profile._id;
-
       var creator = await Creator.findById(creatorId);
 
       if (!creator) throw new Error("Creator does not exist");
@@ -20,7 +17,12 @@ export default async (req, res) => {
       var result = await Creator.findByIdAndUpdate(
         creatorId,
         {
-          $set: { profile },
+          $set: {
+            profile: {
+              ...creator.profile,
+              ...profile,
+            },
+          },
         },
         {
           new: true,
