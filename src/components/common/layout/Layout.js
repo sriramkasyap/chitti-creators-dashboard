@@ -7,14 +7,15 @@ const Layout = ({ children }) => {
   return (
     <Flex h="100vh" flexDir="row" overflow="hidden" maxW="2000px">
       <Sidebar />
-      <Flex w="85%" flexDir="column" justifyContent="space-between">
+      <Flex w="82%" flexDir="column" justifyContent="space-between">
         <Topbar />
         <main>
           <Flex
             h="80vh"
             flexDir="row"
-            justifyContent="space-around"
+            justifyContent="space-between"
             alignItems="flex-start"
+            p={5}
           >
             {children}
           </Flex>

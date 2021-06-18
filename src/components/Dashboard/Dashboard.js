@@ -6,8 +6,8 @@ const HomePage = () => {
 
   return (
     <>
-      {cards?.map((card, i) => (
-        <Card key={i} title={card.title} subtitle={card.total} />
+      {cards?.map((card) => (
+        <Card key={card.id} title={card.title} subtitle={card.total} />
       ))}
     </>
   );

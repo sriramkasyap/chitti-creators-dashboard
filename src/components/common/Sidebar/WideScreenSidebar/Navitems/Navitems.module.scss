@@ -1,4 +1,4 @@
-@import "../../../../../styles/variables.scss";
+@import "../../../../../../styles/variables.scss";
 
 .sidebarItem {
   color: $bright-gray;
@@ -9,6 +9,7 @@
 
   a {
     display: flex;
+    align-items: center;
   }
 
   &:hover {
@@ -22,7 +23,7 @@
   }
 
   &:not(:last-child) {
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.875rem;
   }
 
   .active {
