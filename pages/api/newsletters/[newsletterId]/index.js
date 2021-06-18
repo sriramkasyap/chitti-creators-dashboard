@@ -1,5 +1,4 @@
-import Newsletter from "../../../src/models/Newsletter";
-import { Obj } from "mongoose";
+import Newsletter from "../../../../src/models/Newsletter";
 
 export default async (req, res) => {
   try {

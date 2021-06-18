@@ -1,6 +1,3 @@
-// GET /newsletters - Get newsletters of the creator
-// POST /newsletters - Create new Newsletter
-// PUT /newsletters/{id} - Update Newsletter
 // POST /newsleters/{action} - Publish newsletter
 // DELETE /newsletters/{id} - delete newsletter
 
