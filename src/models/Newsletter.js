@@ -3,6 +3,7 @@ mongoose.connect(process.env.MONGO_URL, {
   dbName: process.env.MONGO_DB,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 /**
@@ -26,13 +27,14 @@ const newsletterSchema = mongoose.Schema({
   reference: String,
   emailSubject: String,
   body: String,
+  keywords: [String],
   status: { type: String, index: true },
-  creator: mongoose.ObjectId,
+  creator: { type: mongoose.ObjectId, index: true },
   createdAt: Date,
   lastSavedAt: Date,
   sentAt: Date,
   recipients: [mongoose.ObjectId],
-  keywords: [String],
 });
 
-module.exports = mongoose.model("Newsletter", newsletterSchema);
+module.exports =
+  mongoose.models.Newsletter || mongoose.model("Newsletter", newsletterSchema);
