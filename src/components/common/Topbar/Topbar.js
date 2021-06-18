@@ -2,8 +2,6 @@ import { Flex } from "@chakra-ui/react";
 
 import Button from "../Button/Button";
 
-import classes from "./Topbar.module.scss";
-
 const Topbar = () => {
   return (
     <Flex
@@ -18,8 +16,15 @@ const Topbar = () => {
         <Button
           rounded={"full"}
           variant="outline"
-          className={classes.topbarButton}
           text="Create New Newsletter"
+          marginLeft="1.5rem"
+          color="bright.black"
+          borderColor="bright.black"
+          _hover={{
+            backgroundColor: "bright.black",
+            color: "bright.white",
+            borderColor: "bright.black",
+          }}
         />
       </Flex>
     </Flex>
