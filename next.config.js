@@ -6,7 +6,7 @@ module.exports = (phase, { defaultConfig }) => {
       MONGO_DB: "chitti",
       MONGO_URL:
         phase === PHASE_DEVELOPMENT_SERVER
-          ? "mongodb://localhost:27017/"
+          ? "mongodb+srv://staging_user:OPOR6NAMa4OkKcgm@devcluster.pjhyg.mongodb.net/chitti?retryWrites=true&w=majority"
           : "mongodb+srv://staging_user:OPOR6NAMa4OkKcgm@devcluster.pjhyg.mongodb.net/chitti?retryWrites=true&w=majority",
     },
   };
