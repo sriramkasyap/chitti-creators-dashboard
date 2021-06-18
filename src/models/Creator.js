@@ -3,6 +3,7 @@ mongoose.connect(process.env.MONGO_URL, {
   dbName: process.env.MONGO_DB,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 /**
@@ -25,21 +26,24 @@ const SubscrptionPlanSchema = new mongoose.Schema({
   planFee: Number,
   planFeatures: [String],
   planRZPid: { type: String, index: true },
-  createdAt: VarDate,
+  createdAt: Date,
   updatedAt: Date,
 });
 
 const CreatorSchema = new mongoose.Schema({
-  fullName: String,
-  emailId: { type: String, index: true },
+  emailId: { type: String, index: true, unique: true },
   password: String,
-  shortBio: String,
-  longBio: String,
-  displayPicture: String,
   registeredAt: Date,
   lastLoginAt: Date,
-  plans: [SubscrptionPlanSchema],
-  categories: [String],
+  profile: {
+    fullName: String,
+    shortBio: String,
+    longBio: String,
+    displayPicture: String,
+    plans: [SubscrptionPlanSchema],
+    categories: [String],
+  },
 });
 
-module.exports = mongoose.model("Creator", CreatorSchema);
+module.exports =
+  mongoose.models.Creator || mongoose.model("Creator", CreatorSchema);
