@@ -20,7 +20,7 @@ export default async (req, res) => {
       var result = await Creator.findByIdAndUpdate(
         creatorId,
         {
-          $set: { ...profile },
+          $set: { profile },
         },
         {
           new: true,
