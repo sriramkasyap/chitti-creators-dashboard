@@ -18,14 +18,20 @@ import Header from "./Header/Header";
 
 import { getUserData } from "../../../../helpers/userFetcher";
 
-const SmallScreenSidebar = () => {
+const SideDrawer = () => {
   const user = getUserData();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
 
   return (
     <>
-      <IconButton ref={btnRef} icon={<FiMenu />} onClick={onOpen} />
+      <IconButton
+        ref={btnRef}
+        icon={<FiMenu />}
+        onClick={onOpen}
+        fontSize="4xl"
+        color="bright.gray"
+      />
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -33,18 +39,17 @@ const SmallScreenSidebar = () => {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent backgroundColor="bright.black" color="bright.white">
-          <DrawerCloseButton />
+        <DrawerContent backgroundColor="bright.fg" color="bright.bg">
           <DrawerHeader>
             <Header user={user} />
           </DrawerHeader>
 
           <DrawerBody>
-            <Navitems />
+            <Navitems onClose={onClose} />
           </DrawerBody>
 
-          <DrawerFooter justifyContent="flex-start">
-            <Footer />
+          <DrawerFooter>
+            <Footer onClose={onClose} />
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -52,4 +57,4 @@ const SmallScreenSidebar = () => {
   );
 };
 
-export default SmallScreenSidebar;
+export default SideDrawer;

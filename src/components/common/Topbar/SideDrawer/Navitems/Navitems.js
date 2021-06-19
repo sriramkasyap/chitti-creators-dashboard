@@ -3,7 +3,7 @@ import { Flex, Text, Icon } from "@chakra-ui/react";
 
 import { getNavItems } from "../../../../../helpers/navitemsFetcher";
 
-const Navitems = () => {
+const Navitems = ({ onClose }) => {
   const navItems = getNavItems();
   return (
     <Flex flexDir="column" alignItems="flex-start" justifyContent="center">
@@ -11,17 +11,23 @@ const Navitems = () => {
         navItems.map((item) => (
           <Flex key={item.id}>
             <Link href={item.link}>
-              <Flex mb={25} flexDir="row" alignItems="center" cursor="pointer">
+              <Flex
+                mb={25}
+                flexDir="row"
+                alignItems="center"
+                cursor="pointer"
+                onClick={onClose}
+              >
                 <Icon
                   as={item.icon}
                   fontSize="2xl"
                   fontWeight="medium"
-                  color="bright.white"
+                  color="bright.bg"
                 />
                 <Text
                   fontSize="2xl"
                   fontWeight="medium"
-                  color="bright.white"
+                  color="bright.bg"
                   ml={5}
                 >
                   {item.text}

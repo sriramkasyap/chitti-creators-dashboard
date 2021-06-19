@@ -6,10 +6,13 @@ const Card = ({ title, subtitle }) => {
   return (
     <Box
       rounded={25}
-      w={350}
-      h={175}
-      backgroundColor="bright.black"
-      color="bright.white"
+      w={["100%", 350, 350, 480, 350]}
+      h={[175, 200, 175, 200, 175]}
+      backgroundColor="bright.fg"
+      color="bright.bg"
+      mr={[0, 0, 0, 0, 5]}
+      mt={5}
+      flexGrow={[1, 1, 0, 0, 0]}
     >
       <Flex
         p={5}
@@ -21,7 +24,7 @@ const Card = ({ title, subtitle }) => {
         <Text
           fontWeight="bold"
           fontSize="6xl"
-          color="bright.white"
+          color="bright.bg"
           textAlign="center"
           fontFamily="Josefin Sans"
         >

@@ -21,14 +21,16 @@ const theme = extendTheme(
   {
     colors: {
       bright: {
-        white: "#e1e1e1",
-        gray: "#7e7e7e",
-        black: "#252525",
-      },
-      dark: {
-        white: "#ffffff",
+        bg: "#ffffff",
         light: "#e1e1e1",
         gray: "#7e7e7e",
+        fg: "#252525",
+      },
+      dark: {
+        bg: "#252525",
+        light: "#e1e1e1",
+        gray: "#7e7e7e",
+        fg: "#ffffff",
       },
     },
     components: {

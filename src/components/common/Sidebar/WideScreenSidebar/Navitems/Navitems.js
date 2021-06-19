@@ -1,30 +1,30 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Flex, Text, Icon } from "@chakra-ui/react";
 
-import classes from "./Navitems.module.scss";
-import { getNavItems } from "../../../../../helpers/navitemsFetcher";
-
-const Navitems = () => {
-  const navItems = getNavItems();
+const Navitems = ({ navItems }) => {
+  const router = useRouter();
+  const route = router.asPath;
   return (
     <Flex flexDir="column" alignItems="flex-start" justifyContent="center">
-      {/* <Flex className={classes.sidebarItem}>
-        <Link href="/">
-          <a>
-            <Icon as={FiHome} fontSize="2xl" className={classes.activeIcon} />
-            <Text className={classes.active}>Home</Text>
-          </a>
-        </Link>
-      </Flex> */}
-
       {navItems?.length > 0 &&
         navItems.map((item) => (
-          <Flex key={item.id} className={classes.sidebarItem}>
+          <Flex key={item.id}>
             <Link href={item.link}>
-              <a>
+              <Flex
+                flxDir="row"
+                alignItems="center"
+                color="bright.gray"
+                mb={8}
+                _hover={{ color: "bright.bg" }}
+                cursor="pointer"
+                color={route === item.link ? "bright.bg" : "bright.gray"}
+              >
                 <Icon as={item.icon} fontSize="2xl" />
-                <Text fontSize="xl">{item.text}</Text>
-              </a>
+                <Text fontSize="xl" ml={4}>
+                  {item.text}
+                </Text>
+              </Flex>
             </Link>
           </Flex>
         ))}

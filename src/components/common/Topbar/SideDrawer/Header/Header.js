@@ -14,7 +14,7 @@ const Header = ({ user }) => {
           textAlign="center"
           fontSize="md"
           fontFamily="Josefin Sans"
-          color="bright.white"
+          color="bright.light"
         >
           {user.first_name}
         </Text>
@@ -22,7 +22,7 @@ const Header = ({ user }) => {
           textAlign="center"
           fontSize="md"
           fontFamily="Josefin Sans"
-          color="bright.white"
+          color="bright.light"
         >
           {user.last_name}
         </Text>
