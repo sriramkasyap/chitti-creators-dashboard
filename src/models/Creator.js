@@ -22,14 +22,6 @@ mongoose.connect(process.env.MONGO_URL, {
  * [NewsletterCategories]
  */
 
-const SubscrptionPlanSchema = new mongoose.Schema({
-  planFee: Number,
-  planFeatures: [String],
-  planRZPid: { type: String, index: true },
-  createdAt: Date,
-  updatedAt: Date,
-});
-
 const CreatorSchema = new mongoose.Schema({
   emailId: { type: String, index: true, unique: true },
   password: String,
@@ -40,9 +32,14 @@ const CreatorSchema = new mongoose.Schema({
     shortBio: String,
     longBio: String,
     displayPicture: String,
-    plans: [SubscrptionPlanSchema],
     categories: [String],
   },
+  plans: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubscriptionPlan",
+    },
+  ],
 });
 
 module.exports =
