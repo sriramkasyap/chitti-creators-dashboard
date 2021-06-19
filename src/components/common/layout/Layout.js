@@ -5,17 +5,18 @@ import Topbar from "../Topbar/Topbar";
 
 const Layout = ({ children }) => {
   return (
-    <Flex h="100vh" flexDir="row" overflow="hidden" maxW="2000px">
+    <Flex
+      h="100vh"
+      flexDir="row"
+      overflow="hidden"
+      maxW="2000px"
+      overflow={["scroll", "scroll", "scroll", "scroll", "hidden"]}
+    >
       <Sidebar />
-      <Flex w="85%" flexDir="column" justifyContent="space-between">
+      <Flex w="100%" flexDir="column">
         <Topbar />
         <main>
-          <Flex
-            h="80vh"
-            flexDir="row"
-            justifyContent="space-around"
-            alignItems="flex-start"
-          >
+          <Flex h="90vh" flexDir="row" p={5}>
             {children}
           </Flex>
         </main>

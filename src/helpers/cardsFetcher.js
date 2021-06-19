@@ -1,21 +1,28 @@
+import { v4 as uuidv4 } from "uuid";
+
 const DUMMY_CARDS_DATA = [
   {
-    id: 'e1',
-    title: 'Total Active Subscribers',
-    total: 500
+    id: uuidv4(),
+    title: "Active Subscribers",
+    total: "30k",
   },
   {
-    id: 'e2',
-    title: 'Paid Subscribers',
-    total: 300
+    id: uuidv4(),
+    title: "Paid Subscribers",
+    total: "21.5k",
   },
   {
-    id: 'e3',
-    title: 'Revenue Till Now',
-    total: '$ 1500'
-  }
-]
+    id: uuidv4(),
+    title: "Revenue Till Date",
+    total: "$ 1500",
+  },
+  {
+    id: uuidv4(),
+    title: "Newsletters Sent",
+    total: "28",
+  },
+];
 
 export function getCardsData() {
-  return DUMMY_CARDS_DATA
+  return DUMMY_CARDS_DATA;
 }

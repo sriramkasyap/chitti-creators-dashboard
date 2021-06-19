@@ -1,34 +1,49 @@
-import { extendTheme } from '@chakra-ui/react'
-import { createBreakpoints } from '@chakra-ui/theme-tools'
+import { extendTheme, withDefaultColorScheme } from "@chakra-ui/react";
+import { createBreakpoints } from "@chakra-ui/theme-tools";
+
+import "@fontsource/quicksand/500.css";
+import "@fontsource/josefin-sans/600.css";
 
 const fonts = {
-  body: 'system-ui, sans-serif',
-  heading: 'Georgia, serif',
-  mono: 'Menlo, monospace'
-}
+  body: "Quicksand",
+  heading: "Josefin Sans",
+};
 
 const breakpoints = createBreakpoints({
-  sm: '30em',
-  md: '48em',
-  lg: '62em',
-  xl: '80em'
-})
+  sm: "30em",
+  md: "48em",
+  lg: "62em",
+  xl: "80em",
+  "2xl": "96em",
+});
 
-const theme = extendTheme({
-  colors: {
-    bright: {
-      white: '#e1e1e1',
-      gray: '#7e7e7e',
-      black: '#252525'
+const theme = extendTheme(
+  {
+    colors: {
+      bright: {
+        bg: "#ffffff",
+        light: "#e1e1e1",
+        gray: "#7e7e7e",
+        fg: "#252525",
+      },
+      dark: {
+        bg: "#252525",
+        light: "#e1e1e1",
+        gray: "#7e7e7e",
+        fg: "#ffffff",
+      },
     },
-    dark: {
-      white: '#ffffff',
-      light: '#e1e1e1',
-      gray: '#7e7e7e'
-    }
+    components: {
+      Drawer: {
+        defaultProps: {
+          colorScheme: "#252525",
+        },
+      },
+    },
+    fonts,
+    breakpoints,
   },
-  fonts,
-  breakpoints
-})
+  withDefaultColorScheme({ colorScheme: "bright" })
+);
 
-export default theme
+export default theme;

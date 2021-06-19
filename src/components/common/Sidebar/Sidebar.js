@@ -1,31 +1,20 @@
-import { Flex, IconButton } from "@chakra-ui/react";
-import { FiArrowLeftCircle } from "react-icons/fi";
+import { Flex } from "@chakra-ui/react";
 
-import Logo from "./Logo/Logo";
-import Navitems from "./Navitems/Navitems";
-import Footer from "./Footer/Footer";
-
-import { getUserData } from "../../../helpers/userFetcher";
+import WideScreenSidebar from "./WideScreenSidebar/WideScreenSidebar";
 
 const Sidebar = () => {
-  const user = getUserData();
-
   return (
+    // Sidebar for Widescreen Start
     <Flex
-      w="15%"
-      flexDir="column"
-      alignItems="center"
-      backgroundColor="bright.black"
-      color="bright.white"
+      display={["none", "none", "none", "none", "flex"]} // display according to the breakpoints defined in theme.js
+      w="300px"
+      h="100vh"
+      backgroundColor="bright.fg"
+      color="bright.bg"
     >
-      <Flex flexDir="column" justifyContent="space-between" h="100vh">
-        <Flex flexDir="column" as="nav">
-          <Logo title="Chitti." />
-          <Navitems />
-        </Flex>
-        <Footer user={user} />
-      </Flex>
+      <WideScreenSidebar />
     </Flex>
+    // Sidebar for Widescreen End
   );
 };
 
