@@ -10,6 +10,9 @@ export default async (req, res) => {
 
       if (!creator) throw new Error("User not found");
 
+      creator = { ...creator.toObject() };
+      delete creator.password;
+
       return res.send({
         success: true,
         creator,

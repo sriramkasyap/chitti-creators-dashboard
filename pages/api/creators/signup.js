@@ -70,7 +70,9 @@ export default async (req, res) => {
         }
       );
 
+      creator = creator.toObject();
       creator.plans = [plan];
+      delete creator.password;
 
       res.send({
         success: true,
