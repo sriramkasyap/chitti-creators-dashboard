@@ -12,7 +12,7 @@ const Navitems = ({ navItems }) => {
           <Flex key={item.id}>
             <Link href={item.link}>
               <Flex
-                flxDir="row"
+                flexDir="row"
                 alignItems="center"
                 color="bright.gray"
                 mb={8}
