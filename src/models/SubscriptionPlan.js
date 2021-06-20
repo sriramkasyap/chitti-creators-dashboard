@@ -13,7 +13,6 @@ const SubscriptionPlanSchema = new Schema({
   subscribers: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Subscriber",
     },
   ],
 });
