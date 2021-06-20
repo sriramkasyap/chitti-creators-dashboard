@@ -1,4 +1,5 @@
 import Creator from "../../../src/models/Creator";
+import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 
 export default async (req, res) => {
   try {
@@ -10,6 +11,18 @@ export default async (req, res) => {
 
       if (!creator) throw new Error("User not found");
 
+      var plans = await SubscriptionPlan.find(
+        {
+          _id: {
+            $in: creator.plans,
+          },
+        },
+        {
+          subscribers: 0, // No need to send subscribers list with every  auth call
+        }
+      );
+
+      creator.plans = plans;
       creator = { ...creator.toObject() };
       delete creator.password;
 

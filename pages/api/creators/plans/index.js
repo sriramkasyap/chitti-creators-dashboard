@@ -1,3 +1,4 @@
+import Creator from "../../../../src/models/Creator";
 import SubscriptionPlan from "../../../../src/models/SubscriptionPlan";
 
 export default async (req, res) => {
@@ -22,7 +23,15 @@ export default async (req, res) => {
         subscribers: [],
       });
 
-      plan.save();
+      await plan.save();
+
+      plan = { ...plan.toObject() };
+
+      await Creator.findByIdAndUpdate(creator, {
+        $push: {
+          plans: plan._id,
+        },
+      });
 
       return res.send({
         success: true,
