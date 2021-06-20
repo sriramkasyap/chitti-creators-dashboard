@@ -17,7 +17,6 @@ export default async (req, res) => {
       payments: [],
     }));
 
-    console.log(data);
     var resut = await Subscriber.insertMany(data);
 
     return res.send({
