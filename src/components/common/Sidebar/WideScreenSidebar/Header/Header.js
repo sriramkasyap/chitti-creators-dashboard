@@ -1,11 +1,11 @@
 import { Heading } from "@chakra-ui/react";
 
-const Logo = ({ title }) => {
+const Header = ({ title }) => {
   return (
     <Heading
-      mb={100}
+      mb={22.5}
       mt={50}
-      fontSize="4xl"
+      fontSize="4.375rem"
       alignSelf="center"
       letterSpacing="tight"
     >
@@ -14,4 +14,4 @@ const Logo = ({ title }) => {
   );
 };
 
-export default Logo;
+export default Header;
