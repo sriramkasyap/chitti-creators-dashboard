@@ -12,3 +12,13 @@ export function generateRandomString(length = 6, numbers = false) {
   }
   return result;
 }
+
+export const getIronConfig = () => ({
+  cookieName: process.env.AUTH_COOKIE_NAME,
+  password: process.env.APPLICATION_SECRET,
+  cookieOptions: {
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, // 7 Days
+  },
+});

@@ -4,6 +4,7 @@ import { generateRandomString, ucFirst } from "../../../src/utils";
 import crypto from "crypto";
 
 export default async (req, res) => {
+  // Load Creators
   try {
     var { data } = await fetch(
       "https://dummyapi.io/data/api/user?limit=10&page=7",

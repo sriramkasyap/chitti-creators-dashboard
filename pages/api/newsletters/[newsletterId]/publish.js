@@ -1,51 +1,60 @@
+import { withIronSession } from "next-iron-session";
+import withCreatorAuth from "../../../../src/middleware/withCreatorAuth";
 import Newsletter from "../../../../src/models/Newsletter";
 import SubscriptionPlan from "../../../../src/models/SubscriptionPlan";
+import { getIronConfig } from "../../../../src/utils";
 
-export default async (req, res) => {
-  try {
-    if (req.method === "POST") {
-      // Publish the newsleter and send
+export default withIronSession(
+  withCreatorAuth(async (req, res) => {
+    try {
+      if (req.method === "POST") {
+        // Publish the newsleter and send
 
-      var creator = req.body.creatorId;
-      // replace this with auth middleware
-      var { newsletterId } = req.query;
-      var { planId } = req.body;
+        var { creatorId } = req.creator;
 
-      if (!(newsletterId && planId)) throw new Error("Invalid  Request");
+        var { newsletterId } = req.query;
+        var { planId } = req.body;
 
-      var newsletter = await Newsletter.findById(newsletterId);
+        if (!(newsletterId && planId)) throw new Error("Invalid  Request");
 
-      if (!newsletter) throw new Error("Newsletter does not exist");
-      if (newsletter.status !== "draft")
-        throw new Error("Only draft newsletters can be sent");
+        var newsletter = await Newsletter.findById(newsletterId);
 
-      var plan = await SubscriptionPlan.findById(planId);
-      if (!plan) throw new Error("Plan does not exist");
+        if (!newsletter) throw new Error("Newsletter does not exist");
+        if (newsletter.status !== "draft")
+          throw new Error("Only draft newsletters can be sent");
 
-      // Queue the newsletter to be sent to all the recipients
+        if (!newsletter.creator.equals(creatorId))
+          throw new Error("You are not authorized to perform this action.");
 
-      newsletter.recipients = plan.subscribers;
-      newsletter.status = "published";
-      newsletter.lastSavedAt = Date.now();
-      newsletter.sentAt = Date.now();
+        var plan = await SubscriptionPlan.findById(planId);
+        if (!plan) throw new Error("Plan does not exist");
 
-      newsletter.save();
+        // Queue the newsletter to be sent to all the recipients
 
-      return res.send({
-        success: true,
-        newsletter,
-      });
-    } else {
-      res.status(404).send({
+        newsletter.recipients = plan.subscribers;
+        newsletter.status = "published";
+        newsletter.lastSavedAt = Date.now();
+        newsletter.sentAt = Date.now();
+
+        newsletter.save();
+
+        return res.send({
+          success: true,
+          newsletter,
+        });
+      } else {
+        res.status(404).send({
+          error: true,
+          message: "Invalid Request",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(501).send({
         error: true,
-        message: "Invalid Request",
+        message: error.message,
       });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(501).send({
-      error: true,
-      message: error.message,
-    });
-  }
-};
+  }),
+  getIronConfig()
+);
