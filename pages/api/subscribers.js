@@ -24,11 +24,18 @@ export default withIronSession(
           throw new Error("You haven't created any plans");
 
         var subscriberPromises = plans.map(async (plan) => {
-          var planSubs = await Subscriber.find({
-            _id: {
-              $in: plan.subscribers,
+          var planSubs = await Subscriber.find(
+            {
+              _id: {
+                $in: plan.subscribers,
+              },
             },
-          }).lean(true);
+            {
+              name: 1,
+              email: 1,
+              _id: 0,
+            }
+          ).lean(true);
 
           return {
             planId: plan._id,
