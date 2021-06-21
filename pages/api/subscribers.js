@@ -15,38 +15,39 @@ export default async (req, res) => {
         _id: {
           $in: creator.plans,
         },
-      });
+      }).lean(true);
+
       if (!plans || plans.length < 1)
         throw new Error("You haven't created any plans");
 
-      var subscriberIds = plans.reduce((list, plan) => {
-        return [...list, ...plan.subscribers];
-      }, []);
-
-      var subscribers = await Subscriber.find(
-        {
+      var subscriberPromises = plans.map(async (plan) => {
+        var planSubs = await Subscriber.find({
           _id: {
-            $in: subscriberIds,
+            $in: plan.subscribers,
           },
-        },
-        {
-          subscriptions: 0,
-          registeredAt: 0,
-          payments: 0,
-        }
-      );
+        }).lean(true);
+
+        return {
+          planId: plan._id,
+          subscribers: planSubs,
+          count: planSubs.length,
+        };
+      });
+
+      var subscribers = await Promise.all(subscriberPromises);
+      var count = subscribers.reduce((sum, { count }) => sum + count, 0);
 
       return res.send({
         success: true,
         subscribers,
-        count: subscribers.length,
+        count,
       });
     } else {
       throw new Error("Invalid Request");
     }
   } catch (error) {
     console.error(error);
-    res.send(501).send({
+    res.status(501).send({
       error: true,
       message: error.message,
     });
