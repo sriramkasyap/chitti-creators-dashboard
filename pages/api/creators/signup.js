@@ -5,8 +5,10 @@
 import Creator from "../../../src/models/Creator";
 import crypto from "crypto";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
+import { withIronSession } from "next-iron-session";
+import { getIronConfig } from "../../../src/utils";
 
-export default async (req, res) => {
+export default withIronSession(async (req, res) => {
   if (req.method === "POST") {
     try {
       var { fullName, emailId, password } = req.body;
@@ -74,6 +76,13 @@ export default async (req, res) => {
       creator.plans = [plan];
       delete creator.password;
 
+      req.session.set("creator", {
+        emailId,
+        creatorId: creator._id,
+      });
+
+      await req.session.save();
+
       res.send({
         success: true,
         creator,
@@ -98,4 +107,4 @@ export default async (req, res) => {
       message: "API endpoint not found",
     });
   }
-};
+}, getIronConfig());
