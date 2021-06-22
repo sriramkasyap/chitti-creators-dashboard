@@ -22,3 +22,16 @@ export const getIronConfig = () => ({
     maxAge: 60 * 60 * 24 * 7, // 7 Days
   },
 });
+
+export const checkAuthentication = async ({ req, res }) => {
+  if (!(req.session && req.session.get("creator"))) {
+    res.setHeader("Location", "/login");
+    res.statusCode = 302;
+    res.end();
+  }
+  return {
+    props: {
+      data: null,
+    },
+  };
+};

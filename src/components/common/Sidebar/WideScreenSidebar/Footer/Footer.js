@@ -11,7 +11,7 @@ const Footer = ({ user }) => {
       <Text textAlign="center" mt={3} mb={3} fontSize="2xl">
         {fullName}
       </Text>
-      <Link _hover={{ textDecor: "none" }}>
+      <Link href="/logout" _hover={{ textDecor: "none" }}>
         <Text color="bright.gray" _hover={{ color: "bright.bg" }} fontSize="md">
           Logout <Icon as={FiLogOut} fontSize="lg" />
         </Text>
