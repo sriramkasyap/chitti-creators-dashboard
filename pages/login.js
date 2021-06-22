@@ -3,9 +3,11 @@ import { Flex, Heading, Input, Text, Divider } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
 import { AuthContext } from "../contexts/AuthContext";
+import { withIronSession } from "next-iron-session";
+import { getIronConfig } from "../src/utils";
 
 const Login = () => {
-  const { loggedInUser, setLoggedInUser, userLogin } = useContext(AuthContext);
+  const { loggedInUser, userLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     emailId: "",
     password: "",
@@ -23,7 +25,8 @@ const Login = () => {
 
   const handleLogin = async () => {
     await userLogin(formData);
-    console.log("RB:: File: login.js, Line: 27 ==> loggedInUser", loggedInUser);
+    // console.log("RB:: File: login.js, Line: 27 ==> loggedInUser", loggedInUser);
+    window.location = "/";
   };
 
   return (
@@ -73,5 +76,18 @@ const Login = () => {
     </Flex>
   );
 };
+
+export const getServerSideProps = withIronSession(async ({ req, res }) => {
+  if (req.session && req.session.get("creator")) {
+    res.setHeader("Location", "/");
+    res.statusCode = 302;
+    res.end();
+  }
+  return {
+    props: {
+      data: null,
+    },
+  };
+}, getIronConfig());
 
 export default Login;
