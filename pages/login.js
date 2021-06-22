@@ -25,7 +25,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     await userLogin(formData);
-    // console.log("RB:: File: login.js, Line: 27 ==> loggedInUser", loggedInUser);
     window.location = "/";
   };
 

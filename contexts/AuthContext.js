@@ -30,7 +30,6 @@ class AuthProvider extends Component {
         },
         body: JSON.stringify(userCreds),
       });
-      // console.log("RB:: File: AuthContext.js, Line: 17 ==> res", res);
       const user = await res.json();
       this.setLoggedInUser(user);
     } catch (err) {
@@ -42,7 +41,6 @@ class AuthProvider extends Component {
     try {
       const res = await fetch("/api/creators");
       const { creator } = await res.json();
-      // console.log("RB:: File: AuthContext.js, Line: 17 ==> creator", creator);
       if (creator) {
         this.setLoggedInUser(creator);
       } else {
