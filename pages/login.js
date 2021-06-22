@@ -57,7 +57,7 @@ const Login = () => {
         <Text> rewarding</Text>
       </Flex>
       <Flex
-        h="100vh"
+        h={["100vh", "100vh", "60vh"]}
         flexDir="column"
         alignItems="center"
         justifyContent={["space-evenly", "space-evenly", "unset"]}
