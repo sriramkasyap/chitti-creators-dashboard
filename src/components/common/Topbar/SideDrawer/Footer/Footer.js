@@ -11,7 +11,7 @@ const Footer = ({ onClose }) => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <Link>
+      <Link href="/logout">
         <Text color="bright.gray" _hover={{ color: "bright.bg" }}>
           Logout
         </Text>
