@@ -1,34 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chitti
 
-## Getting Started
+---
 
-First, run the development server:
+#### In one line,
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Chitti is a Newsletter publication and distribution platform to help Content creators reach their audience directly andmonetize from the loyal ones.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Who is this for?
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Content creators are often not rewarded for the quality of their content due to the limitations and nuances of their Social Media algorithms. Chitti intends to provide a platform for them to write, publish and distribute their content in its purest form via newsletters directly to their audience inboxes.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+#### How do they Benefit?
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Creators can easily publish their content and reach only their select and interested audience, and in doing so, are rewarded directly by those who find value in their content.
 
-## Learn More
+Audiences who are interested in specific creators often end up paying directly (Magazine subscriptions) or indirectly (Offering data to Social media apps) way more than what they are required to. With Chitti, they can only subscribe to their favourite creators and enjoy their content without the clutter.
 
-To learn more about Next.js, take a look at the following resources:
+#### How is this different?
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Unlike Wordpress or Medium, Chitti doesn't charge anything upfront. We only make money when creators do. Also, creators’ content reaches the audience directly, eliminating the need to visit the creators’ website / blog every time there is new content.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Unlike Social Media, the audience and creators are actually connected directly to each other, without all the unnecessary noise and clutter of the platform.
