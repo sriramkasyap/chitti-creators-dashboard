@@ -7,7 +7,7 @@ class AuthProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedInUser: null,
+      loggedInUser: { profile: { fullName: "", displayPicture: null } },
     };
   }
 
@@ -44,12 +44,15 @@ class AuthProvider extends Component {
       if (creator) {
         this.setLoggedInUser(creator);
       } else {
-        this.setLoggedInUser(null);
+        this.setLoggedInUser({
+          profile: { fullName: "", displayPicture: null },
+        });
       }
     } catch (err) {
       console.log("Error", err);
     }
   };
+
   render() {
     return (
       <AuthContext.Provider

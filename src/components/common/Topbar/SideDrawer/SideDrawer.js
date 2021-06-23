@@ -16,10 +16,7 @@ import Navitems from "./Navitems/Navitems";
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 
-import { getUserData } from "../../../../helpers/userFetcher";
-
 const SideDrawer = () => {
-  const user = getUserData();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
 
@@ -41,7 +38,7 @@ const SideDrawer = () => {
         <DrawerOverlay />
         <DrawerContent backgroundColor="bright.fg" color="bright.bg">
           <DrawerHeader>
-            <Header user={user} />
+            <Header />
           </DrawerHeader>
 
           <DrawerBody>
