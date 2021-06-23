@@ -8,6 +8,7 @@ class AuthProvider extends Component {
     super(props);
     this.state = {
       loggedInUser: null,
+      loginError: "",
     };
   }
 
@@ -21,9 +22,28 @@ class AuthProvider extends Component {
     });
   };
 
-  userLogin = async (userCreds) => {
+  userLogin = (userCreds) => {
+    fetch("/api/creators/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userCreds),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.setLoggedInUser(data);
+      })
+      .catch((err) => {
+        this.setState({
+          loginError: err,
+        });
+      });
+  };
+
+  userSignup = async (userCreds) => {
     try {
-      const res = await fetch("/api/creators/login", {
+      const res = await fetch("/api/creators/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +53,9 @@ class AuthProvider extends Component {
       const user = await res.json();
       this.setLoggedInUser(user);
     } catch (err) {
-      console.log("Error", err);
+      this.setState({
+        loginError: err,
+      });
     }
   };
 
@@ -51,11 +73,14 @@ class AuthProvider extends Component {
     }
   };
   render() {
+    const { loggedInUser, loginError } = this.state;
     return (
       <AuthContext.Provider
         value={{
-          loggedInUser: this.state.loggedInUser,
+          loggedInUser,
+          loginError,
           userLogin: this.userLogin,
+          userSignup: this.userSignup,
         }}
       >
         {this.props.children}

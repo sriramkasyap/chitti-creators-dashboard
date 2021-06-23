@@ -9,6 +9,10 @@ const fonts = {
   heading: "Josefin Sans",
 };
 
+const letterSpacings = {
+  tight: "-4px",
+};
+
 const breakpoints = createBreakpoints({
   sm: "30em",
   md: "48em",
@@ -40,6 +44,7 @@ const theme = extendTheme(
         },
       },
     },
+    letterSpacings,
     fonts,
     breakpoints,
   },
