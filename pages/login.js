@@ -38,31 +38,38 @@ const Login = () => {
   };
 
   return (
-    <Flex flexDir="column">
+    <Flex flexDir={["column", "column", "column", "column", "row-reverse"]}>
       <Flex
         display={["none", "none", "flex"]}
-        flexDir="column"
-        justifyContent="center"
+        justifyContent={["center", "center", "center", "center", "flex-end"]}
         alignItems="center"
-        fontSize={["2xl", "2xl", "6xl"]}
-        fontWeight="semibold"
-        color="bright.bg"
         backgroundColor="bright.fg"
         backgroundImage="url('word_cloud.png')"
         backgroundSize="cover"
-        h="40vh"
+        h={["40vh", "40vh", "40vh", "40vh", "100vh"]}
+        w={["100vw", "100vw", "100vw", "100vw", "70vw"]}
       >
-        <Text>Creating content</Text>
-        <Text>has never been more</Text>
-        <Text> rewarding</Text>
+        <Flex
+          flexDir="column"
+          fontSize={["2xl", "2xl", "6xl", "7xl", "6xl"]}
+          alignItems={["center", "center", "center", "center", "flex-end"]}
+          fontWeight="semibold"
+          color="bright.bg"
+          mr={[0, 0, 0, 0, 28]}
+          mb={[0, 0, 0, 0, 28]}
+        >
+          <Text>Creating content</Text>
+          <Text>has never been more</Text>
+          <Text> rewarding</Text>
+        </Flex>
       </Flex>
       <Flex
         h={["100vh", "100vh", "60vh"]}
         flexDir="column"
         alignItems="center"
         justifyContent={["space-evenly", "space-evenly", "unset"]}
-        p={8}
-        w={["100vw", "100vw", "80vw"]}
+        p={[8, 8, 8, 8, "0 6rem"]}
+        w={["100vw", "100vw", "80vw", "80vw", "30vw"]}
         m="auto"
       >
         <Flex
