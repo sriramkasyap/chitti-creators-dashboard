@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { Flex, Text, Icon } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const Navitems = ({ navItems }) => {
   const router = useRouter();
@@ -16,18 +16,18 @@ const Navitems = ({ navItems }) => {
             whileTap={{ scale: 0.9 }}
           >
             <Flex>
-              <Link href={item.link} as={item.link}>
+              <Link href={item.link} as={`${item.link}`}>
                 <Flex
                   flexDir="row"
                   alignItems="center"
                   color="bright.gray"
-                  mb={8}
+                  mb={5}
                   _hover={{ color: "bright.bg" }}
                   cursor="pointer"
                   color={route === item.link ? "bright.bg" : "bright.gray"}
                 >
-                  <Icon as={item.icon} fontSize="2xl" />
-                  <Text fontSize="xl" ml={4}>
+                  <Icon as={item.icon} fontSize="xl" />
+                  <Text fontSize="lg" ml={4}>
                     {item.text}
                   </Text>
                 </Flex>

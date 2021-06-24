@@ -43,7 +43,7 @@ const Dashboard = () => {
         mt={[0, 5, 5, 5, 0]}
       >
         {cards?.map((card) => (
-          <Card key={card.id} title={card.title} subtitle={card.total} />
+          <Card key={card.id} card={card} />
         ))}
       </Flex>
       {/* Dashboard Card End */}

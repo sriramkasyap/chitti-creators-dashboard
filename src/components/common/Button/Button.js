@@ -8,6 +8,7 @@ const Button = ({ text, rounded, variant, className, ...rest }) => {
         rounded={rounded}
         variant={variant}
         className={className}
+        _focus={{ boxShadow: "none" }}
         {...rest}
       >
         {text}

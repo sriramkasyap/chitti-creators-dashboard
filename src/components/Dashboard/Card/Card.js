@@ -1,40 +1,50 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
 import "@fontsource/josefin-sans/600.css";
 
-const Card = ({ title, subtitle }) => {
+const Card = ({ card }) => {
+  const { title, total, icon } = card;
   return (
     <Box
       rounded={25}
-      w={["100%", 350, 350, 480, 350]}
-      h={[175, 200, 175, 200, 175]}
+      w={["100%", 350, 350, 480, "23%"]}
+      h={[175, 200, 175, 200, 150]}
       backgroundColor="bright.fg"
       color="bright.bg"
-      mr={[0, 0, 0, 0, 5]}
       mt={5}
       flexGrow={[1, 1, 0, 0, 0]}
     >
       <Flex
-        p={5}
         flexDir="column"
         h="100%"
-        justifyContent="center"
+        justifyContent="space-between"
         alignItems="flex-end"
       >
-        <Text
-          fontWeight="bold"
-          fontSize="6xl"
-          color="bright.bg"
-          textAlign="center"
-          fontFamily="Josefin Sans"
+        <Flex
+          flexDir="row"
+          justifyContent="space-between"
+          alignItems="center"
+          w="100%"
         >
-          {subtitle}
-        </Text>
+          <Image src={icon} alt={icon} h={[90, 100, 90, 100, 75]} />
+          <Text
+            fontWeight="bold"
+            fontSize={["5xl", "5xl", "5xl", "6xl", "5xl"]}
+            color="bright.bg"
+            textAlign="center"
+            fontFamily="Josefin Sans"
+            mr={5}
+          >
+            {total}
+          </Text>
+        </Flex>
         <Text
           color="bright.gray"
-          fontSize="3xl"
+          fontSize={["2xl", "2xl", "2xl", "3xl", "2xl"]}
           fontWeight="medium"
           textAlign="center"
+          mr={5}
+          mb={5}
         >
           {title}
         </Text>

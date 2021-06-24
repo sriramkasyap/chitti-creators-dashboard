@@ -28,6 +28,7 @@ const SideDrawer = () => {
         onClick={onOpen}
         fontSize="4xl"
         color="bright.gray"
+        _focus={{ boxShadow: "none" }}
       />
       <Drawer
         isOpen={isOpen}
@@ -37,6 +38,11 @@ const SideDrawer = () => {
       >
         <DrawerOverlay />
         <DrawerContent backgroundColor="bright.fg" color="bright.bg">
+          <DrawerCloseButton
+            color="bright.gray"
+            fontSize="2xl"
+            _focus={{ boxShadow: "none" }}
+          />
           <DrawerHeader>
             <Header />
           </DrawerHeader>
