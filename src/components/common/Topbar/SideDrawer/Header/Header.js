@@ -1,19 +1,15 @@
 import { useContext } from "react";
 import { Flex, Avatar, Text } from "@chakra-ui/react";
 import "@fontsource/josefin-sans/400.css";
-
+import { useContext } from "react";
 import { AuthContext } from "../../../../../../contexts/AuthContext";
 
-const Header = () => {
-  const { loggedInUser } = useContext(AuthContext);
+const Header = ({ user }) => {
   const {
-    creator: {
-      profile: { displayPicture, fullName },
+    loggedInUser: {
+      profile: { fullName, displayPicture },
     },
-  } = loggedInUser;
-  const nameArr = fullName.split(" ");
-  const firstName = nameArr[0];
-  const lastName = nameArr[1];
+  } = useContext(AuthContext);
 
   return (
     <Flex flexDir="row" alignItems="center" mb={10} mt={5}>
@@ -27,15 +23,7 @@ const Header = () => {
           fontFamily="Josefin Sans"
           color="bright.light"
         >
-          {firstName}
-        </Text>
-        <Text
-          textAlign="center"
-          fontSize="md"
-          fontFamily="Josefin Sans"
-          color="bright.light"
-        >
-          {lastName}
+          {fullName}
         </Text>
       </Flex>
     </Flex>

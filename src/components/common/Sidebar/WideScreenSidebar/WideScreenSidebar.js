@@ -5,11 +5,9 @@ import Navitems from "./Navitems/Navitems";
 import Footer from "./Footer/Footer";
 
 import { getNavItems } from "../../../../helpers/navitemsFetcher";
-import { getUserData } from "../../../../helpers/userFetcher";
 
 const WideScreenSidebar = () => {
   const navItems = getNavItems(); // fetch navbar items
-  const user = getUserData(); // fetch loggedin user data
 
   return (
     <Flex
@@ -26,7 +24,7 @@ const WideScreenSidebar = () => {
           <Navitems navItems={navItems} />
         </Flex>
       </Flex>
-      <Footer user={user} />
+      <Footer />
     </Flex>
   );
 };
