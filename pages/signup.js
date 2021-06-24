@@ -251,7 +251,7 @@ export const getServerSideProps = withIronSession(async ({ req, res }) => {
   }
   return {
     props: {
-      data: null,
+      standardLayout: false,
     },
   };
 }, getIronConfig());

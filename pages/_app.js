@@ -9,12 +9,12 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <ChakraProvider resetCSS theme={theme}>
-        {Component.name === "Login" || Component.name === "Signup" ? (
-          <Component {...pageProps} />
-        ) : (
+        {pageProps.standardLayout ? (
           <Layout>
             <Component {...pageProps} />
           </Layout>
+        ) : (
+          <Component {...pageProps} />
         )}
       </ChakraProvider>
     </AuthProvider>

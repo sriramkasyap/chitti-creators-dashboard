@@ -31,7 +31,7 @@ export const checkAuthentication = async ({ req, res }) => {
   }
   return {
     props: {
-      data: null,
+      standardLayout: true,
     },
   };
 };
