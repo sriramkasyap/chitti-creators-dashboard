@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import { withIronSession } from "next-iron-session";
 import {
@@ -41,20 +41,28 @@ const Login = () => {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    try {
-      await userLogin(formData);
-      setIsLoading(false);
-      router.replace("/");
-    } catch (err) {
-      setError(loginError);
-      setIsLoading(false);
-      setFormData({
-        emailId: "",
-        password: "",
-      });
-      router.replace("/login");
-    }
+    setTimeout(async () => {
+      // Only to demostrate loading state. To be removed later
+
+      try {
+        if (await userLogin(formData)) {
+          router.replace("/");
+        }
+        setIsLoading(false);
+      } catch (err) {
+        setError(loginError);
+        setIsLoading(false);
+        setFormData({
+          emailId: "",
+          password: "",
+        });
+      }
+    }, 3000); // Only to demostrate loading state. To be removed later
   };
+
+  useEffect(() => {
+    setError(loginError);
+  }, [loginError]);
 
   return (
     <Flex flexDir={["column", "column", "column", "column", "row-reverse"]}>

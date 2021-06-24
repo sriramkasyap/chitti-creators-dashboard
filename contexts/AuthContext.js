@@ -22,8 +22,8 @@ class AuthProvider extends Component {
     });
   };
 
-  userLogin = (userCreds) => {
-    fetch("/api/creators/login", {
+  userLogin = async (userCreds) => {
+    return fetch("/api/creators/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,21 +34,24 @@ class AuthProvider extends Component {
       .then((data) => {
         if (data.success) {
           this.setLoggedInUser(data.creator);
+          return true;
         } else {
           this.setState({
             loginError: data.message,
           });
+          return false;
         }
       })
       .catch((err) => {
         this.setState({
           loginError: err,
         });
+        return false;
       });
   };
 
-  userSignup = (userCreds) => {
-    fetch("/api/creators/signup", {
+  userSignup = async (userCreds) => {
+    return fetch("/api/creators/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,10 +62,12 @@ class AuthProvider extends Component {
       .then((data) => {
         if (data.success) {
           this.setLoggedInUser(data.creator);
+          return true;
         } else {
           this.setState({
             loginError: data.message,
           });
+          return false;
         }
       })
       .catch((err) => {
