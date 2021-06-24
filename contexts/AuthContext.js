@@ -78,19 +78,24 @@ class AuthProvider extends Component {
   };
 
   fetchMe = async () => {
-    try {
-      const res = await fetch("/api/creators");
-      const { creator } = await res.json();
-      if (creator) {
-        this.setLoggedInUser(creator);
-      } else {
-        this.setLoggedInUser({
-          profile: { fullName: "", displayPicture: null },
+    return fetch("/api/creators")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          this.setLoggedInUser(data.creator);
+          return true;
+        } else {
+          this.setState({
+            loginError: data.message,
+          });
+          return false;
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          loginError: err,
         });
-      }
-    } catch (err) {
-      console.log("Error", err);
-    }
+      });
   };
 
   render() {
