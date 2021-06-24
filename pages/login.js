@@ -195,7 +195,12 @@ const Login = () => {
           <Text color="bright.gray" fontWeight="medium">
             Don’t have an account yet?
           </Text>
-          <Link href="/signup" textDecor="underline" color="bright.gray">
+          <Link
+            href="/signup"
+            _focus={{ boxShadow: "none" }}
+            textDecor="underline"
+            color="bright.gray"
+          >
             <Text color="bright.gray" fontSize="md">
               Sign up
             </Text>

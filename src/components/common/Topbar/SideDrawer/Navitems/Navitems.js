@@ -10,7 +10,7 @@ const Navitems = ({ onClose }) => {
       {navItems?.length > 0 &&
         navItems.map((item) => (
           <Flex key={item.id}>
-            <Link href={item.link}>
+            <Link href={item.link} as={`${item.link}`}>
               <Flex
                 mb={25}
                 flexDir="row"

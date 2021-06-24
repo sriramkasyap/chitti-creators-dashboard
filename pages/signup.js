@@ -45,13 +45,20 @@ const Login = () => {
   const handleSignup = async () => {
     setIsLoading(true);
     try {
-      await userSignup({
-        fullName: formData.fullName,
-        emailId: formData.emailId,
-        password: formData.password,
-      });
-      setIsLoading(false);
-      router.replace("/");
+      if (formData.password !== formData.confirmPassword) {
+        console.log("RB:: File: signup.js, Line: 49 ==> inside if");
+        setError("Password did not match");
+        setIsLoading(false);
+        router.replace("/signup");
+      } else {
+        await userSignup({
+          fullName: formData.fullName,
+          emailId: formData.emailId,
+          password: formData.password,
+        });
+        setIsLoading(false);
+        router.replace("/");
+      }
     } catch (err) {
       setError(loginError);
       setIsLoading(false);
@@ -232,7 +239,12 @@ const Login = () => {
           <Text color="bright.gray" fontWeight="medium">
             Have an account already?
           </Text>
-          <Link href="/login" textDecor="underline" color="bright.gray">
+          <Link
+            href="/login"
+            _focus={{ boxShadow: "none" }}
+            textDecor="underline"
+            color="bright.gray"
+          >
             <Text color="bright.gray" fontSize="md">
               Login
             </Text>

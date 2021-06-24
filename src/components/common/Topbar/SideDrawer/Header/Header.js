@@ -1,32 +1,7 @@
-import { useContext } from "react";
-import { Flex, Avatar, Text } from "@chakra-ui/react";
-import "@fontsource/josefin-sans/400.css";
-import { AuthContext } from "../../../../../../contexts/AuthContext";
+import { Flex } from "@chakra-ui/react";
 
-const Header = ({ user }) => {
-  const {
-    loggedInUser: {
-      profile: { fullName, displayPicture },
-    },
-  } = useContext(AuthContext);
-
-  return (
-    <Flex flexDir="row" alignItems="center" mb={10} mt={5}>
-      <Flex>
-        <Avatar name={fullName} src={displayPicture} h={45} w={45} />
-      </Flex>
-      <Flex flexDir="column" alignItems="flex-start" ml={15}>
-        <Text
-          textAlign="center"
-          fontSize="md"
-          fontFamily="Josefin Sans"
-          color="bright.light"
-        >
-          {fullName}
-        </Text>
-      </Flex>
-    </Flex>
-  );
+const Header = () => {
+  return <Flex mb={5}></Flex>;
 };
 
 export default Header;
