@@ -8,6 +8,7 @@ class AuthProvider extends Component {
     super(props);
     this.state = {
       loggedInUser: { profile: { fullName: "", displayPicture: null } },
+      loginError: null,
     };
   }
 
@@ -22,19 +23,58 @@ class AuthProvider extends Component {
   };
 
   userLogin = async (userCreds) => {
-    try {
-      const res = await fetch("/api/creators/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userCreds),
+    return fetch("/api/creators/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userCreds),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          this.setLoggedInUser(data.creator);
+          return true;
+        } else {
+          this.setState({
+            loginError: data.message,
+          });
+          return false;
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          loginError: err,
+        });
+        return false;
       });
-      const user = await res.json();
-      this.setLoggedInUser(user);
-    } catch (err) {
-      console.log("Error", err);
-    }
+  };
+
+  userSignup = async (userCreds) => {
+    return fetch("/api/creators/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userCreds),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          this.setLoggedInUser(data.creator);
+          return true;
+        } else {
+          this.setState({
+            loginError: data.message,
+          });
+          return false;
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          loginError: err,
+        });
+      });
   };
 
   fetchMe = async () => {
@@ -54,11 +94,14 @@ class AuthProvider extends Component {
   };
 
   render() {
+    const { loggedInUser, loginError } = this.state;
     return (
       <AuthContext.Provider
         value={{
-          loggedInUser: this.state.loggedInUser,
+          loggedInUser,
+          loginError,
           userLogin: this.userLogin,
+          userSignup: this.userSignup,
         }}
       >
         {this.props.children}

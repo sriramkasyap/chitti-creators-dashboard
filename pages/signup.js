@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState, useContext } from "react";
 import { withIronSession } from "next-iron-session";
+import { useRouter } from "next/router";
 import {
   Flex,
   Heading,
@@ -21,12 +21,15 @@ import { getIronConfig } from "../src/utils";
 
 const Login = () => {
   const router = useRouter();
+  const { loggedInUser, userSignup } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { loginError, userLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
+    fullName: "",
     emailId: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (event) => {
@@ -39,30 +42,28 @@ const Login = () => {
     });
   };
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     setIsLoading(true);
-    setTimeout(async () => {
-      // Only to demostrate loading state. To be removed later
-
-      try {
-        if (await userLogin(formData)) {
-          router.replace("/");
-        }
-        setIsLoading(false);
-      } catch (err) {
-        setError(loginError);
-        setIsLoading(false);
-        setFormData({
-          emailId: "",
-          password: "",
-        });
-      }
-    }, 3000); // Only to demostrate loading state. To be removed later
+    try {
+      await userSignup({
+        fullName: formData.fullName,
+        emailId: formData.emailId,
+        password: formData.password,
+      });
+      setIsLoading(false);
+      router.replace("/");
+    } catch (err) {
+      setError(loginError);
+      setIsLoading(false);
+      setFormData({
+        fullName: "",
+        emailId: "",
+        password: "",
+        confirmPassword: "",
+      });
+      router.replace("/signup");
+    }
   };
-
-  useEffect(() => {
-    setError(loginError);
-  }, [loginError]);
 
   return (
     <Flex flexDir={["column", "column", "column", "column", "row-reverse"]}>
@@ -73,12 +74,12 @@ const Login = () => {
         backgroundColor="bright.fg"
         backgroundImage="url('word_cloud.png')"
         backgroundSize="cover"
-        h={["40vh", "40vh", "40vh", "40vh", "100vh"]}
+        h={["40vh", "40vh", "30vh", "40vh", "100vh"]}
         w={["100vw", "100vw", "100vw", "100vw", "70vw"]}
       >
         <Flex
           flexDir="column"
-          fontSize={["2xl", "2xl", "6xl", "7xl", "6xl"]}
+          fontSize={["2xl", "2xl", "5xl", "7xl", "6xl"]}
           alignItems={["center", "center", "center", "center", "flex-end"]}
           fontWeight="semibold"
           color="bright.bg"
@@ -97,7 +98,7 @@ const Login = () => {
         justifyContent={["space-evenly", "space-evenly", "unset"]}
         p={[8, 8, 8, 8, "0 6rem"]}
         w={["100vw", "100vw", "80vw", "80vw", "30vw"]}
-        m={["auto", "auto", "auto", "auto", "6rem auto"]}
+        m={["auto", "auto", "auto", "auto", "3rem auto"]}
       >
         <Flex
           display={["flex", "flex", "none"]}
@@ -127,12 +128,28 @@ const Login = () => {
           mt={[0, 0, 5]}
         >
           <Text color="bright.gray" fontSize="xl" mb={1.5}>
-            Login to
+            Sign up as a Creator on
           </Text>
           <Heading color="bright" fontSize="6xl" mb={5} letterSpacing="tight">
             Chitti.
           </Heading>
           {error && <ErrorMessage message={error} />}
+          <FormControl id="fullName">
+            <FormLabel color="bright.fg">Full Name</FormLabel>
+            <Input
+              variant="outline"
+              focusBorderColor="bright.fg"
+              borderColor="bright.light"
+              border="2px solid"
+              borderRadius={0}
+              mb={3}
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+            />
+          </FormControl>
+
           <FormControl id="email">
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
@@ -157,7 +174,7 @@ const Login = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={6}
+              mb={3}
               type="password"
               name="password"
               value={formData.password}
@@ -165,15 +182,35 @@ const Login = () => {
             />
           </FormControl>
 
+          <FormControl id="confirmPassword">
+            <FormLabel color="bright.fg">Confirm Password</FormLabel>
+            <Input
+              variant="outline"
+              focusBorderColor="bright.fg"
+              borderColor="bright.light"
+              border="2px solid"
+              borderRadius={0}
+              mb={6}
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+          </FormControl>
+
           <Button
             rounded={"full"}
             text={
-              isLoading ? <Image src="loader_white.gif" h="2.5rem" /> : "Login"
+              isLoading ? (
+                <Image src="loader_white.gif" h="2.5rem" />
+              ) : (
+                "Create Account"
+              )
             }
             color="bright.bg"
             backgroundColor="bright.fg"
             fontWeight={400}
-            onClick={handleLogin}
+            onClick={handleSignup}
             p="1rem 2rem"
           />
         </Flex>
@@ -193,11 +230,11 @@ const Login = () => {
         </Flex>
         <Flex flexDir="column" justifyContent="center" alignItems="center">
           <Text color="bright.gray" fontWeight="medium">
-            Don’t have an account yet?
+            Have an account already?
           </Text>
-          <Link href="/signup" textDecor="underline" color="bright.gray">
+          <Link href="/login" textDecor="underline" color="bright.gray">
             <Text color="bright.gray" fontSize="md">
-              Sign up
+              Login
             </Text>
           </Link>
         </Flex>
