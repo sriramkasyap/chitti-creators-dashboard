@@ -16,7 +16,7 @@ const Navitems = ({ navItems }) => {
             whileTap={{ scale: 0.9 }}
           >
             <Flex>
-              <Link href={item.link}>
+              <Link href={item.link} as={item.link}>
                 <Flex
                   flexDir="row"
                   alignItems="center"
