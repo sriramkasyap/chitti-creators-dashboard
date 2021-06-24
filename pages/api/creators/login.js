@@ -20,10 +20,10 @@ export default withIronSession(async (req, res) => {
       });
 
       if (!creator || !creator._id)
-        throw new Error("Invalid Login credentials");
+        throw new Error("Incorrect Email ID or Password!");
 
       if (creator.password !== hashedpass)
-        throw new Error("Invalid Login credentials");
+        throw new Error("Incorrect Email ID or Password!");
 
       creator = creator.toObject();
       delete creator.password;
