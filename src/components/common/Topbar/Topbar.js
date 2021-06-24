@@ -7,6 +7,7 @@ import "@fontsource/quicksand/400.css";
 
 import Button from "../Button/Button";
 import SmallScreenSidebar from "./SideDrawer/SideDrawer";
+import Link from "next/link";
 
 const Topbar = () => {
   const [pageTitle, setPageTitle] = useState("");
@@ -33,20 +34,22 @@ const Topbar = () => {
         p={5}
       >
         <IconButton icon={<FaBell />} color="bright.fg" fontSize="3xl" />
-        <Button
-          rounded={"full"}
-          variant="outline"
-          text="Create New Newsletter"
-          marginLeft="1.5rem"
-          color="bright.fg"
-          borderColor="bright.fg"
-          fontWeight={400}
-          _hover={{
-            backgroundColor: "bright.fg",
-            color: "bright.bg",
-            borderColor: "bright.fg",
-          }}
-        />
+        <Link href="/newsletters/new" as="/newsletters/new">
+          <Button
+            rounded={"full"}
+            variant="outline"
+            text="Create New Newsletter"
+            marginLeft="1.5rem"
+            color="bright.fg"
+            borderColor="bright.fg"
+            fontWeight={400}
+            _hover={{
+              backgroundColor: "bright.fg",
+              color: "bright.bg",
+              borderColor: "bright.fg",
+            }}
+          />
+        </Link>
       </Flex>
       {/* Topbar for Widescreen End */}
 
