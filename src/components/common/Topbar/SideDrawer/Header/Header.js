@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { Flex, Avatar, Text } from "@chakra-ui/react";
 import "@fontsource/josefin-sans/400.css";
-import { useContext } from "react";
 import { AuthContext } from "../../../../../../contexts/AuthContext";
 
 const Header = ({ user }) => {

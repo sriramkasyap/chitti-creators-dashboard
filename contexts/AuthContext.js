@@ -8,7 +8,7 @@ class AuthProvider extends Component {
     super(props);
     this.state = {
       loggedInUser: { profile: { fullName: "", displayPicture: null } },
-      loginError,
+      loginError: null,
     };
   }
 
@@ -32,7 +32,13 @@ class AuthProvider extends Component {
     })
       .then((res) => res.json())
       .then((data) => {
-        this.setLoggedInUser(data);
+        if (data.success) {
+          this.setLoggedInUser(data.creator);
+        } else {
+          this.setState({
+            loginError: data.message,
+          });
+        }
       })
       .catch((err) => {
         this.setState({
@@ -41,22 +47,29 @@ class AuthProvider extends Component {
       });
   };
 
-  userSignup = async (userCreds) => {
-    try {
-      const res = await fetch("/api/creators/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userCreds),
+  userSignup = (userCreds) => {
+    fetch("/api/creators/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userCreds),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          this.setLoggedInUser(data.creator);
+        } else {
+          this.setState({
+            loginError: data.message,
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          loginError: err,
+        });
       });
-      const user = await res.json();
-      this.setLoggedInUser(user);
-    } catch (err) {
-      this.setState({
-        loginError: err,
-      });
-    }
   };
 
   fetchMe = async () => {

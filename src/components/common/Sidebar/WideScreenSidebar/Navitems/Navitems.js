@@ -10,8 +10,12 @@ const Navitems = ({ navItems }) => {
     <Flex flexDir="column" alignItems="flex-start" justifyContent="center">
       {navItems?.length > 0 &&
         navItems.map((item) => (
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Flex key={item.id}>
+          <motion.div
+            key={item.id}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Flex>
               <Link href={item.link}>
                 <Flex
                   flexDir="row"

@@ -1,18 +1,13 @@
 import { useContext } from "react";
 import { Flex, Avatar, Text, Link, Icon } from "@chakra-ui/react";
-import { useContext } from "react";
 
 import { FiLogOut } from "react-icons/fi";
-import { AuthContext } from "../../../../../../contexts/AuthContext";
-
 import { AuthContext } from "../../../../../../contexts/AuthContext";
 
 const Footer = () => {
   const { loggedInUser } = useContext(AuthContext);
   const {
-    creator: {
-      profile: { displayPicture, fullName },
-    },
+    profile: { displayPicture, fullName },
   } = loggedInUser;
 
   return (

@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
+import { withIronSession } from "next-iron-session";
 import {
   Flex,
   Heading,
@@ -11,7 +12,6 @@ import {
   Link,
   Image,
 } from "@chakra-ui/react";
-import { withIronSession } from "next-iron-session";
 
 import Button from "../src/components/common/Button/Button";
 import ErrorMessage from "../src/components/common/ErrorAlert/ErrorAlert";
@@ -52,6 +52,7 @@ const Login = () => {
         emailId: "",
         password: "",
       });
+      router.replace("/login");
     }
   };
 

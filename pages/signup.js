@@ -1,4 +1,6 @@
 import { useState, useContext } from "react";
+import { withIronSession } from "next-iron-session";
+import { useRouter } from "next/router";
 import {
   Flex,
   Heading,
@@ -8,15 +10,21 @@ import {
   FormControl,
   FormLabel,
   Link,
+  Image,
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
+import ErrorMessage from "../src/components/common/ErrorAlert/ErrorAlert";
+
 import { AuthContext } from "../contexts/AuthContext";
-import { withIronSession } from "next-iron-session";
 import { getIronConfig } from "../src/utils";
 
 const Login = () => {
+  const router = useRouter();
   const { loggedInUser, userSignup } = useContext(AuthContext);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { loginError, userLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     fullName: "",
     emailId: "",
@@ -35,12 +43,26 @@ const Login = () => {
   };
 
   const handleSignup = async () => {
-    await userSignup({
-      fullName: formData.fullName,
-      emailId: formData.emailId,
-      password: formData.password,
-    });
-    window.location = "/";
+    setIsLoading(true);
+    try {
+      await userSignup({
+        fullName: formData.fullName,
+        emailId: formData.emailId,
+        password: formData.password,
+      });
+      setIsLoading(false);
+      router.replace("/");
+    } catch (err) {
+      setError(loginError);
+      setIsLoading(false);
+      setFormData({
+        fullName: "",
+        emailId: "",
+        password: "",
+        confirmPassword: "",
+      });
+      router.replace("/signup");
+    }
   };
 
   return (
@@ -111,6 +133,7 @@ const Login = () => {
           <Heading color="bright" fontSize="6xl" mb={5} letterSpacing="tight">
             Chitti.
           </Heading>
+          {error && <ErrorMessage message={error} />}
           <FormControl id="fullName">
             <FormLabel color="bright.fg">Full Name</FormLabel>
             <Input
@@ -177,7 +200,13 @@ const Login = () => {
 
           <Button
             rounded={"full"}
-            text="Create Account"
+            text={
+              isLoading ? (
+                <Image src="loader_white.gif" h="2.5rem" />
+              ) : (
+                "Create Account"
+              )
+            }
             color="bright.bg"
             backgroundColor="bright.fg"
             fontWeight={400}
