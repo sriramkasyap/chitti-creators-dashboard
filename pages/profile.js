@@ -9,7 +9,7 @@ import {
 } from "../src/utils";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { updateProfile } from "../src/helpers/userFetcher";
+import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
 
 const Profile = () => {
   const [profile, setProfile] = useState({}); // Profile Content of the creator
@@ -56,12 +56,52 @@ const Profile = () => {
     }
   };
 
-  const hanndleAddPlan = () => {
+  const addPlan = (planIdToEdit) => {
     // Handle create new Plan
+    setLoading(true);
+    var plan = plans.filter(planId === planIdToEdit)[0];
+    if (validatePlan(plan)) {
+      addPlan(plan)
+        .then((result) => {
+          if (result.success) {
+            setSuccessMessage("Plan added successfully");
+            setLoading(false);
+          } else {
+            setError(result.message);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          setError(e.message);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
   };
 
-  const handleUpdatePlan = () => {
+  const updatePlan = (planIdToEdit) => {
     // Handle Save plan
+    setLoading(true);
+    var plan = plans.filter(planId === planIdToEdit)[0];
+    if (validatePlan(plan)) {
+      updatePlan(planIdToEdit, plan)
+        .then((result) => {
+          if (result.success) {
+            setSuccessMessage("Plan added successfully");
+            setLoading(false);
+          } else {
+            setError(result.message);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          setError(e.message);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
   };
 
   const validateProfile = () => {
@@ -90,7 +130,35 @@ const Profile = () => {
     }
   };
 
-  return <Text fontSize="6xl">Profile Page</Text>;
+  const validatePlan = (plan) => {
+    setError("");
+    var { planFee, planFeatures } = plan;
+
+    if (
+      planFee !== null &&
+      planFee !== undefined &&
+      planFeatures &&
+      planFeatures.length > 0
+    ) {
+      var flag = true;
+      planFeatures.some((feature) => {
+        if (!feature || !feature.length > 0) {
+          flag = false;
+          return false;
+        }
+      });
+      return flag;
+    } else {
+      setError("Please add features for the plan");
+      return false;
+    }
+  };
+
+  return (
+    <>
+      <Text fontSize="6xl">Profile Page</Text>
+    </>
+  );
 };
 
 export const getServerSideProps = withIronSession(
