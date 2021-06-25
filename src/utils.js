@@ -36,11 +36,24 @@ export const checkAuthentication = async ({ req, res }) => {
   };
 };
 
-export const serializeObject = function (obj) {
+export const serializeObject = function (objct) {
   var str = [];
-  for (var p in obj)
-    if (obj.hasOwnProperty(p)) {
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+  for (var i in objct)
+    if (objct.hasOwnProperty(i)) {
+      str.push(encodeURIComponent(i) + "=" + encodeURIComponent(objct[i]));
     }
   return str.join("&");
+};
+
+export const validateURL = (input) => {
+  var regex = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i" // Ignore case
+  );
+  return regex.test(input);
 };
