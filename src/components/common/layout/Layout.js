@@ -9,7 +9,6 @@ const Layout = ({ children }) => {
       h="100vh"
       flexDir="row"
       overflow="hidden"
-      maxW="2000px"
       overflow={["scroll", "scroll", "scroll", "scroll", "hidden"]}
     >
       <Sidebar />
