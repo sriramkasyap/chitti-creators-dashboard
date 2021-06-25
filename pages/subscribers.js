@@ -2,6 +2,7 @@ import { withIronSession } from "next-iron-session";
 import { Text } from "@chakra-ui/react";
 import { checkAuthentication, getIronConfig } from "../src/utils";
 import { getSubscribers } from "../src/helpers/userFetcher";
+import { useEffect, useState } from "react";
 
 const Subscribers = () => {
   var [subscribers, setSubscribers] = useState([]); // Subscribers
