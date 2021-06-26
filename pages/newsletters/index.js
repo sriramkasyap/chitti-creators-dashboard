@@ -35,8 +35,8 @@ const Newsletters = () => {
     // Get link component for Editing newsletter
     return (
       <Link
-        href={`/newsletters/${newsletterId}`}
-        as={`/newsletters/[newsletterId]`}
+        href={`/newsletters/[newsletterId]`}
+        as={`/newsletters/${newsletterId}`}
       >
         Edit
       </Link>
@@ -48,6 +48,7 @@ const Newsletters = () => {
       newsletters={newsletters}
       isLoading={loading}
       error={error}
+      getNewsletterLink={getNewsletterLink}
     />
   );
 };

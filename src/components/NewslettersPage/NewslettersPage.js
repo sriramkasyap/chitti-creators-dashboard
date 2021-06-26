@@ -19,7 +19,12 @@ import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 import ErrorMessage from "../common/ErrorAlert/ErrorAlert";
 import { getFormattedDate } from "../../utils";
 
-const NewslettersPage = ({ newsletters, isLoading, error }) => {
+const NewslettersPage = ({
+  newsletters,
+  isLoading,
+  error,
+  getNewsletterLink,
+}) => {
   const data = useMemo(() => {
     return newsletters.map((newsletter) => ({
       newsletterName: newsletter.reference,
@@ -32,13 +37,7 @@ const NewslettersPage = ({ newsletters, isLoading, error }) => {
             // href={`/newsletter/${newsletterId}`}
             href=""
           >
-            <Text
-              _hover={{ fontWeight: "bold" }}
-              cursor="pointer"
-              textDecor="underline"
-            >
-              Edit
-            </Text>
+            {getNewsletterLink(newsletter._id)}
           </Link>
         ) : (
           <Text>&mdash;</Text>
