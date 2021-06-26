@@ -33,12 +33,7 @@ const NewslettersPage = ({
       status: newsletter.status.toUpperCase(),
       isEditable:
         newsletter.status === "draft" ? (
-          <Link
-            // href={`/newsletter/${newsletterId}`}
-            href=""
-          >
-            {getNewsletterLink(newsletter._id)}
-          </Link>
+          getNewsletterLink(newsletter._id)
         ) : (
           <Text>&mdash;</Text>
         ),

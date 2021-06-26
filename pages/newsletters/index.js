@@ -35,6 +35,7 @@ const Newsletters = () => {
     // Get link component for Editing newsletter
     return (
       <Link
+        prefetch={false}
         href={`/newsletters/[newsletterId]`}
         as={`/newsletters/${newsletterId}`}
       >
