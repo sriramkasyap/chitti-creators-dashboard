@@ -10,6 +10,7 @@ const Topbar = ({ isTopbarDisplay }) => {
   const router = useRouter();
 
   const createNewsletterHandler = () => {
+    console.log("RB:: File: Topbar.js, Line: 13 ==> inside button");
     router.push("/newsletters/new");
   };
   return (
@@ -67,7 +68,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         </Heading>
       </Flex>
 
-      <Flex pt={5} pl={5} mt={[20, 24, 28, 36, 0]}>
+      <Flex pt={isTopbarDisplay ? 0 : 5} pl={5} mt={[20, 24, 28, 36, 0]}>
         <PageTitle
           display={[
             isTopbarDisplay,
