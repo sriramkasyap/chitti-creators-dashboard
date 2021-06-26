@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { useTable, useSortBy } from "react-table";
 import {
@@ -17,22 +17,15 @@ import {
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
 import ErrorMessage from "../common/ErrorAlert/ErrorAlert";
-import { AuthContext } from "../../../contexts/AuthContext";
 import { getFormattedDate } from "../../utils";
 
 const NewslettersPage = ({ newsletters, isLoading, error }) => {
-  const { loggedInUser } = useContext(AuthContext);
-  const {
-    profile: { fullName },
-  } = loggedInUser;
-  const totalNewsletters = newsletters.length;
-
   const data = useMemo(() => {
     return newsletters.map((newsletter) => ({
       newsletterName: newsletter.reference,
+      newsletterSubject: newsletter.emailSubject,
       createdDate: getFormattedDate(newsletter.createdAt),
       status: newsletter.status.toUpperCase(),
-      authorName: fullName,
       isEditable:
         newsletter.status === "draft" ? (
           <Link
@@ -60,6 +53,10 @@ const NewslettersPage = ({ newsletters, isLoading, error }) => {
         accessor: "newsletterName",
       },
       {
+        Header: "Subject",
+        accessor: "newsletterSubject",
+      },
+      {
         Header: "Created At",
         accessor: "createdDate",
       },
@@ -67,10 +64,7 @@ const NewslettersPage = ({ newsletters, isLoading, error }) => {
         Header: "Status",
         accessor: "status",
       },
-      {
-        Header: "Author",
-        accessor: "authorName",
-      },
+
       {
         Header: "Edit Newsletter",
         accessor: "isEditable",
@@ -84,11 +78,6 @@ const NewslettersPage = ({ newsletters, isLoading, error }) => {
 
   return (
     <Flex flexDir="column" w={["", "100%"]}>
-      <Heading
-        mt={[0, 0, 0, 0, 5]}
-        mb={5}
-        fontFamily="Quicksand"
-      >{`Newsletters List (${totalNewsletters})`}</Heading>
       <Flex
         flexDir="column"
         justifyContent={isLoading ? "center" : "flex-start"}

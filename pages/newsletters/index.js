@@ -15,7 +15,6 @@ const Newsletters = () => {
 
   useEffect(() => {
     // Set newsletters on first load
-    setLoading(true);
     getNewsletters()
       .then((data) => {
         if (data.success) {

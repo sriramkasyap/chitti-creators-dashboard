@@ -3,11 +3,13 @@ import { Text } from "@chakra-ui/react";
 import { checkAuthentication, getIronConfig } from "../src/utils";
 import { getSubscribers } from "../src/helpers/userFetcher";
 import { useEffect, useState } from "react";
+import SubscribersPage from "../src/components/SubscribersPage/SubscribersPage";
 
 const Subscribers = () => {
-  var [subscribers, setSubscribers] = useState([]); // Subscribers
-  var [loading, setLoading] = useState(true); // Loading State
-  var [error, setError] = useState(""); // Error message
+  const [subscribers, setSubscribers] = useState([]); // Subscribers
+  const [loading, setLoading] = useState(true); // Loading State
+  const [error, setError] = useState(""); // Error message
+  const [subscribersCount, setSubscribersCount] = useState(0);
 
   useEffect(() => {
     // Set Subscribers on first load
@@ -15,6 +17,7 @@ const Subscribers = () => {
       .then((data) => {
         if (data.success) {
           setSubscribers(data.subscribers);
+          setSubscribersCount(data.count);
           setLoading(false);
         } else {
           setError(data.message);
@@ -27,7 +30,18 @@ const Subscribers = () => {
       });
   }, []);
 
-  return <Text fontSize="6xl">Subscribers Page</Text>;
+  return (
+    <>
+      {Object.keys(subscribers).length > 0 && (
+        <SubscribersPage
+          subscribers={subscribers}
+          isLoading={loading}
+          error={error}
+          subscribersCount={subscribersCount}
+        />
+      )}
+    </>
+  );
 };
 
 export const getServerSideProps = withIronSession(

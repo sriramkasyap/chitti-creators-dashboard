@@ -71,5 +71,5 @@ export const getFormattedDate = (date) => {
   if (month < 10) {
     month = "0" + month;
   }
-  return `${dt}-${month}-${year}`;
+  return `${dt}-${month}-${year} ${time}`;
 };

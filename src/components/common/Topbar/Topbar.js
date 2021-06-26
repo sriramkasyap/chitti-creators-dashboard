@@ -61,7 +61,8 @@ const Topbar = () => {
       </Flex>
 
       <Flex
-        p={5}
+        pt={5}
+        pl={5}
         mt={[20, 24, 28, 36, 0]}
         display={["flex", "flex", "flex", "flex", "none"]}
       >
