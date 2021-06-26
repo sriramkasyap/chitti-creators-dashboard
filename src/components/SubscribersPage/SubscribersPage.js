@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useTable, useSortBy } from "react-table";
 import {
   Flex,
@@ -40,9 +40,9 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
   const columns = useMemo(
     () => [
       {
-        Header: "Subscriber",
+        Header: "Name",
         accessor: "subscriberName",
-        show: window.innerWidth > 768,
+        isVisible: window.innerWidth > 7680,
       },
       {
         Header: "Email",
@@ -56,8 +56,18 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    setHiddenColumns,
+  } = useTable({ columns, data }, useSortBy);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) setHiddenColumns(["subscriberName"]); // Hide Subscriber name if the window size is less than 768px
+  }, []);
 
   return (
     <Flex flexDir="column" w={["", "100%"]}>
@@ -74,7 +84,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
         ) : isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
-          <Table {...getTableProps()} size={("sm", "sm", "md", "lg")}>
+          <Table {...getTableProps()} size={("sm", "sm", "sm", "sm")}>
             <Thead>
               {headerGroups.map((headerGroup) => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -85,7 +95,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
                           column.getSortByToggleProps()
                         )}
                         fontSize={["sm", "sm", "sm", "md", "lg"]}
-                        p={[3, 3, 5, 5, 5]}
+                        p={[3, 3, 4, 4, 4]}
                       >
                         <Flex flexDir="row" alignItems="center">
                           <Text>{column.render("Header")}</Text>
@@ -112,7 +122,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
                   <Tr {...row.getRowProps()}>
                     {row.cells.map((cell) => {
                       return (
-                        <Td {...cell.getCellProps()} p={[3, 3, 5, 5, 5]}>
+                        <Td {...cell.getCellProps()} p={[3, 3, 3, 3, 3]}>
                           {cell.render("Cell")}
                         </Td>
                       );
