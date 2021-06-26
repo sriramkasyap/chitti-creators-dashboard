@@ -107,6 +107,7 @@ class AuthProvider extends Component {
           loginError,
           userLogin: this.userLogin,
           userSignup: this.userSignup,
+          fetchMe: this.fetchMe,
         }}
       >
         {this.props.children}

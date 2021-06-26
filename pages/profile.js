@@ -7,7 +7,7 @@ import {
   ucFirst,
   validateURL,
 } from "../src/utils";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
 
@@ -154,11 +154,7 @@ const Profile = () => {
     }
   };
 
-  return (
-    <>
-      <Text fontSize="6xl">Profile Page</Text>
-    </>
-  );
+  return <></>;
 };
 
 export const getServerSideProps = withIronSession(
