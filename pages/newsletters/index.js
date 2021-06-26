@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { withIronSession } from "next-iron-session";
 import { Text } from "@chakra-ui/react";
+
+import NewslettersPage from "../../src/components/NewslettersPage/NewslettersPage";
+
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 import { useEffect, useState } from "react";
 import { getNewsletters } from "../../src/helpers/userFetcher";
@@ -12,6 +15,7 @@ const Newsletters = () => {
 
   useEffect(() => {
     // Set newsletters on first load
+    setLoading(true);
     getNewsletters()
       .then((data) => {
         if (data.success) {
@@ -40,7 +44,13 @@ const Newsletters = () => {
     );
   };
 
-  return <Text fontSize="6xl">Newsletters Page</Text>;
+  return (
+    <NewslettersPage
+      newsletters={newsletters}
+      isLoading={loading}
+      error={error}
+    />
+  );
 };
 
 export const getServerSideProps = withIronSession(

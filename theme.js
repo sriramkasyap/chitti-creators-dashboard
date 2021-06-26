@@ -43,6 +43,11 @@ const theme = extendTheme(
           colorScheme: "#252525",
         },
       },
+      Table: {
+        defaultProps: {
+          colorScheme: "#252525",
+        },
+      },
     },
     letterSpacings,
     fonts,
