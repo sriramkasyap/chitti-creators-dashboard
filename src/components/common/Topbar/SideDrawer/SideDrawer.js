@@ -23,6 +23,7 @@ const SideDrawer = () => {
   return (
     <>
       <IconButton
+        aria-label="Menu Button"
         ref={btnRef}
         icon={<FiMenu />}
         onClick={onOpen}

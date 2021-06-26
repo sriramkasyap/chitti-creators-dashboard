@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { Heading, Text } from "@chakra-ui/react";
 
-const PageTitle = () => {
+const PageTitle = ({ display }) => {
   const [pageTitle, setPageTitle] = useState("");
   const router = useRouter();
   const route = router.asPath;
@@ -16,7 +16,7 @@ const PageTitle = () => {
   }, [route]);
 
   return (
-    <Heading as="h2" size="xl" textTransform="capitalize ">
+    <Heading as="h2" size="xl" textTransform="capitalize" display={display}>
       {route === "/" ? <Text>My Dashboard</Text> : <Text>{pageTitle}</Text>}
     </Heading>
   );
