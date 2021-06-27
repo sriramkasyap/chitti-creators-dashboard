@@ -49,3 +49,13 @@ export const createNewsletter = async (newsletter) => {
     body: JSON.stringify({ newsletter }),
   }).then((r) => r.json());
 };
+
+export const updateNewsletter = async (newsletterId, newsletter) => {
+  return fetch(`/api/newsletters/${newsletterId}`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ newsletter }),
+  }).then((r) => r.json());
+};

@@ -102,21 +102,6 @@ const CreateNewNewsletter = () => {
     console.log("RB:: File: new.js, Line: 85 ==> requestBody", requestBody);
   };
 
-  const handlePublishSend = () => {
-    setLoading(true);
-    setPublishing(true);
-    const requestBody = {
-      newsletter: {
-        reference: formData.reference,
-        emailSubject: formData.subject,
-        body: editorData,
-        keywords: keywordsList.map((keyword) => keyword.text),
-      },
-    };
-
-    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
-  };
-
   return (
     <Flex flexDirection="column" w="100%">
       <Flex

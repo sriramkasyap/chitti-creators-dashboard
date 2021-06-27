@@ -7,8 +7,7 @@ import Topbar from "../Topbar/Topbar";
 const Layout = ({ children }) => {
   const router = useRouter();
   const route = router.asPath;
-  const isHideTopbar =
-    route === "/newsletters/new" || route === "/newsletters/[newsletterId]";
+  const isHideTopbar = route.startsWith("/newsletters/");
 
   return (
     <Box pl={[0, 0, 0, 0, "300px"]}>
