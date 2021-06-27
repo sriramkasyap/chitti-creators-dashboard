@@ -17,6 +17,7 @@
     "ckeditor5-custom-build": "file:./ckeditor5",
     "framer-motion": "^4",
     "html-react-parser": "^1.2.7",
+    "juice": "^8.0.0",
     "mongoose": "^5.12.14",
     "next": "10.2.3",
     "next-iron-session": "^4.2.0",
