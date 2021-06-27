@@ -10,11 +10,11 @@ import {
   Heading,
   IconButton,
   Badge,
-  Stack,
+  Box,
   CloseButton,
 } from "@chakra-ui/react";
 import { FiPlus, FiX } from "react-icons/fi";
-
+import renderHTML from "react-render-html";
 import Button from "../../src/components/common/Button/Button";
 import RichTextEditor from "../../src/components/common/RichTextEditor/RichTextEditor";
 
@@ -216,12 +216,14 @@ const CreateNewNewsletter = () => {
             data={editorData}
           />
         </Flex>
-        {/* <Flex flexDirection="column" width="100%" p={2}>
+        <Flex flexDirection="column" width="100%" p={2}>
           <Text fontWeight="bold" fontSize="lg" mb={3}>
             Newsletter Preview
           </Text>
-          <Flex>{parse(editorData)}</Flex>
-        </Flex> */}
+          <Box border="1px" borderColor="gray.200">
+            {renderHTML(editorData)}
+          </Box>
+        </Flex>
       </Flex>
     </Flex>
   );
