@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 
 import Sidebar from "../Sidebar/Sidebar";
 import Topbar from "../Topbar/Topbar";
@@ -11,22 +11,17 @@ const Layout = ({ children }) => {
     route === "/newsletters/new" || route === "/newsletters/[newsletterId]";
 
   return (
-    <Flex
-      h="100vh"
-      flexDir="row"
-      overflow="hidden"
-      overflow={["scroll", "scroll", "scroll", "scroll", "hidden"]}
-    >
+    <Box pl={[0, 0, 0, 0, "300px"]}>
       <Sidebar />
       <Flex w="100%" flexDir="column">
         <Topbar isTopbarDisplay={isHideTopbar ? "none" : "flex"} />
         <main>
-          <Flex h="90vh" flexDir="row" p={5}>
+          <Flex flexDir="row" p={5}>
             {children}
           </Flex>
         </main>
       </Flex>
-    </Flex>
+    </Box>
   );
 };
 
