@@ -46,17 +46,13 @@ const Login = () => {
     setIsLoading(true);
     try {
       if (formData.password !== formData.confirmPassword) {
-        console.log("RB:: File: signup.js, Line: 49 ==> inside if");
-        setError("Password did not match");
-        setIsLoading(false);
-        router.replace("/signup");
+        throw new Error("Password did not match");
       } else {
         await userSignup({
           fullName: formData.fullName,
           emailId: formData.emailId,
           password: formData.password,
         });
-        setIsLoading(false);
         router.replace("/");
       }
     } catch (err) {
