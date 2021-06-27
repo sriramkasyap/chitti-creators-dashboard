@@ -1,16 +1,24 @@
-import { ChakraProvider } from '@chakra-ui/react'
-import Layout from '../components/layout/Layout'
+import { ChakraProvider } from "@chakra-ui/react";
+import { AuthProvider } from "../contexts/AuthContext";
 
-import theme from '../theme'
+import Layout from "../src/components/common/layout/Layout";
+
+import theme from "../theme";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ChakraProvider>
-  )
+    <AuthProvider>
+      <ChakraProvider resetCSS theme={theme}>
+        {pageProps.standardLayout ? (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </ChakraProvider>
+    </AuthProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;

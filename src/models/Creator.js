@@ -3,6 +3,7 @@ mongoose.connect(process.env.MONGO_URL, {
   dbName: process.env.MONGO_DB,
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 /**
@@ -21,25 +22,25 @@ mongoose.connect(process.env.MONGO_URL, {
  * [NewsletterCategories]
  */
 
-const SubscrptionPlanSchema = new mongoose.Schema({
-  planFee: Number,
-  planFeatures: [String],
-  planRZPid: { type: String, index: true },
-  createdAt: Number,
-  updatedAt: Number,
-});
-
 const CreatorSchema = new mongoose.Schema({
-  fullName: String,
-  emailId: { type: String, index: true },
+  emailId: { type: String, index: true, unique: true },
   password: String,
-  shortBio: String,
-  longBio: String,
-  displayPicture: String,
   registeredAt: Date,
   lastLoginAt: Date,
-  plans: [SubscrptionPlanSchema],
-  categories: [String],
+  profile: {
+    fullName: String,
+    shortBio: String,
+    longBio: String,
+    displayPicture: String,
+    categories: [String],
+  },
+  plans: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubscriptionPlan",
+    },
+  ],
 });
 
-module.exports = mongoose.model("Creator", CreatorSchema);
+module.exports =
+  mongoose.models.Creator || mongoose.model("Creator", CreatorSchema);

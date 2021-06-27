@@ -1,24 +1,10 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 
 module.exports = (phase, { defaultConfig }) => {
-  var common = {
+  return {
     env: {
-      MONGO_URL: "mongodb://localhost:27017/",
       MONGO_DB: "chitti",
+      AUTH_COOKIE_NAME: "epsilon",
     },
   };
-
-  if (phase === PHASE_DEVELOPMENT_SERVER) {
-    var devConfig = {};
-    return {
-      ...common,
-      ...devConfig,
-    };
-  } else {
-    var prodConfig = {};
-    return {
-      ...common,
-      ...prodConfig,
-    };
-  }
 };
