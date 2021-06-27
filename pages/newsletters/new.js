@@ -26,6 +26,8 @@ const RichTextEditor = dynamic(
 );
 
 import { checkAuthentication, getIronConfig } from "../../src/utils";
+import juice from "juice";
+import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 
 const CreateNewNewsletter = () => {
   const [editorData, setEditorData] = useState("");
@@ -63,8 +65,7 @@ const CreateNewNewsletter = () => {
 
   const handleTextEditorChange = (event, editor) => {
     const data = editor.getData();
-
-    setEditorData(data);
+    setEditorData(juice.inlineContent(data, ckeditorStyles));
   };
 
   const handleSaveDraft = () => {
