@@ -64,6 +64,7 @@ const RichTextEditor = ({ data, handleChange }) => {
               window.innerWidth > 992 ? "500px" : "400px",
               editor.editing.view.document.getRoot()
             );
+            editor.setData(data);
           });
         }}
       />
