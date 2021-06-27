@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Flex, Heading } from "@chakra-ui/react";
 import "@fontsource/quicksand/400.css";
-
+import Link from "next/link";
 import Button from "../Button/Button";
 import SmallScreenSidebar from "./SideDrawer/SideDrawer";
 import PageTitle from "../PageTitle/PageTitle";
@@ -9,10 +9,6 @@ import PageTitle from "../PageTitle/PageTitle";
 const Topbar = ({ isTopbarDisplay }) => {
   const router = useRouter();
 
-  const createNewsletterHandler = () => {
-    console.log("RB:: File: Topbar.js, Line: 13 ==> inside button");
-    router.push("/newsletters/new");
-  };
   return (
     <>
       {/* Topbar for Widescreen Start */}
@@ -29,21 +25,22 @@ const Topbar = ({ isTopbarDisplay }) => {
           <PageTitle />
         </Flex>
         <Flex>
-          <Button
-            rounded={"full"}
-            variant="outline"
-            text="Create New Newsletter"
-            marginLeft="1.5rem"
-            color="bright.fg"
-            borderColor="bright.fg"
-            fontWeight={400}
-            _hover={{
-              backgroundColor: "bright.fg",
-              color: "bright.bg",
-              borderColor: "bright.fg",
-            }}
-            onClick={createNewsletterHandler}
-          />
+          <Link href="/newsletters/new">
+            <Button
+              rounded={"full"}
+              variant="outline"
+              text="Create New Newsletter"
+              marginLeft="1.5rem"
+              color="bright.fg"
+              borderColor="bright.fg"
+              fontWeight={400}
+              _hover={{
+                backgroundColor: "bright.fg",
+                color: "bright.bg",
+                borderColor: "bright.fg",
+              }}
+            />
+          </Link>
         </Flex>
       </Flex>
       {/* Topbar for Widescreen End */}
