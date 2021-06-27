@@ -9,6 +9,8 @@ const Sidebar = () => {
       display={["none", "none", "none", "none", "flex"]} // display according to the breakpoints defined in theme.js
       w="300px"
       h="100vh"
+      pos="fixed"
+      left={0}
       backgroundColor="bright.fg"
       color="bright.bg"
     >
