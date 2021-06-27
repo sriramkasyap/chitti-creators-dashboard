@@ -1,20 +1,73 @@
 import React from "react";
-import CKEditor from "react-ckeditor-component";
-import { Flex } from "@chakra-ui/react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { Box } from "@chakra-ui/react";
+import Editor from "ckeditor5-custom-build/build/ckeditor";
 
 import classes from "./RichTextEditor.module.scss";
 
 const RichTextEditor = ({ data, handleChange }) => {
+  const editorConfiguration = {
+    toolbar: {
+      items: [
+        "heading",
+        "|",
+        "fontfamily",
+        "fontsize",
+        "|",
+        "alignment",
+        "|",
+        "fontColor",
+        "fontBackgroundColor",
+        "|",
+        "bold",
+        "italic",
+        "strikethrough",
+        "underline",
+        "subscript",
+        "superscript",
+        "|",
+        "link",
+        "|",
+        "outdent",
+        "indent",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "todoList",
+        "|",
+        "code",
+        "codeBlock",
+        "|",
+        "insertTable",
+        "|",
+        "uploadImage",
+        "blockQuote",
+        "|",
+        "undo",
+        "redo",
+      ],
+      shouldNotGroupWhenFull: true,
+    },
+  };
   return (
-    <Flex id="editor" w="100%">
+    <Box id="editor" w="100%">
       <CKEditor
-        activeClass={classes["ck-editor-container"]}
+        editor={Editor}
+        config={editorConfiguration}
         content={data}
-        events={{
-          change: handleChange,
+        onChange={handleChange}
+        activeClass={classes["ck-editor-container"]}
+        onReady={(editor) => {
+          editor.editing.view.change((writer) => {
+            writer.setStyle(
+              "height",
+              window.innerWidth > 992 ? "500px" : "400px",
+              editor.editing.view.document.getRoot()
+            );
+          });
         }}
       />
-    </Flex>
+    </Box>
   );
 };
 

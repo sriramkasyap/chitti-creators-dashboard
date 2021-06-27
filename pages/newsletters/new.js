@@ -16,7 +16,14 @@ import {
 import { FiPlus, FiX } from "react-icons/fi";
 import renderHTML from "react-render-html";
 import Button from "../../src/components/common/Button/Button";
-import RichTextEditor from "../../src/components/common/RichTextEditor/RichTextEditor";
+import dynamic from "next/dynamic";
+
+const RichTextEditor = dynamic(
+  () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
+  {
+    ssr: false,
+  }
+);
 
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 
@@ -60,8 +67,8 @@ const CreateNewNewsletter = () => {
     setKeywordsList(tempKeywords);
   };
 
-  const handleTextEditorChange = (event) => {
-    const data = event.editor.getData();
+  const handleTextEditorChange = (event, editor) => {
+    const data = editor.getData();
     setEditorData(data);
   };
 
@@ -95,36 +102,51 @@ const CreateNewNewsletter = () => {
     <Flex flexDirection="column" w="100%">
       <Flex
         justifyContent="space-between"
-        flexDir={["column", "row"]}
+        flexDir={["column", "column", "row"]}
+        alignItems={"center"}
         width="100%"
+        pl={[0, 0, 0, 0, 5]}
+        pr={[0, 0, 0, 0, 5]}
+        pt={[0, 0, 0, 0, 5]}
       >
-        <Flex mb={5}>
+        <Flex mb={[5, 5, 5, 0, 0]} mt={[5, 5, 5, 0, 0]} ml={[0, 0, 0, 0]}>
           <Heading>Create Newsletter</Heading>
         </Flex>
-        <Flex>
+        <Flex
+          flexDirection={"row"}
+          justifyContent={["flex-start", "flex-start", "flex-end"]}
+        >
           <Button
             rounded={"full"}
             text="Save as Draft"
             variant="outline"
             fontWeight={400}
-            backgroundColor="bright.fg"
-            color="bright.bg"
+            backgroundColor="bright.bg"
+            color="bright.fg"
             onClick={handleSaveDraft}
+            fontSize={[12, 14, 16]}
           />
           <Button
             rounded={"full"}
             text="Publish & Send"
             variant="outline"
             fontWeight={400}
-            ml={5}
+            ml={[2, 2, 2, 5]}
             backgroundColor="bright.fg"
             color="bright.bg"
             onClick={handlePublishSend}
+            fontSize={[12, 14, 16]}
           />
         </Flex>
       </Flex>
-      <Flex w="100%" flexDir={["column", "row"]} mt={[5, 0, 0, 0, 0]}>
-        <FormControl p={2}>
+      <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
+        <FormControl
+          flex={["100%", "100%", "50%"]}
+          pl={[0, 0, 0, 0, 5]}
+          pt={2}
+          pb={[2, 2, 2, 2, 5]}
+          pr={[0, 0, 5, 5, 10]}
+        >
           <FormLabel>Newsletter Title (Invisible to Audience)</FormLabel>
           <Input
             type="text"
@@ -137,7 +159,13 @@ const CreateNewNewsletter = () => {
             onChange={handleInputChange}
           />
         </FormControl>
-        <FormControl p={2}>
+        <FormControl
+          pl={[0, 0, 5, 5]}
+          pt={2}
+          pb={[2, 2, 2, 2, 5]}
+          pr={[0, 0, 0, 0, 5]}
+          flex={["100%", "100%", "50%"]}
+        >
           <FormLabel>Emailer Subject Line</FormLabel>
           <Input
             type="text"
@@ -151,8 +179,14 @@ const CreateNewNewsletter = () => {
           />
         </FormControl>
       </Flex>
-      <Flex flexDir="column" width={["100%", "50%"]}>
-        <FormControl p={2}>
+      <Flex alignItems="center" flexWrap="wrap" width={"100%"}>
+        <FormControl
+          pl={[0, 0, 0, 0, 5]}
+          pt={2}
+          pb={[2, 2, 2, 2, 5]}
+          pr={[0, 0, 5, 5, 10]}
+          width={["100%", "100%", "50%"]}
+        >
           <FormLabel>Keywords</FormLabel>
           <Flex>
             <Input
@@ -178,7 +212,15 @@ const CreateNewNewsletter = () => {
             />
           </Flex>
         </FormControl>
-        <Flex p={2} flexWrap="wrap">
+        <Flex
+          pl={[0, 0, 5, 5, 5]}
+          pt={2}
+          pb={[2, 2, 2, 2, 5]}
+          pr={[0, 0, 0, 0, 5]}
+          flexWrap="wrap"
+          width={["100%", "100%", "50%"]}
+        >
+          <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
             keywordsList.map((keyword) => (
               <Badge
@@ -206,28 +248,50 @@ const CreateNewNewsletter = () => {
             ))}
         </Flex>
       </Flex>
-      <Flex flexDirection="row" justifyContent="center" width="100%">
-        <Flex flexDirection="column" w="100%" p={2}>
+      <Flex
+        flexDirection="row"
+        justifyContent="center"
+        flexWrap={"wrap"}
+        width="100%"
+      >
+        <Flex
+          flexDirection="column"
+          w={["100%", "100%", "100%", "50%"]}
+          pl={[0, 0, 0, 0, 5]}
+          pt={2}
+          pb={2}
+          pr={[0, 0, 0, 5, 10]}
+        >
           <Text fontWeight="bold" fontSize="lg" mb={3}>
             Newsletter Body
           </Text>
           <RichTextEditor
-            handleChange={(e) => handleTextEditorChange(e)}
+            handleChange={handleTextEditorChange}
             data={editorData}
           />
         </Flex>
-        <Flex flexDirection="column" width="100%" p={2}>
+        <Flex
+          flexDirection="column"
+          width={["100%", "100%", "100%", "50%"]}
+          pl={[0, 0, 0, 5, 5]}
+          pt={2}
+          pb={2}
+          pr={[0, 0, 0, 0, 5]}
+          mt={2}
+        >
           <Text fontWeight="bold" fontSize="lg" mb={3}>
             Preview
           </Text>
           <Box
-            p={10}
+            p={5}
             border="1px"
             borderColor="gray.200"
             bgImage="url(/preview-bg-white.jpg)"
             bgPosition="center"
             bgRepeat="repeat"
             bgSize="cover"
+            height="100%"
+            minHeight="400px"
           >
             {renderHTML(editorData)}
           </Box>

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.6.3",
+    "@ckeditor/ckeditor5-react": "^3.0.2",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/josefin-sans": "^4.4.5",
