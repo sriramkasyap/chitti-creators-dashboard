@@ -218,9 +218,17 @@ const CreateNewNewsletter = () => {
         </Flex>
         <Flex flexDirection="column" width="100%" p={2}>
           <Text fontWeight="bold" fontSize="lg" mb={3}>
-            Newsletter Preview
+            Preview
           </Text>
-          <Box border="1px" borderColor="gray.200">
+          <Box
+            p={10}
+            border="1px"
+            borderColor="gray.200"
+            bgImage="url(/preview-bg-white.jpg)"
+            bgPosition="center"
+            bgRepeat="repeat"
+            bgSize="cover"
+          >
             {renderHTML(editorData)}
           </Box>
         </Flex>
