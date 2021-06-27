@@ -47,13 +47,7 @@ const CreateNewNewsletter = () => {
   };
 
   const handleAddKeyword = () => {
-    setKeywordsList([
-      ...keywordsList,
-      {
-        id: Math.floor(100000 + Math.random() * 900000),
-        text: formData.keyword,
-      },
-    ]);
+    setKeywordsList([...keywordsList, formData.keyword]);
     setFormData({
       ...formData,
       keyword: "",
@@ -69,6 +63,7 @@ const CreateNewNewsletter = () => {
 
   const handleTextEditorChange = (event, editor) => {
     const data = editor.getData();
+
     setEditorData(data);
   };
 
@@ -82,7 +77,7 @@ const CreateNewNewsletter = () => {
       },
     };
 
-    console.log("RB:: File: new.js, Line: 51 ==> requestBody", requestBody);
+    console.log("RB:: File: new.js, Line: 85 ==> requestBody", requestBody);
   };
 
   const handlePublishSend = () => {
@@ -95,7 +90,7 @@ const CreateNewNewsletter = () => {
       },
     };
 
-    console.log("RB:: File: new.js, Line: 51 ==> requestBody", requestBody);
+    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
   };
 
   return (
@@ -222,21 +217,21 @@ const CreateNewNewsletter = () => {
         >
           <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword) => (
+            keywordsList.map((keyword, k) => (
               <Badge
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
                 variant="subtle"
                 colorScheme="teal"
-                key={keyword.id}
+                key={k}
                 fontSize="0.8em"
                 backgroundColor="bright.fg"
                 color="bright.bg"
                 mr={2}
                 mt={[2]}
               >
-                <Text pl={1}>{keyword.text}</Text>
+                <Text pl={1}>{keyword}</Text>
                 <CloseButton
                   size="sm"
                   borderRadius={0}
