@@ -20,71 +20,72 @@ export default async (req, res) => {
       .update(generateRandomString())
       .digest("hex");
 
-    var allCreators = [];
+    var dataPromises = data.map(async (user) => {
+      return new Promise(async (resolve, reject) => {
+        var newPlan = new SubscriptionPlan({
+          planFee: 0,
+          planFeatures: [],
+          planRZPid: null,
+          creator: null,
+          subscribers: [],
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
 
-    data.forEach(async (user) => {
-      var newPlan = new SubscriptionPlan({
-        planFee: 0,
-        planFeatures: [],
-        planRZPid: null,
-        creator: null,
-        subscribers: [],
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
-
-      var newCreator = new Creator({
-        emailId: user.email,
-        password: hashedPass,
-        registeredAt: Date.now(),
-        lastLoginAt: Date.now(),
-        plans: [],
-        profile: {
-          fullName: `${ucFirst(user.title)}. ${user.firstName} ${
-            user.lastName
-          }`,
-          shortBio: null,
-          longBio: null,
-          displayPicture: null,
-          categories: [],
-        },
-      });
-
-      var creator = await newCreator.save();
-      var plan = await newPlan.save();
-
-      creator = await Creator.findByIdAndUpdate(
-        creator._id,
-        {
-          $push: {
-            plans: plan._id,
+        var newCreator = new Creator({
+          emailId: user.email,
+          password: hashedPass,
+          registeredAt: Date.now(),
+          lastLoginAt: Date.now(),
+          plans: [],
+          profile: {
+            fullName: `${ucFirst(user.title)}. ${user.firstName} ${
+              user.lastName
+            }`,
+            shortBio: null,
+            longBio: null,
+            displayPicture: null,
+            categories: [],
           },
-        },
-        {
-          new: true,
-        }
-      );
+        });
 
-      plan = await SubscriptionPlan.findByIdAndUpdate(
-        plan._id,
-        {
-          $set: {
-            creator: creator._id,
+        var creator = await newCreator.save();
+        var plan = await newPlan.save();
+
+        creator = await Creator.findByIdAndUpdate(
+          creator._id,
+          {
+            $push: {
+              plans: plan._id,
+            },
           },
-        },
-        {
-          new: true,
-        }
-      );
+          {
+            new: true,
+          }
+        );
 
-      creator = creator.toObject();
-      creator.plans = [plan];
-      allCreators.push(creator);
+        plan = await SubscriptionPlan.findByIdAndUpdate(
+          plan._id,
+          {
+            $set: {
+              creator: creator._id,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+
+        creator = creator.toObject();
+        resolve({ creator });
+      });
     });
 
-    return res.send({
-      success: true,
-      allCreators,
+    Promise.all(dataPromises).then((allCreators) => {
+      res.send({
+        success: true,
+        allCreators,
+      });
     });
   } catch (error) {
     console.error(error);
