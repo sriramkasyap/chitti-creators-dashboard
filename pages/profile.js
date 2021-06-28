@@ -1,14 +1,29 @@
+import { useContext, useEffect, useState } from "react";
 import { withIronSession } from "next-iron-session";
-import { Text } from "@chakra-ui/react";
+import {
+  Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Textarea,
+  Image,
+  Link,
+  Divider,
+  Heading,
+  Text,
+  Box,
+} from "@chakra-ui/react";
 
+import Button from "../src/components/common/Button/Button";
+
+import { AuthContext } from "../contexts/AuthContext";
 import {
   checkAuthentication,
   getIronConfig,
   ucFirst,
   validateURL,
 } from "../src/utils";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
 import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
 
 const Profile = () => {
@@ -154,7 +169,190 @@ const Profile = () => {
     }
   };
 
-  return <></>;
+  return (
+    <Flex flexDir="column" w="100%">
+      <Flex w="100%">
+        <Flex w="100%" flexDir="column">
+          <FormControl>
+            <FormLabel>Display Name</FormLabel>
+            <Input />
+            <FormErrorMessage>Error message</FormErrorMessage>
+          </FormControl>
+          <FormControl mt={2}>
+            <FormLabel>Newsletter Name</FormLabel>
+            <Input />
+            <FormErrorMessage>Error message</FormErrorMessage>
+          </FormControl>
+          <FormControl mt={2}>
+            <FormLabel>Short Bio</FormLabel>
+            <Input />
+            <FormErrorMessage>Error message</FormErrorMessage>
+          </FormControl>
+          <FormControl mt={2}>
+            <FormLabel>Full Bio</FormLabel>
+            <FormErrorMessage>Error message</FormErrorMessage>
+            <Textarea />
+          </FormControl>
+        </Flex>
+        <Flex w="30%" flexDir="column" ml={5}>
+          <Flex w="100%" justifyContent="center">
+            <Button
+              rounded={"full"}
+              text="Save"
+              variant="solid"
+              backgroundColor="bright.fg"
+              size="lg"
+            />
+          </Flex>
+          <Flex
+            w="100%"
+            justifyContent="center"
+            mt={5}
+            flexDir="column"
+            alignItems="center"
+          >
+            <Image
+              height="100px"
+              w="100px"
+              borderRadius="50%"
+              src="media.png"
+            />
+            <Link textAlign="center" mt={3} textDecor="underline">
+              Update Profile Picture
+            </Link>
+          </Flex>
+        </Flex>
+      </Flex>
+      <Divider
+        mt={5}
+        mb={5}
+        border="1px solid"
+        borderColor="bright.light"
+        backgroundColor="bright.light"
+      />
+      <Flex flexDir="column">
+        <Flex w="100%">
+          <Heading>Subscriptions</Heading>
+        </Flex>
+        <Flex
+          mt={5}
+          justifyContent="space-between"
+          alignItems="center"
+          w="100%"
+        >
+          <Flex
+            w="90%"
+            flexDir="column"
+            justifyContent="center"
+            alignItems="stretch"
+          >
+            <Text mb={2}>Free Plan</Text>
+            <Box
+              display="flex"
+              flexDir="column"
+              justifyContent="center"
+              alignItems="center"
+              border="1px solid"
+              borderRadius={5}
+              p={5}
+            >
+              <Input
+                placeholder="$0"
+                display="block"
+                w="20%"
+                isReadOnly
+                borderColor="bright.light"
+                focusBorderColor="bright.light"
+              />
+              <Text mt={3}>Pricing</Text>
+              <Divider
+                w="60%"
+                mt={2}
+                mb={5}
+                border="1px solid"
+                borderColor="bright.gray"
+                backgroundColor="bright.gray"
+              />
+              <Text>Features</Text>
+              <Flex w="100%" mt={3}>
+                <Input />
+                <Button
+                  text="+"
+                  variant="solid"
+                  size="md"
+                  ml={3}
+                  backgroundColor="bright.fg"
+                />
+              </Flex>
+              <Flex mt={3} w="100%" flexDir="column">
+                <Text>Text Value One</Text>
+                <Text mt={2}>Text Value Two</Text>
+                <Text mt={2}>Text Value Three</Text>
+              </Flex>
+              <Button
+                text="Save"
+                variant="solid"
+                size="md"
+                mt={5}
+                backgroundColor="bright.fg"
+              />
+            </Box>
+          </Flex>
+          <Flex w="90%" ml={5} flexDir="column">
+            <Text mb={2}>Paid Plan</Text>
+            <Box
+              display="flex"
+              flexDir="column"
+              justifyContent="center"
+              alignItems="center"
+              border="1px solid"
+              borderRadius={5}
+              p={5}
+            >
+              <Input
+                placeholder="$5"
+                display="block"
+                w="20%"
+                focusBorderColor="bright.fg"
+              />
+              <Text mt={3}>Pricing</Text>
+              <Divider
+                w="60%"
+                mt={2}
+                mb={5}
+                border="1px solid"
+                borderColor="bright.gray"
+                backgroundColor="bright.gray"
+              />
+              <Text>Features</Text>
+              <Flex w="100%" mt={3}>
+                <Input />
+                <Button
+                  text="+"
+                  variant="solid"
+                  size="md"
+                  ml={3}
+                  backgroundColor="bright.fg"
+                />
+              </Flex>
+              <Flex mt={3} w="100%" flexDir="column">
+                <Text>Text Value One</Text>
+                <Text mt={2}>Text Value Two</Text>
+                <Text mt={2}>Text Value Three</Text>
+              </Flex>
+              <Button
+                text="save"
+                variant="solid"
+                size="md"
+                mt={5}
+                backgroundColor="bright.fg"
+              />
+            </Box>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
 };
 
 export const getServerSideProps = withIronSession(
