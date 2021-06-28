@@ -61,7 +61,13 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   const handleAddKeyword = () => {
-    setKeywordsList([...keywordsList, formData.keyword]);
+    setKeywordsList([
+      ...keywordsList,
+      {
+        id: Math.floor(100000 + Math.random() * 900000),
+        text: formData.keyword,
+      },
+    ]);
     setFormData({
       ...formData,
       keyword: "",
@@ -302,21 +308,21 @@ const EditNewsletter = ({ newsletter }) => {
         >
           <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword, k) => (
+            keywordsList.map((keyword) => (
               <Badge
+                key={keyword.id}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
                 variant="subtle"
                 colorScheme="teal"
-                key={k}
                 fontSize="0.8em"
                 backgroundColor="bright.fg"
                 color="bright.bg"
                 mr={2}
                 mt={[2]}
               >
-                <Text pl={1}>{keyword}</Text>
+                <Text pl={1}>{keyword.text}</Text>
                 <CloseButton
                   size="sm"
                   borderRadius={0}

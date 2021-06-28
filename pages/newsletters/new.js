@@ -62,7 +62,13 @@ const CreateNewNewsletter = () => {
   };
 
   const handleAddKeyword = () => {
-    setKeywordsList([...keywordsList, formData.keyword]);
+    setKeywordsList([
+      ...keywordsList,
+      {
+        id: Math.floor(100000 + Math.random() * 900000),
+        text: formData.keyword,
+      },
+    ]);
     setFormData({
       ...formData,
       keyword: "",
@@ -108,6 +114,20 @@ const CreateNewNewsletter = () => {
     } else {
       setPageStatus("loaded");
     }
+  };
+
+  const handlePublishSend = () => {
+    setPageStatus("publishing");
+    const requestBody = {
+      newsletter: {
+        reference: formData.reference,
+        emailSubject: formData.subject,
+        body: editorData,
+        keywords: keywordsList.map((keyword) => keyword.text),
+      },
+    };
+
+    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
   };
 
   const valdateFormData = () => {
@@ -166,6 +186,30 @@ const CreateNewNewsletter = () => {
             }}
             color="bright.fg"
             onClick={handleSaveDraft}
+            fontSize={[12, 14, 16]}
+            p="1rem 2rem"
+          />
+          <Button
+            rounded={"full"}
+            disabled={pageStatus !== "loaded"}
+            text={
+              pageStatus === "publishing" ? (
+                <Image src="/loader_white.gif" h="2rem" />
+              ) : (
+                "Publish & Send"
+              )
+            }
+            variant="outline"
+            fontWeight={400}
+            ml={[2, 2, 2, 5]}
+            backgroundColor="bright.fg"
+            _hover={{
+              bg: "transparent",
+              color: "bright.fg",
+              borderColor: "bright.fg",
+            }}
+            color="bright.bg"
+            onClick={handlePublishSend}
             fontSize={[12, 14, 16]}
             p="1rem 2rem"
           />
@@ -255,21 +299,21 @@ const CreateNewNewsletter = () => {
         >
           <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword, k) => (
+            keywordsList.map((keyword) => (
               <Badge
+                key={keyword.id}
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
                 variant="subtle"
                 colorScheme="teal"
-                key={k}
                 fontSize="0.8em"
                 backgroundColor="bright.fg"
                 color="bright.bg"
                 mr={2}
                 mt={[2]}
               >
-                <Text pl={1}>{keyword}</Text>
+                <Text pl={1}>{keyword.text}</Text>
                 <CloseButton
                   size="sm"
                   borderRadius={0}

@@ -67,7 +67,17 @@ const Topbar = ({ isTopbarDisplay }) => {
         </Heading>
       </Flex>
 
-      <Flex pl={5} mt="10vh">
+      <Flex
+        pl={5}
+        mt="10vh"
+        display={[
+          isTopbarDisplay,
+          isTopbarDisplay,
+          isTopbarDisplay,
+          isTopbarDisplay,
+          "none",
+        ]}
+      >
         <PageTitle
           pt={5}
           display={[
