@@ -1,9 +1,9 @@
 import { Flex, Alert, AlertIcon, AlertDescription } from "@chakra-ui/react";
 
-const ErrorAlert = ({ message }) => {
+const SuccessAlert = ({ message }) => {
   return (
     <Flex my={4} w="100%">
-      <Alert status="error" borderRadius={4}>
+      <Alert status="success" borderRadius={4}>
         <AlertIcon />
         <AlertDescription>{message}</AlertDescription>
       </Alert>
@@ -11,4 +11,4 @@ const ErrorAlert = ({ message }) => {
   );
 };
 
-export default ErrorAlert;
+export default SuccessAlert;

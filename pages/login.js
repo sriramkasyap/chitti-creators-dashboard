@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
-import ErrorMessage from "../src/components/common/ErrorAlert/ErrorAlert";
+import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 
 import { AuthContext } from "../contexts/AuthContext";
 import { getIronConfig } from "../src/utils";
@@ -136,7 +136,7 @@ const Login = () => {
           <Heading color="bright" fontSize="6xl" mb={5} letterSpacing="tight">
             Chitti.
           </Heading>
-          {error && <ErrorMessage message={error} />}
+          {error && <ErrorAlert message={error} />}
           <FormControl id="email">
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input

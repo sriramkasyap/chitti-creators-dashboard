@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorMessage from "../common/ErrorAlert/ErrorAlert";
+import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 const SubscribersPage = ({ subscribers, isLoading, error }) => {
@@ -80,7 +80,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
         overflow="auto"
       >
         {error ? (
-          <ErrorMessage message={error} />
+          <ErrorAlert message={error} />
         ) : isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (

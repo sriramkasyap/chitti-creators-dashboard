@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-// import parse from "html-react-parser"; // used to parse string to html
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+
 import {
   Flex,
   FormControl,
@@ -15,10 +17,10 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
-import renderHTML from "react-render-html";
+
+import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
+import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
 import Button from "../../src/components/common/Button/Button";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -46,6 +48,7 @@ const EditNewsletter = ({ newsletter }) => {
   // enum for Page status. Values as below
   // loaded, saving, publishing
   const [errorMessage, setError] = useState(null);
+  const [successMessage, setSuccess] = useState(null);
 
   const handleInputChange = (event) => {
     const {
@@ -98,14 +101,14 @@ const EditNewsletter = ({ newsletter }) => {
             });
             setKeywordsList(result.newsletter.keywords);
             setPageStatus("loaded");
-            //  TODO: Show success message
+            setSuccess("Data Saved Successfully!");
           } else {
-            alert(result.message); // TODO: Show Error message
+            setError(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          alert(e.message); // TODO: Show Error message
+          setError(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -214,6 +217,8 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </Flex>
       </Flex>
+      {successMessage && <SuccessAlert message={successMessage} />}
+      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
