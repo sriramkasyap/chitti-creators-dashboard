@@ -13,10 +13,12 @@ import {
   Heading,
   Text,
   Box,
+  IconButton,
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
 
+import { FiPlus } from "react-icons/fi";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   checkAuthentication,
@@ -171,45 +173,53 @@ const Profile = () => {
 
   return (
     <Flex flexDir="column" w="100%">
-      <Flex w="100%">
-        <Flex w="100%" flexDir="column">
-          <FormControl>
-            <FormLabel>Display Name</FormLabel>
-            <Input />
-            <FormErrorMessage>Error message</FormErrorMessage>
-          </FormControl>
-          <FormControl mt={2}>
-            <FormLabel>Newsletter Name</FormLabel>
-            <Input />
-            <FormErrorMessage>Error message</FormErrorMessage>
-          </FormControl>
-          <FormControl mt={2}>
-            <FormLabel>Short Bio</FormLabel>
-            <Input />
-            <FormErrorMessage>Error message</FormErrorMessage>
-          </FormControl>
-          <FormControl mt={2}>
-            <FormLabel>Full Bio</FormLabel>
-            <FormErrorMessage>Error message</FormErrorMessage>
-            <Textarea />
-          </FormControl>
-        </Flex>
-        <Flex w="30%" flexDir="column" ml={5}>
-          <Flex w="100%" justifyContent="center">
-            <Button
-              rounded={"full"}
-              text="Save"
-              variant="solid"
-              backgroundColor="bright.fg"
-              size="lg"
-            />
+      <Flex w="100%" justifyContent="flex-start" mb={5}>
+        <Button
+          rounded={"full"}
+          text="Save Profile"
+          variant="solid"
+          backgroundColor="bright.fg"
+          size="lg"
+        />
+      </Flex>
+      <Flex w="100%" flexDir={["column-reverse", "row"]}>
+        <Flex w="100%" flexDir="column" mt={[5, 0]}>
+          <Flex flexDir={["column", "row"]}>
+            <FormControl>
+              <FormLabel>Display Name</FormLabel>
+              <Input
+                borderRadius={0}
+                focusBorderColor="bright.fg"
+                borderColor="bright.light"
+              />
+            </FormControl>
+            <FormControl ml={[0, 3]} mt={[3, 0]}>
+              <FormLabel>Short Bio</FormLabel>
+              <Input
+                borderRadius={0}
+                focusBorderColor="bright.fg"
+                borderColor="bright.light"
+              />
+            </FormControl>
           </Flex>
+          <Flex mt={3}>
+            <FormControl>
+              <FormLabel>Full Bio</FormLabel>
+              <Textarea
+                borderRadius={0}
+                focusBorderColor="bright.fg"
+                borderColor="bright.light"
+              />
+            </FormControl>
+          </Flex>
+        </Flex>
+        <Flex w={["100%", "30%"]} flexDir="column" ml={[0, 5]}>
           <Flex
             w="100%"
-            justifyContent="center"
+            justifyContent={["flex-start", "center"]}
             mt={5}
             flexDir="column"
-            alignItems="center"
+            alignItems={["flex-start", "center"]}
           >
             <Image
               height="100px"
@@ -235,18 +245,21 @@ const Profile = () => {
           <Heading>Subscriptions</Heading>
         </Flex>
         <Flex
+          flexDir={["column", "row"]}
           mt={5}
           justifyContent="space-between"
           alignItems="center"
           w="100%"
         >
           <Flex
-            w="90%"
+            w={["100%", "90%"]}
             flexDir="column"
             justifyContent="center"
             alignItems="stretch"
           >
-            <Text mb={2}>Free Plan</Text>
+            <Text mb={2} fontSize="lg" fontWeight="semibold">
+              Free Plan
+            </Text>
             <Box
               display="flex"
               flexDir="column"
@@ -263,8 +276,11 @@ const Profile = () => {
                 isReadOnly
                 borderColor="bright.light"
                 focusBorderColor="bright.light"
+                borderRadius={0}
               />
-              <Text mt={3}>Pricing</Text>
+              <Text mt={3} fontWeight="semibold">
+                Pricing
+              </Text>
               <Divider
                 w="60%"
                 mt={2}
@@ -273,15 +289,23 @@ const Profile = () => {
                 borderColor="bright.gray"
                 backgroundColor="bright.gray"
               />
-              <Text>Features</Text>
+              <Text fontWeight="semibold">Features</Text>
               <Flex w="100%" mt={3}>
-                <Input />
-                <Button
-                  text="+"
-                  variant="solid"
-                  size="md"
-                  ml={3}
+                <Input
+                  borderRadius={0}
+                  focusBorderColor="bright.fg"
+                  borderColor="bright.light"
+                />
+                <IconButton
+                  aria-label="Add Plan Feature"
+                  icon={<FiPlus />}
+                  ml={2}
+                  fontSize="2xl"
+                  borderRadius={0}
                   backgroundColor="bright.fg"
+                  color="bright.bg"
+                  _focus={{ boxShadow: "none" }}
+                  // onClick={handleAddPlanFeature}
                 />
               </Flex>
               <Flex mt={3} w="100%" flexDir="column">
@@ -290,16 +314,20 @@ const Profile = () => {
                 <Text mt={2}>Text Value Three</Text>
               </Flex>
               <Button
+                rounded={"full"}
                 text="Save"
                 variant="solid"
                 size="md"
                 mt={5}
                 backgroundColor="bright.fg"
+                p="1rem 2rem"
               />
             </Box>
           </Flex>
-          <Flex w="90%" ml={5} flexDir="column">
-            <Text mb={2}>Paid Plan</Text>
+          <Flex w={["100%", "90%"]} ml={[0, 5]} mt={[5, 0]} flexDir="column">
+            <Text mb={2} fontSize="lg" fontWeight="semibold">
+              Paid Plan
+            </Text>
             <Box
               display="flex"
               flexDir="column"
@@ -314,8 +342,11 @@ const Profile = () => {
                 display="block"
                 w="20%"
                 focusBorderColor="bright.fg"
+                borderRadius={0}
               />
-              <Text mt={3}>Pricing</Text>
+              <Text mt={3} fontWeight="semibold">
+                Pricing
+              </Text>
               <Divider
                 w="60%"
                 mt={2}
@@ -324,15 +355,23 @@ const Profile = () => {
                 borderColor="bright.gray"
                 backgroundColor="bright.gray"
               />
-              <Text>Features</Text>
+              <Text fontWeight="semibold">Features</Text>
               <Flex w="100%" mt={3}>
-                <Input />
-                <Button
-                  text="+"
-                  variant="solid"
-                  size="md"
-                  ml={3}
+                <Input
+                  borderRadius={0}
+                  focusBorderColor="bright.fg"
+                  borderColor="bright.light"
+                />
+                <IconButton
+                  aria-label="Add Plan Feature"
+                  icon={<FiPlus />}
+                  ml={2}
+                  fontSize="2xl"
+                  borderRadius={0}
                   backgroundColor="bright.fg"
+                  color="bright.bg"
+                  _focus={{ boxShadow: "none" }}
+                  // onClick={handleAddPlanFeature}
                 />
               </Flex>
               <Flex mt={3} w="100%" flexDir="column">
@@ -341,11 +380,13 @@ const Profile = () => {
                 <Text mt={2}>Text Value Three</Text>
               </Flex>
               <Button
-                text="save"
+                rounded={"full"}
+                text="Save"
                 variant="solid"
                 size="md"
                 mt={5}
                 backgroundColor="bright.fg"
+                p="1rem 2rem"
               />
             </Box>
           </Flex>
