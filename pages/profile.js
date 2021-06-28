@@ -173,15 +173,6 @@ const Profile = () => {
 
   return (
     <Flex flexDir="column" w="100%">
-      <Flex w="100%" justifyContent="flex-start" mb={5}>
-        <Button
-          rounded={"full"}
-          text="Save Profile"
-          variant="solid"
-          backgroundColor="bright.fg"
-          size="lg"
-        />
-      </Flex>
       <Flex w="100%" flexDir={["column-reverse", "row"]}>
         <Flex w="100%" flexDir="column" mt={[5, 0]}>
           <Flex flexDir={["column", "row"]}>
@@ -233,12 +224,22 @@ const Profile = () => {
           </Flex>
         </Flex>
       </Flex>
+      <Flex w="100%" justifyContent="flex-start" mt={3}>
+        <Button
+          rounded={"full"}
+          text="Save Profile"
+          variant="solid"
+          backgroundColor="bright.fg"
+          size="lg"
+          fontWeight="normal"
+        />
+      </Flex>
       <Divider
         mt={5}
         mb={5}
         border="1px solid"
-        borderColor="bright.light"
-        backgroundColor="bright.light"
+        borderColor="bright.gray"
+        backgroundColor="bright.gray"
       />
       <Flex flexDir="column">
         <Flex w="100%">
@@ -321,6 +322,7 @@ const Profile = () => {
                 mt={5}
                 backgroundColor="bright.fg"
                 p="1rem 2rem"
+                fontWeight="normal"
               />
             </Box>
           </Flex>
@@ -387,6 +389,7 @@ const Profile = () => {
                 mt={5}
                 backgroundColor="bright.fg"
                 p="1rem 2rem"
+                fontWeight="normal"
               />
             </Box>
           </Flex>
