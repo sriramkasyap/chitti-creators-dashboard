@@ -45,6 +45,7 @@ const EditNewsletter = ({ newsletter }) => {
   const [isLoading, setLoading] = useState(false);
   const [isPublishing, setPublishing] = useState(false);
   const [isSavingDraft, setSavingDraft] = useState(false);
+  const [errorMessage, setError] = useState(null);
 
   const router = useRouter();
 
@@ -81,37 +82,42 @@ const EditNewsletter = ({ newsletter }) => {
   const handleSaveDraft = () => {
     setLoading(true);
     setSavingDraft(true);
-    const requestBody = {
-      reference: formData.reference,
-      emailSubject: formData.subject,
-      body: editorData,
-      keywords: keywordsList,
-    };
+    if (valdateFormData()) {
+      const requestBody = {
+        reference: formData.reference,
+        emailSubject: formData.subject,
+        body: editorData,
+        keywords: keywordsList,
+      };
 
-    updateNewsletter(newsletter.newsletterId, requestBody)
-      .then((result) => {
-        if (result.success) {
-          setEditorData(result.newsletter.body);
-          setFormData({
-            reference: result.newsletter.reference,
-            subject: result.newsletter.emailSubject,
-            keyword: "",
-          });
-          setKeywordsList(result.newsletter.keywords);
+      updateNewsletter(newsletter.newsletterId, requestBody)
+        .then((result) => {
+          if (result.success) {
+            setEditorData(result.newsletter.body);
+            setFormData({
+              reference: result.newsletter.reference,
+              subject: result.newsletter.emailSubject,
+              keyword: "",
+            });
+            setKeywordsList(result.newsletter.keywords);
+            setLoading(false);
+            setSavingDraft(false);
+            //  TODO: Show success message
+          } else {
+            alert(result.message); // TODO: Show Error message
+            setLoading(false);
+            setSavingDraft(false);
+          }
+        })
+        .catch((e) => {
+          alert(e.message); // TODO: Show Error message
           setLoading(false);
           setSavingDraft(false);
-          //  TODO: Show success message
-        } else {
-          alert(result.message); // TODO: Show Error message
-          setLoading(false);
-          setSavingDraft(false);
-        }
-      })
-      .catch((e) => {
-        alert(e.message); // TODO: Show Error message
-        setLoading(false);
-        setSavingDraft(false);
-      });
+        });
+    } else {
+      setLoading(false);
+      setSavingDraft(false);
+    }
   };
 
   const handlePublishSend = () => {
@@ -127,6 +133,25 @@ const EditNewsletter = ({ newsletter }) => {
     };
 
     console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
+  };
+
+  const valdateFormData = () => {
+    setError("");
+    if (
+      formData &&
+      formData.reference &&
+      formData.subject &&
+      formData.reference.length > 0 &&
+      formData.subject.length > 0 &&
+      keywordsList &&
+      keywordsList.length > 0 &&
+      editorData.length > 0
+    ) {
+      return true;
+    } else {
+      setError("Please Enter all the details");
+      return false;
+    }
   };
 
   return (

@@ -45,6 +45,7 @@ const CreateNewNewsletter = () => {
   const [isLoading, setLoading] = useState(false);
   const [isPublishing, setPublishing] = useState(false);
   const [isSavingDraft, setSavingDraft] = useState(false);
+  const [errorMessage, setError] = useState(null);
 
   const router = useRouter();
 
@@ -81,25 +82,49 @@ const CreateNewNewsletter = () => {
   const handleSaveDraft = () => {
     setLoading(true);
     setSavingDraft(true);
-    const requestBody = {
-      reference: formData.reference,
-      emailSubject: formData.subject,
-      body: editorData,
-      keywords: keywordsList,
-    };
 
-    createNewsletter(requestBody)
-      .then((result) => {
-        if (result.success) {
-          router.push(`/newsletters/${result.newsletter._id}`);
-        } else {
-          alert(result.message); // TODO: Show Error message
-        }
-      })
-      .catch((e) => {
-        alert(e.message); // TODO: Show Error message
-      });
-    console.log("RB:: File: new.js, Line: 85 ==> requestBody", requestBody);
+    if (valdateFormData()) {
+      const requestBody = {
+        reference: formData.reference,
+        emailSubject: formData.subject,
+        body: editorData,
+        keywords: keywordsList,
+      };
+
+      createNewsletter(requestBody)
+        .then((result) => {
+          if (result.success) {
+            router.push(`/newsletters/${result.newsletter._id}`);
+          } else {
+            alert(result.message); // TODO: Show Error message
+          }
+        })
+        .catch((e) => {
+          alert(e.message); // TODO: Show Error message
+        });
+    } else {
+      setLoading(false);
+      setSavingDraft(false);
+    }
+  };
+
+  const valdateFormData = () => {
+    setError("");
+    if (
+      formData &&
+      formData.reference &&
+      formData.subject &&
+      formData.reference.length > 0 &&
+      formData.subject.length > 0 &&
+      keywordsList &&
+      keywordsList.length > 0 &&
+      editorData.length > 0
+    ) {
+      return true;
+    } else {
+      setError("Please Enter all the details");
+      return false;
+    }
   };
 
   return (
@@ -122,7 +147,7 @@ const CreateNewNewsletter = () => {
         >
           <Button
             rounded={"full"}
-            disabled={isSavingDraft}
+            disabled={isLoading}
             text={
               isSavingDraft ? (
                 <Image src="/loader_black.gif" h="2rem" />
