@@ -79,7 +79,7 @@ const Topbar = ({ isTopbarDisplay }) => {
           ]}
         />
       </Flex>
-      {/* Topbar for Widescreen End */}
+      {/* Topbar for Smallscreen End */}
     </>
   );
 };

@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
       <Flex w="100%" flexDir="column">
         <Topbar isTopbarDisplay={shouldHideTopbar ? "none" : "flex"} />
         <main>
-          <Flex flexDir="row" p={5}>
+          <Flex flexDir="row" p={5} overflow="auto">
             {children}
           </Flex>
         </main>
