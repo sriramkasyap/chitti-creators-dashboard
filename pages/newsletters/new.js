@@ -87,6 +87,18 @@ const CreateNewNewsletter = () => {
     setEditorData(juice.inlineContent(data, ckeditorStyles));
   };
 
+  const handleDiscardDraft = () => {
+    setFormData({
+      reference: "",
+      subject: "",
+      keyword: "",
+    });
+    setKeywordsList([]);
+    setEditorData(
+      `<p style="text-align:center;">Start Creating your Newsletter!</p>`
+    );
+  };
+
   const handleSaveDraft = () => {
     setPageStatus("saving");
 
@@ -150,7 +162,7 @@ const CreateNewNewsletter = () => {
   };
 
   return (
-    <Flex flexDirection="column" w="100%">
+    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -161,58 +173,77 @@ const CreateNewNewsletter = () => {
         pt={[0, 0, 0, 0, 5]}
       >
         <Flex mb={[5, 5, 5, 0, 0]} mt={[5, 5, 5, 0, 0]} ml={[0, 0, 0, 0]}>
-          <Heading>Create Newsletter</Heading>
+          <Heading fontSize={["3xl", "3xl", "3xl", "4xl", "4xl"]}>
+            Create Newsletter
+          </Heading>
         </Flex>
         <Flex
-          flexDirection={"row"}
-          justifyContent={["flex-start", "flex-start", "flex-end"]}
+          flexDirection={["column-reverse", "column-reverse", "row"]}
+          justifyContent={["center", "flex-start", "flex-start", "flex-end"]}
+          alignItems="center"
         >
-          <Button
-            rounded={"full"}
-            disabled={pageStatus !== "loaded"}
-            text={
-              pageStatus == "saving" ? (
-                <Image src="/loader_black.gif" h="2rem" />
-              ) : (
-                "Save Draft"
-              )
-            }
-            variant="outline"
-            fontWeight={400}
-            backgroundColor="transparent"
-            _hover={{
-              bg: "bright.gray",
-              color: "bright.bg",
-            }}
-            color="bright.fg"
-            onClick={handleSaveDraft}
-            fontSize={[12, 14, 16]}
-            p="1rem 2rem"
-          />
-          <Button
-            rounded={"full"}
-            disabled={pageStatus !== "loaded"}
-            text={
-              pageStatus === "publishing" ? (
-                <Image src="/loader_white.gif" h="2rem" />
-              ) : (
-                "Publish & Send"
-              )
-            }
-            variant="outline"
-            fontWeight={400}
-            ml={[2, 2, 2, 5]}
-            backgroundColor="bright.fg"
-            _hover={{
-              bg: "transparent",
-              color: "bright.fg",
-              borderColor: "bright.fg",
-            }}
-            color="bright.bg"
-            onClick={handlePublishSend}
-            fontSize={[12, 14, 16]}
-            p="1rem 2rem"
-          />
+          <Flex mt={[3, 3, 0]}>
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text="Discard Draft"
+              variant="link"
+              fontWeight={400}
+              color="bright.gray"
+              textDecor="underline"
+              onClick={handleDiscardDraft}
+              fontSize={[12, 14, 16]}
+            />
+          </Flex>
+          <Flex>
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text={
+                pageStatus == "saving" ? (
+                  <Image src="/loader_black.gif" h="2rem" />
+                ) : (
+                  "Save Draft"
+                )
+              }
+              variant="outline"
+              fontWeight={400}
+              ml={[2, 2, 2, 5]}
+              backgroundColor="transparent"
+              _hover={{
+                bg: "bright.gray",
+                color: "bright.bg",
+              }}
+              color="bright.fg"
+              onClick={handleSaveDraft}
+              fontSize={[12, 14, 16]}
+              p="1rem 2rem"
+            />
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text={
+                pageStatus === "publishing" ? (
+                  <Image src="/loader_white.gif" h="2rem" />
+                ) : (
+                  "Publish & Send"
+                )
+              }
+              variant="outline"
+              fontWeight={400}
+              ml={[2, 2, 2, 5]}
+              backgroundColor="bright.fg"
+              _hover={{
+                bg: "transparent",
+                color: "bright.fg",
+                borderColor: "bright.fg",
+              }}
+              color="bright.bg"
+              onClick={handlePublishSend}
+              fontSize={[12, 14, 16]}
+              p="1rem 2rem"
+            />
+          </Flex>
         </Flex>
       </Flex>
       {errorMessage && <ErrorAlert message={errorMessage} />}

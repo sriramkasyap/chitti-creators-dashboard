@@ -156,7 +156,7 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   return (
-    <Flex flexDirection="column" w="100%">
+    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -167,7 +167,9 @@ const EditNewsletter = ({ newsletter }) => {
         pt={[0, 0, 0, 0, 5]}
       >
         <Flex mb={[5, 5, 5, 0, 0]} mt={[5, 5, 5, 0, 0]} ml={[0, 0, 0, 0]}>
-          <Heading>Edit Newsletter</Heading>
+          <Heading fontSize={["3xl", "3xl", "3xl", "4xl", "4xl"]}>
+            Edit Newsletter
+          </Heading>
         </Flex>
         <Flex
           flexDirection={"row"}
