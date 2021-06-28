@@ -11,10 +11,11 @@ import {
   Text,
   Heading,
   IconButton,
-  Badge,
   Box,
-  CloseButton,
   Image,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 
@@ -61,22 +62,16 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   const handleAddKeyword = () => {
-    setKeywordsList([
-      ...keywordsList,
-      {
-        id: Math.floor(100000 + Math.random() * 900000),
-        text: formData.keyword,
-      },
-    ]);
+    setKeywordsList([...keywordsList, formData.keyword]);
     setFormData({
       ...formData,
       keyword: "",
     });
   };
 
-  const handleRemoveKeyword = (keywordId) => {
+  const handleRemoveKeyword = (kIndex) => {
     const tempKeywords = keywordsList?.filter(
-      (keyword) => keyword.id !== keywordId
+      (keyword, index) => index !== kIndex
     );
     setKeywordsList(tempKeywords);
   };
@@ -310,29 +305,21 @@ const EditNewsletter = ({ newsletter }) => {
         >
           <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword) => (
-              <Badge
-                key={keyword.id}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                variant="subtle"
-                colorScheme="teal"
-                fontSize="0.8em"
+            keywordsList.map((keyword, index) => (
+              <Tag
+                size="md"
+                key={index + 1}
+                borderRadius={0}
+                variant="solid"
                 backgroundColor="bright.fg"
                 color="bright.bg"
+                textTransform="uppercase"
                 mr={2}
-                mt={[2]}
+                mt={2}
               >
-                <Text pl={1}>{keyword.text}</Text>
-                <CloseButton
-                  size="sm"
-                  borderRadius={0}
-                  onClick={() => handleRemoveKeyword(keyword.id)}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
-                />
-              </Badge>
+                <TagLabel>{keyword}</TagLabel>
+                <TagCloseButton onClick={() => handleRemoveKeyword(index)} />
+              </Tag>
             ))}
         </Flex>
       </Flex>

@@ -11,16 +11,11 @@ import {
   Text,
   Heading,
   IconButton,
-  Badge,
   Box,
-  CloseButton,
   Image,
   Tag,
   TagLabel,
-  TagLeftIcon,
-  TagRightIcon,
   TagCloseButton,
-  HStack,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 
@@ -68,22 +63,16 @@ const CreateNewNewsletter = () => {
   };
 
   const handleAddKeyword = () => {
-    setKeywordsList([
-      ...keywordsList,
-      {
-        id: Math.floor(100000 + Math.random() * 900000),
-        text: formData.keyword,
-      },
-    ]);
+    setKeywordsList([...keywordsList, formData.keyword]);
     setFormData({
       ...formData,
       keyword: "",
     });
   };
 
-  const handleRemoveKeyword = (keywordId) => {
+  const handleRemoveKeyword = (kIndex) => {
     const tempKeywords = keywordsList?.filter(
-      (keyword) => keyword.id !== keywordId
+      (keyword, index) => index !== kIndex
     );
     setKeywordsList(tempKeywords);
   };
@@ -336,10 +325,10 @@ const CreateNewNewsletter = () => {
         >
           <Box width="100%" height="20px" display={["none", "flex"]}></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword) => (
+            keywordsList.map((keyword, index) => (
               <Tag
                 size="md"
-                key={keyword.id}
+                key={index + 1}
                 borderRadius={0}
                 variant="solid"
                 backgroundColor="bright.fg"
@@ -348,10 +337,8 @@ const CreateNewNewsletter = () => {
                 mr={2}
                 mt={2}
               >
-                <TagLabel>{keyword.text}</TagLabel>
-                <TagCloseButton
-                  onClick={() => handleRemoveKeyword(keyword.id)}
-                />
+                <TagLabel>{keyword}</TagLabel>
+                <TagCloseButton onClick={() => handleRemoveKeyword(index)} />
               </Tag>
             ))}
         </Flex>
