@@ -15,6 +15,12 @@ import {
   Box,
   CloseButton,
   Image,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagRightIcon,
+  TagCloseButton,
+  HStack,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 
@@ -328,31 +334,25 @@ const CreateNewNewsletter = () => {
           flexWrap="wrap"
           width={["100%", "100%", "50%"]}
         >
-          <Box width="100%" height="20px"></Box>
+          <Box width="100%" height="20px" display={["none", "flex"]}></Box>
           {keywordsList.length > 0 &&
             keywordsList.map((keyword) => (
-              <Badge
+              <Tag
+                size="md"
                 key={keyword.id}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                variant="subtle"
-                colorScheme="teal"
-                fontSize="0.8em"
+                borderRadius={0}
+                variant="solid"
                 backgroundColor="bright.fg"
                 color="bright.bg"
+                textTransform="uppercase"
                 mr={2}
-                mt={[2]}
+                mt={2}
               >
-                <Text pl={1}>{keyword.text}</Text>
-                <CloseButton
-                  size="sm"
-                  borderRadius={0}
+                <TagLabel>{keyword.text}</TagLabel>
+                <TagCloseButton
                   onClick={() => handleRemoveKeyword(keyword.id)}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
                 />
-              </Badge>
+              </Tag>
             ))}
         </Flex>
       </Flex>
