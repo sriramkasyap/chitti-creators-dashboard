@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { Flex, Heading } from "@chakra-ui/react";
 import "@fontsource/quicksand/400.css";
-
 import Button from "../Button/Button";
 import SmallScreenSidebar from "./SideDrawer/SideDrawer";
 import PageTitle from "../PageTitle/PageTitle";
@@ -9,8 +8,8 @@ import PageTitle from "../PageTitle/PageTitle";
 const Topbar = ({ isTopbarDisplay }) => {
   const router = useRouter();
 
-  const createNewsletterHandler = () => {
-    console.log("RB:: File: Topbar.js, Line: 13 ==> inside button");
+  const goToCreatePage = (e) => {
+    e.preventDefault();
     router.push("/newsletters/new");
   };
   return (
@@ -30,6 +29,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         </Flex>
         <Flex>
           <Button
+            onClick={goToCreatePage}
             rounded={"full"}
             variant="outline"
             text="Create New Newsletter"
@@ -42,7 +42,6 @@ const Topbar = ({ isTopbarDisplay }) => {
               color: "bright.bg",
               borderColor: "bright.fg",
             }}
-            onClick={createNewsletterHandler}
           />
         </Flex>
       </Flex>

@@ -39,3 +39,23 @@ export const updatePlan = async (planId, plan) => {
     body: JSON.stringify(plan),
   }).then((r) => r.json());
 };
+
+export const createNewsletter = async (newsletter) => {
+  return fetch(`/api/newsletters`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ newsletter }),
+  }).then((r) => r.json());
+};
+
+export const updateNewsletter = async (newsletterId, newsletter) => {
+  return fetch(`/api/newsletters/${newsletterId}`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ newsletter }),
+  }).then((r) => r.json());
+};

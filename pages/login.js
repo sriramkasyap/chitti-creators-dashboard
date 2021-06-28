@@ -23,7 +23,7 @@ const Login = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { loginError, userLogin } = useContext(AuthContext);
+  const { loginError, userLogin, loggedInUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     emailId: "",
     password: "",
@@ -63,6 +63,10 @@ const Login = () => {
   useEffect(() => {
     setError(loginError);
   }, [loginError]);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser._id) router.push("/");
+  }, [loggedInUser]);
 
   return (
     <Flex flexDir={["column", "column", "column", "column", "row-reverse"]}>
