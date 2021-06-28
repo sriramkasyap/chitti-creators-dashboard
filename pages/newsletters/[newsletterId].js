@@ -267,7 +267,7 @@ const EditNewsletter = ({ newsletter }) => {
           pr={[0, 0, 5, 5, 10]}
           width={["100%", "100%", "50%"]}
         >
-          <FormLabel>Keywords</FormLabel>
+          <FormLabel>Tags</FormLabel>
           <Flex>
             <Input
               type="text"
