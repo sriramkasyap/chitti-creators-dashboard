@@ -14,7 +14,7 @@ import {
   CloseButton,
   Image,
 } from "@chakra-ui/react";
-import { FiPlus, FiX } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import renderHTML from "react-render-html";
 import Button from "../../src/components/common/Button/Button";
 import dynamic from "next/dynamic";
@@ -42,12 +42,10 @@ const EditNewsletter = ({ newsletter }) => {
     keyword: "",
   });
   const [keywordsList, setKeywordsList] = useState(newsletter.keywords);
-  const [isLoading, setLoading] = useState(false);
-  const [isPublishing, setPublishing] = useState(false);
-  const [isSavingDraft, setSavingDraft] = useState(false);
+  const [pageStatus, setPageStatus] = useState("loaded");
+  // enum for Page status. Values as below
+  // loaded, saving, publishing
   const [errorMessage, setError] = useState(null);
-
-  const router = useRouter();
 
   const handleInputChange = (event) => {
     const {
@@ -80,8 +78,7 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   const handleSaveDraft = () => {
-    setLoading(true);
-    setSavingDraft(true);
+    setPageStatus("saving");
     if (valdateFormData()) {
       const requestBody = {
         reference: formData.reference,
@@ -100,29 +97,24 @@ const EditNewsletter = ({ newsletter }) => {
               keyword: "",
             });
             setKeywordsList(result.newsletter.keywords);
-            setLoading(false);
-            setSavingDraft(false);
+            setPageStatus("loaded");
             //  TODO: Show success message
           } else {
             alert(result.message); // TODO: Show Error message
-            setLoading(false);
-            setSavingDraft(false);
+            setPageStatus("loaded");
           }
         })
         .catch((e) => {
           alert(e.message); // TODO: Show Error message
-          setLoading(false);
-          setSavingDraft(false);
+          setPageStatus("loaded");
         });
     } else {
-      setLoading(false);
-      setSavingDraft(false);
+      setPageStatus("loaded");
     }
   };
 
   const handlePublishSend = () => {
-    setLoading(true);
-    setPublishing(true);
+    setPageStatus("publishing");
     const requestBody = {
       newsletter: {
         reference: formData.reference,
@@ -174,9 +166,9 @@ const EditNewsletter = ({ newsletter }) => {
         >
           <Button
             rounded={"full"}
-            disabled={isSavingDraft}
+            disabled={pageStatus !== "loaded"}
             text={
-              isSavingDraft ? (
+              pageStatus === "saving" ? (
                 <Image src="/loader_black.gif" h="2rem" />
               ) : (
                 "Save Draft"
@@ -184,11 +176,13 @@ const EditNewsletter = ({ newsletter }) => {
             }
             variant="outline"
             fontWeight={400}
-            backgroundColor="transparent"
+            bg="bright.light"
             _hover={{
-              bg: "bright.gray",
-              color: "bright.bg",
+              bg: "transparent",
+              color: "bright.fg",
+              borderColor: "bright.fg",
             }}
+            borderColor="bright.light"
             color="bright.fg"
             onClick={handleSaveDraft}
             fontSize={[12, 14, 16]}
@@ -196,9 +190,9 @@ const EditNewsletter = ({ newsletter }) => {
           />
           <Button
             rounded={"full"}
-            disabled={isLoading}
+            disabled={pageStatus !== "loaded"}
             text={
-              isPublishing ? (
+              pageStatus === "publishing" ? (
                 <Image src="/loader_white.gif" h="2rem" />
               ) : (
                 "Publish & Send"
@@ -209,8 +203,9 @@ const EditNewsletter = ({ newsletter }) => {
             ml={[2, 2, 2, 5]}
             backgroundColor="bright.fg"
             _hover={{
-              bg: "bright.gray",
-              color: "bright.bg",
+              bg: "transparent",
+              color: "bright.fg",
+              borderColor: "bright.fg",
             }}
             color="bright.bg"
             onClick={handlePublishSend}

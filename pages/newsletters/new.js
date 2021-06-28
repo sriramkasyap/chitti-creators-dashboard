@@ -42,9 +42,9 @@ const CreateNewNewsletter = () => {
     keyword: "",
   });
   const [keywordsList, setKeywordsList] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [isPublishing, setPublishing] = useState(false);
-  const [isSavingDraft, setSavingDraft] = useState(false);
+  const [pageStatus, setPageStatus] = useState("loaded");
+  // enum for Page status. Values as below
+  // loaded, saving
   const [errorMessage, setError] = useState(null);
 
   const router = useRouter();
@@ -80,8 +80,7 @@ const CreateNewNewsletter = () => {
   };
 
   const handleSaveDraft = () => {
-    setLoading(true);
-    setSavingDraft(true);
+    setPageStatus("saving");
 
     if (valdateFormData()) {
       const requestBody = {
@@ -97,14 +96,15 @@ const CreateNewNewsletter = () => {
             router.push(`/newsletters/${result.newsletter._id}`);
           } else {
             alert(result.message); // TODO: Show Error message
+            setPageStatus("loaded");
           }
         })
         .catch((e) => {
           alert(e.message); // TODO: Show Error message
+          setPageStatus("loaded");
         });
     } else {
-      setLoading(false);
-      setSavingDraft(false);
+      setPageStatus("loaded");
     }
   };
 
@@ -147,9 +147,9 @@ const CreateNewNewsletter = () => {
         >
           <Button
             rounded={"full"}
-            disabled={isLoading}
+            disabled={pageStatus !== "loaded"}
             text={
-              isSavingDraft ? (
+              pageStatus == "saving" ? (
                 <Image src="/loader_black.gif" h="2rem" />
               ) : (
                 "Save Draft"
@@ -167,29 +167,6 @@ const CreateNewNewsletter = () => {
             fontSize={[12, 14, 16]}
             p="1rem 2rem"
           />
-          {/* <Button
-            rounded={"full"}
-            disabled={isLoading}
-            text={
-              isPublishing ? (
-                <Image src="/loader_white.gif" h="2rem" />
-              ) : (
-                "Publish & Send"
-              )
-            }
-            variant="outline"
-            fontWeight={400}
-            ml={[2, 2, 2, 5]}
-            backgroundColor="bright.fg"
-            _hover={{
-              bg: "bright.gray",
-              color: "bright.bg",
-            }}
-            color="bright.bg"
-            onClick={handlePublishSend}
-            fontSize={[12, 14, 16]}
-            p="1rem 2rem"
-          /> */}
         </Flex>
       </Flex>
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
