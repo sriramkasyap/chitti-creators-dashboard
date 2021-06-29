@@ -27,97 +27,95 @@ import {
   validateURL,
 } from "../src/utils";
 import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
+import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
+import SuccessAlert from "../src/components/common/SuccessAlert/SuccessAlert";
 
 const Profile = () => {
-  const [profile, setProfile] = useState({}); // Profile Content of the creator
-  const [plans, setPlans] = useState([]); // Plans content of the creator
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(""); // Error message
-  const [successMessage, setSuccessMessage] = useState(""); // Success message
   const { fetchMe, loggedInUser, loginError } = useContext(AuthContext); // Loading user data from the Authentication Context
 
+  const [profile, setProfile] = useState(loggedInUser.profile); // Profile Content of the creator
+  const [plans, setPlans] = useState([]); // Plans content of the creator
+  const [pageStatus, setStatus] = useState("loading"); // Page Status
+  const [error, setError] = useState(""); // Error message
+  const [successMessage, setSuccessMessage] = useState(""); // Success message
+
   useEffect(() => {
-    // Refresh creator profile on first load
-    fetchMe().then((fetchSuccessful) => {
-      if (fetchSuccessful) {
-        setProfile(loggedInUser.profile);
-        setPlans(loggedInUser.plans);
-        setLoading(false);
-      } else {
-        setError(loginError);
-        setLoading(false);
-      }
-    });
-  }, []);
+    // Refresh creator profile if the value in provider changes
+    setProfile(loggedInUser.profile);
+    setPlans(loggedInUser.plans);
+    setStatus("loaded");
+  }, [loggedInUser]);
 
   const handleUpdateProfile = () => {
     // Handle Save profile action
-    setLoading(true);
+    setStatus("loading");
+    setSuccessMessage("");
     if (validateProfile()) {
       updateProfile(profile)
         .then((result) => {
           if (result.success) {
             setSuccessMessage("Profile Saved successfully");
-            setLoading(false);
+            setStatus("loaded");
+            setProfile(result.creator.profile);
           } else {
             setError(result.message);
-            setLoading(false);
+            setStatus("loaded");
           }
         })
         .catch((e) => {
           setError(e.message);
-          setLoading(false);
+          setStatus("loaded");
         });
     } else {
-      setLoading(false);
+      setStatus("loaded");
     }
   };
 
   const addPlan = (planIdToEdit) => {
     // Handle create new Plan
-    setLoading(true);
+    setStatus("loading");
     var plan = plans.filter(planId === planIdToEdit)[0];
     if (validatePlan(plan)) {
       addPlan(plan)
         .then((result) => {
           if (result.success) {
             setSuccessMessage("Plan added successfully");
-            setLoading(false);
+            setStatus("loaded");
           } else {
             setError(result.message);
-            setLoading(false);
+            setStatus("loaded");
           }
         })
         .catch((e) => {
           setError(e.message);
-          setLoading(false);
+          setStatus("loaded");
         });
     } else {
-      setLoading(false);
+      setStatus("loaded");
     }
   };
 
   const updatePlan = (planIdToEdit) => {
     // Handle Save plan
-    setLoading(true);
+    setStatus("loading");
     var plan = plans.filter(planId === planIdToEdit)[0];
     if (validatePlan(plan)) {
       updatePlan(planIdToEdit, plan)
         .then((result) => {
           if (result.success) {
             setSuccessMessage("Plan added successfully");
-            setLoading(false);
+            setStatus("loaded");
           } else {
             setError(result.message);
-            setLoading(false);
+            setStatus("loaded");
           }
         })
         .catch((e) => {
           setError(e.message);
-          setLoading(false);
+          setStatus("loaded");
         });
     } else {
-      setLoading(false);
+      setStatus("loaded");
     }
   };
 
@@ -135,13 +133,24 @@ const Profile = () => {
       longBio.length > 0 &&
       displayPicture.length > 0
     ) {
-      if (validateURL(displayPicture)) {
-        return true;
-      } else {
-        setError("Invalid Display picture url");
-        return false;
-      }
+      // if (validateURL(displayPicture)) {
+      return true;
+      // } else {
+      //   console.log(displayPicture);
+      //   setError("Invalid Display picture url");
+      //   return false;
+      // }
     } else {
+      console.log(
+        fullName,
+        shortBio,
+        longBio,
+        displayPicture,
+        fullName.length > 0,
+        shortBio.length > 0,
+        longBio.length > 0,
+        displayPicture.length > 0
+      );
       setError("Please fill all the details");
       return false;
     }
@@ -171,11 +180,18 @@ const Profile = () => {
     }
   };
 
+  const handleProfileInput = (e) => {
+    setProfile({
+      ...profile,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <Flex
       flexDir="column"
       w="100%"
-      maxW={["100%", "100%", "100%", "100%", "1240px"]}
+      maxW={["100%", "100%", "100%", "100%", "1440px"]}
       ml={[0]}
     >
       <Flex w="100%" flexDir={["column-reverse", "column-reverse", "row"]}>
@@ -196,6 +212,9 @@ const Profile = () => {
                 borderRadius={0}
                 focusBorderColor="bright.fg"
                 borderColor="bright.light"
+                value={profile.fullName || ""}
+                onChange={handleProfileInput}
+                name="fullName"
               />
             </FormControl>
             <FormControl
@@ -209,6 +228,9 @@ const Profile = () => {
                 borderRadius={0}
                 focusBorderColor="bright.fg"
                 borderColor="bright.light"
+                value={profile.shortBio || ""}
+                onChange={handleProfileInput}
+                name="shortBio"
               />
             </FormControl>
           </Flex>
@@ -219,6 +241,9 @@ const Profile = () => {
                 borderRadius={0}
                 focusBorderColor="bright.fg"
                 borderColor="bright.light"
+                value={profile.longBio || ""}
+                onChange={handleProfileInput}
+                name="longBio"
               />
             </FormControl>
           </Flex>
@@ -237,26 +262,46 @@ const Profile = () => {
             alignItems={["flex-start", "flex-start", "center"]}
           >
             <Image
-              height="100px"
-              w="100px"
+              height={["100px", "100px", "100px", "150px"]}
+              w={["100px", "100px", "100px", "150px"]}
               borderRadius="50%"
-              src="media.png"
+              src={profile.displayPicture || "/media.png"}
             />
-            <Link textAlign="center" mt={3} textDecor="underline">
-              Update Profile Picture
+            <Link textAlign="center" mt={5} textDecor="underline">
+              Upload Profile Picture
             </Link>
           </Flex>
         </Flex>
       </Flex>
-      <Flex w="100%" justifyContent="flex-start" mt={10} ml={[0, 0, 3, 5, 8]}>
+      <Flex alignItems="center" mt={5} ml={[0, 0, 3, 5, 8]}>
         <Button
           rounded={"full"}
-          text="Save Profile"
+          disabled={pageStatus !== "loaded"}
+          text={
+            pageStatus === "loaded" ? (
+              "Save Profile"
+            ) : (
+              <Image src="/loader_black.gif" h="2rem" />
+            )
+          }
           variant="solid"
           backgroundColor="bright.fg"
           size="lg"
           fontWeight="normal"
+          onClick={handleUpdateProfile}
+          mr={10}
+          my={4}
+          flex="200px"
+          maxW="200px"
+          border="1px solid"
+          borderColor="bright.fg"
+          _hover={{
+            backgroundColor: "transparent",
+            color: "bright.fg",
+          }}
         />
+        {successMessage && <SuccessAlert message={successMessage} />}
+        {error && <ErrorAlert message={error} />}
       </Flex>
       <Divider
         mt={10}

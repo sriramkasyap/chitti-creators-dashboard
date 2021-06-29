@@ -34,7 +34,7 @@ export default withIronSession(
 
         res.send({
           success: true,
-          result,
+          creator: result,
         });
       } catch (error) {
         console.error(error);
