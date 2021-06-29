@@ -10,13 +10,12 @@ import {
   Input,
   Text,
   Heading,
-  IconButton,
-  Badge,
   Box,
-  CloseButton,
   Image,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
 
 import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
 import Button from "../../src/components/common/Button/Button";
@@ -69,9 +68,9 @@ const CreateNewNewsletter = () => {
     });
   };
 
-  const handleRemoveKeyword = (keywordId) => {
+  const handleRemoveKeyword = (kIndex) => {
     const tempKeywords = keywordsList?.filter(
-      (keyword) => keyword.id !== keywordId
+      (keyword, index) => index !== kIndex
     );
     setKeywordsList(tempKeywords);
   };
@@ -79,6 +78,18 @@ const CreateNewNewsletter = () => {
   const handleTextEditorChange = (event, editor) => {
     const data = editor.getData();
     setEditorData(juice.inlineContent(data, ckeditorStyles));
+  };
+
+  const handleDiscardDraft = () => {
+    setFormData({
+      reference: "",
+      subject: "",
+      keyword: "",
+    });
+    setKeywordsList([]);
+    setEditorData(
+      `<p style="text-align:center;">Start Creating your Newsletter!</p>`
+    );
   };
 
   const handleSaveDraft = () => {
@@ -110,6 +121,20 @@ const CreateNewNewsletter = () => {
     }
   };
 
+  const handlePublishSend = () => {
+    setPageStatus("publishing");
+    const requestBody = {
+      newsletter: {
+        reference: formData.reference,
+        emailSubject: formData.subject,
+        body: editorData,
+        keywords: keywordsList.map((keyword) => keyword.text),
+      },
+    };
+
+    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
+  };
+
   const valdateFormData = () => {
     setError("");
     if (
@@ -130,7 +155,7 @@ const CreateNewNewsletter = () => {
   };
 
   return (
-    <Flex flexDirection="column" w="100%">
+    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -141,34 +166,77 @@ const CreateNewNewsletter = () => {
         pt={[0, 0, 0, 0, 5]}
       >
         <Flex mb={[5, 5, 5, 0, 0]} mt={[5, 5, 5, 0, 0]} ml={[0, 0, 0, 0]}>
-          <Heading>Create Newsletter</Heading>
+          <Heading fontSize={["3xl", "3xl", "3xl", "4xl", "4xl"]}>
+            Create Newsletter
+          </Heading>
         </Flex>
         <Flex
-          flexDirection={"row"}
-          justifyContent={["flex-start", "flex-start", "flex-end"]}
+          flexDirection={["column-reverse", "column-reverse", "row"]}
+          justifyContent={["center", "flex-start", "flex-start", "flex-end"]}
+          alignItems="center"
         >
-          <Button
-            rounded={"full"}
-            disabled={pageStatus !== "loaded"}
-            text={
-              pageStatus == "saving" ? (
-                <Image src="/loader_black.gif" h="2rem" />
-              ) : (
-                "Save Draft"
-              )
-            }
-            variant="outline"
-            fontWeight={400}
-            backgroundColor="transparent"
-            _hover={{
-              bg: "bright.gray",
-              color: "bright.bg",
-            }}
-            color="bright.fg"
-            onClick={handleSaveDraft}
-            fontSize={[12, 14, 16]}
-            p="1rem 2rem"
-          />
+          <Flex mt={[3, 3, 0]}>
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text="Discard Draft"
+              variant="link"
+              fontWeight={400}
+              color="bright.gray"
+              textDecor="underline"
+              onClick={handleDiscardDraft}
+              fontSize={[12, 14, 16]}
+            />
+          </Flex>
+          <Flex>
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text={
+                pageStatus == "saving" ? (
+                  <Image src="/loader_black.gif" h="2rem" />
+                ) : (
+                  "Save Draft"
+                )
+              }
+              variant="outline"
+              fontWeight={400}
+              ml={[2, 2, 2, 5]}
+              backgroundColor="transparent"
+              _hover={{
+                bg: "bright.gray",
+                color: "bright.bg",
+              }}
+              color="bright.fg"
+              onClick={handleSaveDraft}
+              fontSize={[12, 14, 16]}
+              p="1rem 2rem"
+            />
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text={
+                pageStatus === "publishing" ? (
+                  <Image src="/loader_white.gif" h="2rem" />
+                ) : (
+                  "Publish & Send"
+                )
+              }
+              variant="outline"
+              fontWeight={400}
+              ml={[2, 2, 2, 5]}
+              backgroundColor="bright.fg"
+              _hover={{
+                bg: "transparent",
+                color: "bright.fg",
+                borderColor: "bright.fg",
+              }}
+              color="bright.bg"
+              onClick={handlePublishSend}
+              fontSize={[12, 14, 16]}
+              p="1rem 2rem"
+            />
+          </Flex>
         </Flex>
       </Flex>
       {errorMessage && <ErrorAlert message={errorMessage} />}
@@ -212,73 +280,59 @@ const CreateNewNewsletter = () => {
           />
         </FormControl>
       </Flex>
-      <Flex alignItems="center" flexWrap="wrap" width={"100%"}>
-        <FormControl
-          pl={[0, 0, 0, 0, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 5, 5, 10]}
-          width={["100%", "100%", "50%"]}
-        >
-          <FormLabel>Keywords</FormLabel>
-          <Flex>
-            <Input
-              type="text"
-              name="keyword"
-              focusBorderColor="bright.fg"
-              borderColor="bright.light"
-              border="1px solid"
-              borderRadius={0}
-              value={formData.keyword}
-              onChange={handleInputChange}
-            />
-            <IconButton
-              aria-label="Add Keyword"
-              icon={<FiPlus />}
-              ml={2}
-              fontSize="2xl"
-              borderRadius={0}
-              backgroundColor="bright.fg"
-              color="bright.bg"
-              _focus={{ boxShadow: "none" }}
-              onClick={handleAddKeyword}
-            />
-          </Flex>
-        </FormControl>
+      <Flex
+        flexDir="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        w={["100%", "100%", "50%"]}
+        pl={[0, 0, 0, 0, 5]}
+        pt={2}
+        pb={[2, 2, 2, 2, 5]}
+        pr={[0, 0, 5, 5, 10]}
+      >
+        <Text mb={2}>Tags</Text>
         <Flex
-          pl={[0, 0, 5, 5, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 0, 0, 5]}
+          w={["100%", "100%", "100%"]}
+          borderColor="bright.light"
+          borderWidth="1px"
           flexWrap="wrap"
-          width={["100%", "100%", "50%"]}
+          p={2}
+          alignItems="center"
         >
-          <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword, k) => (
-              <Badge
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                variant="subtle"
-                colorScheme="teal"
-                key={k}
-                fontSize="0.8em"
+            keywordsList.map((keyword, index) => (
+              <Tag
+                size="sm"
+                key={index + 1}
+                borderRadius={0}
+                variant="solid"
                 backgroundColor="bright.fg"
                 color="bright.bg"
+                textTransform="uppercase"
+                mt={1}
                 mr={2}
-                mt={[2]}
+                mb={1}
               >
-                <Text pl={1}>{keyword}</Text>
-                <CloseButton
-                  size="sm"
-                  borderRadius={0}
-                  onClick={() => handleRemoveKeyword(keyword.id)}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
+                <TagLabel>{keyword}</TagLabel>
+                <TagCloseButton
+                  onClick={() => handleRemoveKeyword(index)}
+                  _focus={{ outline: "none", boxShadow: "none" }}
                 />
-              </Badge>
+              </Tag>
             ))}
+          <Input
+            flex="1"
+            variant="unstyled"
+            placeholder="Press Enter to add Tags"
+            type="text"
+            name="keyword"
+            focusBorderColor="none"
+            value={formData.keyword}
+            onKeyUp={(event) =>
+              event.key === "Enter" ? handleAddKeyword() : null
+            }
+            onChange={handleInputChange}
+          />
         </Flex>
       </Flex>
       <Flex

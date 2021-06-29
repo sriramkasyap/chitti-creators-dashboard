@@ -84,7 +84,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
         ) : isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
-          <Table {...getTableProps()} size={("sm", "sm", "sm", "sm")}>
+          <Table {...getTableProps()} size="sm">
             <Thead>
               {headerGroups.map((headerGroup) => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
