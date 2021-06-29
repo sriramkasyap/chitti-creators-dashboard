@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { withIronSession } from "next-iron-session";
 import withCreatorAuth from "../../../../src/middleware/withCreatorAuth";
 import SubscriptionPlan from "../../../../src/models/SubscriptionPlan";
@@ -41,6 +42,24 @@ export default withIronSession(
           success: true,
           plan,
         });
+      } else if (req.method === "GET") {
+        var { creatorId } = req.creator;
+
+        var { planId } = req.query;
+
+        if (!isValidObjectId(planId))
+          throw new Error("The requested plan does not exist");
+
+        var plan = await SubscriptionPlan.findById(planId).lean();
+
+        if (plan && plan._id) {
+          return res.send({
+            success: true,
+            plan,
+          });
+        } else {
+          throw new Error("The requested plan does not exist");
+        }
       } else {
         throw new Error("Invalid request");
       }
