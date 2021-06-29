@@ -155,7 +155,14 @@ const CreateNewNewsletter = () => {
   };
 
   return (
-    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
+    <Flex
+      flexDirection="column"
+      w="100%"
+      mt={["8vh", "8vh", "8vh", "10vh", 0]}
+      ml="auto"
+      mr="auto"
+      maxW={["100%", "100%", "100%", "100%", "1440px"]}
+    >
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
