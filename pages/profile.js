@@ -180,8 +180,17 @@ const Profile = () => {
     >
       <Flex w="100%" flexDir={["column-reverse", "column-reverse", "row"]}>
         <Flex w="100%" flexDir="column" mt={[5, 0]}>
-          <Flex flexWrap="wrap" flexDir={["column", "column", "row"]}>
-            <FormControl ml={[0, 0, 3, 5, 8]} mt={[3, 3, 3, 5]}>
+          <Flex
+            flexWrap="wrap"
+            flexDir={["column", "column", "row"]}
+            justifyContent="space-between"
+          >
+            <FormControl
+              flex={["100%", "100%", "100%", "46%"]}
+              maxW={["100%", "100%", "100%", "46%"]}
+              ml={[0, 0, 3, 5, 8]}
+              mt={[3, 3, 3, 5]}
+            >
               <FormLabel>Display Name</FormLabel>
               <Input
                 borderRadius={0}
@@ -189,7 +198,12 @@ const Profile = () => {
                 borderColor="bright.light"
               />
             </FormControl>
-            <FormControl ml={[0, 0, 3, 5, 8]} mt={[3, 3, 3, 5]}>
+            <FormControl
+              flex={["100%", "100%", "100%", "46%"]}
+              maxW={["100%", "100%", "100%", "46%"]}
+              ml={[0, 0, 3, 5]}
+              mt={[3, 3, 3, 5]}
+            >
               <FormLabel>Short Bio</FormLabel>
               <Input
                 borderRadius={0}
