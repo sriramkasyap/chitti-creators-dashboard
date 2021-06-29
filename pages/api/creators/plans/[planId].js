@@ -50,7 +50,7 @@ export default withIronSession(
         if (!isValidObjectId(planId))
           throw new Error("The requested plan does not exist");
 
-        var plan = SubscriptionPlan.findById(planId).lean();
+        var plan = await SubscriptionPlan.findById(planId).lean();
 
         if (plan && plan._id) {
           return res.send({
