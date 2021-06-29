@@ -172,11 +172,16 @@ const Profile = () => {
   };
 
   return (
-    <Flex flexDir="column" w="100%">
-      <Flex w="100%" flexDir={["column-reverse", "row"]}>
+    <Flex
+      flexDir="column"
+      w="100%"
+      maxW={["100%", "100%", "100%", "100%", "1240px"]}
+      ml={[0]}
+    >
+      <Flex w="100%" flexDir={["column-reverse", "column-reverse", "row"]}>
         <Flex w="100%" flexDir="column" mt={[5, 0]}>
-          <Flex flexDir={["column", "row"]}>
-            <FormControl>
+          <Flex flexWrap="wrap" flexDir={["column", "column", "row"]}>
+            <FormControl ml={[0, 0, 3, 5, 8]} mt={[3, 3, 3, 5]}>
               <FormLabel>Display Name</FormLabel>
               <Input
                 borderRadius={0}
@@ -184,7 +189,7 @@ const Profile = () => {
                 borderColor="bright.light"
               />
             </FormControl>
-            <FormControl ml={[0, 3]} mt={[3, 0]}>
+            <FormControl ml={[0, 0, 3, 5, 8]} mt={[3, 3, 3, 5]}>
               <FormLabel>Short Bio</FormLabel>
               <Input
                 borderRadius={0}
@@ -193,7 +198,7 @@ const Profile = () => {
               />
             </FormControl>
           </Flex>
-          <Flex mt={3}>
+          <Flex mt={[3, 3, 3, 5]} ml={[0, 0, 3, 5, 8]}>
             <FormControl>
               <FormLabel>Full Bio</FormLabel>
               <Textarea
@@ -204,13 +209,18 @@ const Profile = () => {
             </FormControl>
           </Flex>
         </Flex>
-        <Flex w={["100%", "30%"]} flexDir="column" ml={[0, 5]}>
+        <Flex
+          w={["100%", "100%", "50%"]}
+          flexDir="column"
+          ml={[0, 0, 2]}
+          mb={[1, 4]}
+        >
           <Flex
             w="100%"
-            justifyContent={["flex-start", "center"]}
+            justifyContent={["flex-start", "flex-start", "center"]}
             mt={5}
             flexDir="column"
-            alignItems={["flex-start", "center"]}
+            alignItems={["flex-start", "flex-start", "center"]}
           >
             <Image
               height="100px"
@@ -224,7 +234,7 @@ const Profile = () => {
           </Flex>
         </Flex>
       </Flex>
-      <Flex w="100%" justifyContent="flex-start" mt={3}>
+      <Flex w="100%" justifyContent="flex-start" mt={10} ml={[0, 0, 3, 5, 8]}>
         <Button
           rounded={"full"}
           text="Save Profile"
@@ -235,158 +245,198 @@ const Profile = () => {
         />
       </Flex>
       <Divider
-        mt={5}
-        mb={5}
+        mt={10}
+        mb={10}
         border="1px solid"
-        borderColor="bright.gray"
         backgroundColor="bright.gray"
       />
-      <Flex flexDir="column">
+      <Flex flexDir="column" mt={6} ml={[0, 0, 3, 5, 8]}>
         <Flex w="100%">
           <Heading>Subscriptions</Heading>
         </Flex>
-        <Flex
-          flexDir={["column", "row"]}
-          mt={5}
-          justifyContent="space-between"
-          alignItems="center"
-          w="100%"
-        >
+        <Flex flexDir={["column", "row"]} mt={5} alignItems="center" w="100%">
           <Flex
-            w={["100%", "90%"]}
+            w="100%"
+            maxW={["100%", "100%", "400px", "450px"]}
             flexDir="column"
             justifyContent="center"
             alignItems="stretch"
+            mt={5}
+            mr={[5, 5, 5, 10]}
+            mb={5}
+            ml={0}
           >
-            <Text mb={2} fontSize="lg" fontWeight="semibold">
-              Free Plan
-            </Text>
             <Box
               display="flex"
               flexDir="column"
               justifyContent="center"
               alignItems="center"
               border="1px solid"
+              borderColor="bright.gray"
               borderRadius={5}
               p={5}
             >
+              <Text
+                textAlign="center"
+                mb={5}
+                fontSize={25}
+                fontWeight="semibold"
+              >
+                Free Plan
+              </Text>
               <Input
-                placeholder="$0"
+                placeholder="0"
                 display="block"
                 w="20%"
+                fontSize={40}
                 isReadOnly
                 borderColor="bright.light"
                 focusBorderColor="bright.light"
                 borderRadius={0}
+                textAlign="center"
+                p={15}
+                h={20}
               />
-              <Text mt={3} fontWeight="semibold">
+              <Text mt={1} fontWeight="light">
                 Pricing
               </Text>
               <Divider
                 w="60%"
                 mt={2}
                 mb={5}
-                border="1px solid"
-                borderColor="bright.gray"
-                backgroundColor="bright.gray"
+                borderTop="1px solid"
+                borderBottom="0"
+                borderColor="bright.light"
               />
               <Text fontWeight="semibold">Features</Text>
-              <Flex w="100%" mt={3}>
-                <Input
-                  borderRadius={0}
-                  focusBorderColor="bright.fg"
-                  borderColor="bright.light"
-                />
+              <Flex w="100%" mt={5} flexDir="column" alignItems="center">
+                <Flex w="100%" alignItems="center">
+                  <Text mr={4} fontSize={[20]} lineHeight={1}>
+                    1.
+                  </Text>
+                  <Input
+                    textAlign="center"
+                    borderRadius={0}
+                    focusBorderColor="bright.fg"
+                    borderColor="bright.light"
+                    mt={2}
+                    mb={2}
+                    fontSize={[16]}
+                    placeholder="Add your plan offerings here"
+                  />
+                </Flex>
                 <IconButton
                   aria-label="Add Plan Feature"
                   icon={<FiPlus />}
                   ml={2}
                   fontSize="2xl"
                   borderRadius={0}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
+                  backgroundColor="bright.light"
+                  color="bright.fg"
                   _focus={{ boxShadow: "none" }}
-                  // onClick={handleAddPlanFeature}
+                  mt={5}
                 />
-              </Flex>
-              <Flex mt={3} w="100%" flexDir="column">
-                <Text>Text Value One</Text>
-                <Text mt={2}>Text Value Two</Text>
-                <Text mt={2}>Text Value Three</Text>
               </Flex>
               <Button
                 rounded={"full"}
-                text="Save"
+                text="Save Plan"
                 variant="solid"
                 size="md"
-                mt={5}
+                mt={50}
                 backgroundColor="bright.fg"
                 p="1rem 2rem"
                 fontWeight="normal"
               />
             </Box>
           </Flex>
-          <Flex w={["100%", "90%"]} ml={[0, 5]} mt={[5, 0]} flexDir="column">
-            <Text mb={2} fontSize="lg" fontWeight="semibold">
-              Paid Plan
-            </Text>
+          <Flex
+            w="100%"
+            maxW={["100%", "100%", "400px", "450px"]}
+            flexDir="column"
+            justifyContent="center"
+            alignItems="stretch"
+            mt={5}
+            mr={[5, 5, 5, 10]}
+            mb={5}
+            ml={0}
+          >
             <Box
               display="flex"
               flexDir="column"
               justifyContent="center"
               alignItems="center"
               border="1px solid"
+              borderColor="bright.gray"
               borderRadius={5}
               p={5}
             >
+              <Text
+                textAlign="center"
+                mb={5}
+                fontSize={25}
+                fontWeight="semibold"
+              >
+                Paid Plan
+              </Text>
               <Input
-                placeholder="$5"
+                placeholder="0"
                 display="block"
                 w="20%"
-                focusBorderColor="bright.fg"
+                fontSize={40}
+                isReadOnly
+                borderColor="bright.light"
+                focusBorderColor="bright.light"
                 borderRadius={0}
+                textAlign="center"
+                p={15}
+                h={20}
               />
-              <Text mt={3} fontWeight="semibold">
+              <Text mt={1} fontWeight="light">
                 Pricing
               </Text>
               <Divider
                 w="60%"
                 mt={2}
                 mb={5}
-                border="1px solid"
-                borderColor="bright.gray"
-                backgroundColor="bright.gray"
+                borderTop="1px solid"
+                borderBottom="0"
+                borderColor="bright.light"
               />
               <Text fontWeight="semibold">Features</Text>
-              <Flex w="100%" mt={3}>
-                <Input
-                  borderRadius={0}
-                  focusBorderColor="bright.fg"
-                  borderColor="bright.light"
-                />
+              <Flex w="100%" mt={5} flexDir="column" alignItems="center">
+                <Flex w="100%" alignItems="center">
+                  <Text mr={4} fontSize={[20]} lineHeight={1}>
+                    1.
+                  </Text>
+                  <Input
+                    textAlign="center"
+                    borderRadius={0}
+                    focusBorderColor="bright.fg"
+                    borderColor="bright.light"
+                    mt={2}
+                    mb={2}
+                    fontSize={[16]}
+                    placeholder="Add your plan offerings here"
+                  />
+                </Flex>
                 <IconButton
                   aria-label="Add Plan Feature"
                   icon={<FiPlus />}
                   ml={2}
                   fontSize="2xl"
                   borderRadius={0}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
+                  backgroundColor="bright.light"
+                  color="bright.fg"
                   _focus={{ boxShadow: "none" }}
-                  // onClick={handleAddPlanFeature}
+                  mt={5}
                 />
-              </Flex>
-              <Flex mt={3} w="100%" flexDir="column">
-                <Text>Text Value One</Text>
-                <Text mt={2}>Text Value Two</Text>
-                <Text mt={2}>Text Value Three</Text>
               </Flex>
               <Button
                 rounded={"full"}
-                text="Save"
+                text="Save Plan"
                 variant="solid"
                 size="md"
-                mt={5}
+                mt={50}
                 backgroundColor="bright.fg"
                 p="1rem 2rem"
                 fontWeight="normal"
