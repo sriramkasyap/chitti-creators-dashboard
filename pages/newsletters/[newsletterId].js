@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
@@ -15,6 +15,7 @@ import {
   Box,
   CloseButton,
   Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
 
@@ -32,9 +33,14 @@ const RichTextEditor = dynamic(
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 import juice from "juice";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
-import { updateNewsletter } from "../../src/helpers/userFetcher";
+import {
+  getPlan,
+  publishNewsletter,
+  updateNewsletter,
+} from "../../src/helpers/userFetcher";
 import Newsletter from "../../src/models/Newsletter";
 import { isValidObjectId } from "mongoose";
+import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 
 const EditNewsletter = ({ newsletter }) => {
   const [editorData, setEditorData] = useState(newsletter.body);
@@ -43,12 +49,18 @@ const EditNewsletter = ({ newsletter }) => {
     subject: newsletter.emailSubject,
     keyword: "",
   });
+  const [selectedPlan, selectPlan] = useState();
+  const [recipientCount, setRecipientCount] = useState();
   const [keywordsList, setKeywordsList] = useState(newsletter.keywords);
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving, publishing
-  const [errorMessage, setError] = useState(null);
-  const [successMessage, setSuccess] = useState(null);
+  const [errorMessage, setError] = useState();
+  const [successMessage, setSuccess] = useState();
+  const publishModalDisclosure = useDisclosure({
+    defaultIsOpen: false,
+    id: "publishModal",
+  });
 
   const handleInputChange = (event) => {
     const {
@@ -101,7 +113,7 @@ const EditNewsletter = ({ newsletter }) => {
             });
             setKeywordsList(result.newsletter.keywords);
             setPageStatus("loaded");
-            setSuccess("Data Saved Successfully!");
+            setSuccess("Newsletter Saved Successfully!");
           } else {
             setError(result.message);
             setPageStatus("loaded");
@@ -116,18 +128,10 @@ const EditNewsletter = ({ newsletter }) => {
     }
   };
 
-  const handlePublishSend = () => {
+  const handlePublishSend = async () => {
     setPageStatus("publishing");
-    const requestBody = {
-      newsletter: {
-        reference: formData.reference,
-        emailSubject: formData.subject,
-        body: editorData,
-        keywords: keywordsList.map((keyword) => keyword.text),
-      },
-    };
-
-    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
+    handleSaveDraft();
+    publishModalDisclosure.onOpen();
   };
 
   const valdateFormData = () => {
@@ -149,8 +153,63 @@ const EditNewsletter = ({ newsletter }) => {
     }
   };
 
+  const handlePublishNewsletter = () => {
+    setPageStatus("publishing");
+    publishNewsletter(newsletter.newsletterId, selectedPlan)
+      .then((result) => {
+        if (result.success) {
+          setEditorData(result.newsletter.body);
+          setFormData({
+            reference: result.newsletter.reference,
+            subject: result.newsletter.emailSubject,
+            keyword: "",
+          });
+          setKeywordsList(result.newsletter.keywords);
+          setSuccess("Newsletter has been sent Successfully");
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        } else {
+          setError(result.message);
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setPageStatus("loaded");
+        publishModalDisclosure.onClose();
+      });
+  };
+
+  useEffect(() => {
+    // Refresh recipientCount every time the plan is selected
+    if (selectedPlan && selectedPlan.length > 0) {
+      getPlan(selectedPlan)
+        .then((result) => {
+          if (result.success) {
+            setRecipientCount(result.plan.subscribers.length);
+          } else {
+            publishModalDisclosure.onClose();
+            setError(result.message);
+          }
+        })
+        .catch((e) => {
+          publishModalDisclosure.onClose();
+          setError(e.message);
+        });
+    }
+  }, [selectedPlan]);
+
   return (
     <Flex flexDirection="column" w="100%">
+      <PublishModal
+        disclosure={publishModalDisclosure}
+        selectedPlan={selectedPlan}
+        selectPlan={selectPlan}
+        recipientCount={recipientCount}
+        publishNewsletter={handlePublishNewsletter}
+        pageStatus={pageStatus}
+      />
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -357,7 +416,7 @@ const EditNewsletter = ({ newsletter }) => {
           pt={2}
           pb={2}
           pr={[0, 0, 0, 0, 5]}
-          mt={2}
+          mt={[2, 2, 2, 2, 0]}
         >
           <Text fontWeight="bold" fontSize="lg" mb={3}>
             Preview
@@ -408,6 +467,7 @@ export const getServerSideProps = withIronSession(async (ctx) => {
     newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
     newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
     newsletter.creator = newsletter.creator.toString();
+    newsletter.recipients = newsletter.recipients.length;
     return {
       props: {
         ...props,

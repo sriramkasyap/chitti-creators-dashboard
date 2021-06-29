@@ -40,6 +40,10 @@ export const updatePlan = async (planId, plan) => {
   }).then((r) => r.json());
 };
 
+export const getPlan = async (planId) => {
+  return fetch(`/api/creators/plans/${planId}`).then((r) => r.json());
+};
+
 export const createNewsletter = async (newsletter) => {
   return fetch(`/api/newsletters`, {
     method: "POST",
@@ -57,5 +61,15 @@ export const updateNewsletter = async (newsletterId, newsletter) => {
       "Content-type": "application/json",
     },
     body: JSON.stringify({ newsletter }),
+  }).then((r) => r.json());
+};
+
+export const publishNewsletter = async (newsletterId, planId) => {
+  return fetch(`/api/newsletters/${newsletterId}/publish`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ planId }),
   }).then((r) => r.json());
 };
