@@ -10,14 +10,12 @@ import {
   Input,
   Text,
   Heading,
-  IconButton,
   Box,
   Image,
   Tag,
   TagLabel,
   TagCloseButton,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
 
 import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
 import Button from "../../src/components/common/Button/Button";
@@ -282,65 +280,59 @@ const CreateNewNewsletter = () => {
           />
         </FormControl>
       </Flex>
-      <Flex alignItems="center" flexWrap="wrap" width={"100%"}>
-        <FormControl
-          pl={[0, 0, 0, 0, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 5, 5, 10]}
-          width={["100%", "100%", "50%"]}
-        >
-          <FormLabel>Tags</FormLabel>
-          <Flex>
-            <Input
-              type="text"
-              name="keyword"
-              focusBorderColor="bright.fg"
-              borderColor="bright.light"
-              border="1px solid"
-              borderRadius={0}
-              value={formData.keyword}
-              onChange={handleInputChange}
-            />
-            <IconButton
-              aria-label="Add Keyword"
-              icon={<FiPlus />}
-              ml={2}
-              fontSize="2xl"
-              borderRadius={0}
-              backgroundColor="bright.fg"
-              color="bright.bg"
-              _focus={{ boxShadow: "none" }}
-              onClick={handleAddKeyword}
-            />
-          </Flex>
-        </FormControl>
+      <Flex
+        flexDir="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        w={["100%", "100%", "50%"]}
+        pl={[0, 0, 0, 0, 5]}
+        pt={2}
+        pb={[2, 2, 2, 2, 5]}
+        pr={[0, 0, 5, 5, 10]}
+      >
+        <Text mb={2}>Tags</Text>
         <Flex
-          pl={[0, 0, 5, 5, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 0, 0, 5]}
+          w={["100%", "100%", "100%"]}
+          borderColor="bright.light"
+          borderWidth="1px"
           flexWrap="wrap"
-          width={["100%", "100%", "50%"]}
+          p={2}
+          alignItems="center"
         >
-          <Box width="100%" height="20px" display={["none", "flex"]}></Box>
           {keywordsList.length > 0 &&
             keywordsList.map((keyword, index) => (
               <Tag
-                size="md"
+                size="sm"
                 key={index + 1}
                 borderRadius={0}
                 variant="solid"
                 backgroundColor="bright.fg"
                 color="bright.bg"
                 textTransform="uppercase"
+                mt={1}
                 mr={2}
-                mt={2}
+                mb={1}
               >
                 <TagLabel>{keyword}</TagLabel>
-                <TagCloseButton onClick={() => handleRemoveKeyword(index)} />
+                <TagCloseButton
+                  onClick={() => handleRemoveKeyword(index)}
+                  _focus={{ outline: "none", boxShadow: "none" }}
+                />
               </Tag>
             ))}
+          <Input
+            flex="1"
+            variant="unstyled"
+            placeholder="Press Enter to add Tags"
+            type="text"
+            name="keyword"
+            focusBorderColor="none"
+            value={formData.keyword}
+            onKeyUp={(event) =>
+              event.key === "Enter" ? handleAddKeyword() : null
+            }
+            onChange={handleInputChange}
+          />
         </Flex>
       </Flex>
       <Flex
