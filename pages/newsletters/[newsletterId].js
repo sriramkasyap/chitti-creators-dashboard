@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-// import parse from "html-react-parser"; // used to parse string to html
+import dynamic from "next/dynamic";
+import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+
 import {
   Flex,
   FormControl,
@@ -9,16 +11,18 @@ import {
   Text,
   Heading,
   IconButton,
-  Badge,
   Box,
-  CloseButton,
   Image,
+  Tag,
+  TagLabel,
+  TagCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiPlus } from "react-icons/fi";
-import renderHTML from "react-render-html";
+
+import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
+import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
 import Button from "../../src/components/common/Button/Button";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -30,9 +34,14 @@ const RichTextEditor = dynamic(
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 import juice from "juice";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
-import { updateNewsletter } from "../../src/helpers/userFetcher";
+import {
+  getPlan,
+  publishNewsletter,
+  updateNewsletter,
+} from "../../src/helpers/userFetcher";
 import Newsletter from "../../src/models/Newsletter";
 import { isValidObjectId } from "mongoose";
+import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 
 const EditNewsletter = ({ newsletter }) => {
   const [editorData, setEditorData] = useState(newsletter.body);
@@ -41,11 +50,18 @@ const EditNewsletter = ({ newsletter }) => {
     subject: newsletter.emailSubject,
     keyword: "",
   });
+  const [selectedPlan, selectPlan] = useState();
+  const [recipientCount, setRecipientCount] = useState();
   const [keywordsList, setKeywordsList] = useState(newsletter.keywords);
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving, publishing
-  const [errorMessage, setError] = useState(null);
+  const [errorMessage, setError] = useState();
+  const [successMessage, setSuccess] = useState();
+  const publishModalDisclosure = useDisclosure({
+    defaultIsOpen: false,
+    id: "publishModal",
+  });
 
   const handleInputChange = (event) => {
     const {
@@ -65,9 +81,9 @@ const EditNewsletter = ({ newsletter }) => {
     });
   };
 
-  const handleRemoveKeyword = (keywordId) => {
+  const handleRemoveKeyword = (kIndex) => {
     const tempKeywords = keywordsList?.filter(
-      (keyword) => keyword.id !== keywordId
+      (keyword, index) => index !== kIndex
     );
     setKeywordsList(tempKeywords);
   };
@@ -98,14 +114,14 @@ const EditNewsletter = ({ newsletter }) => {
             });
             setKeywordsList(result.newsletter.keywords);
             setPageStatus("loaded");
-            //  TODO: Show success message
+            setSuccess("Newsletter Saved Successfully!");
           } else {
-            alert(result.message); // TODO: Show Error message
+            setError(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          alert(e.message); // TODO: Show Error message
+          setError(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -113,18 +129,10 @@ const EditNewsletter = ({ newsletter }) => {
     }
   };
 
-  const handlePublishSend = () => {
+  const handlePublishSend = async () => {
     setPageStatus("publishing");
-    const requestBody = {
-      newsletter: {
-        reference: formData.reference,
-        emailSubject: formData.subject,
-        body: editorData,
-        keywords: keywordsList.map((keyword) => keyword.text),
-      },
-    };
-
-    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
+    handleSaveDraft();
+    publishModalDisclosure.onOpen();
   };
 
   const valdateFormData = () => {
@@ -146,8 +154,63 @@ const EditNewsletter = ({ newsletter }) => {
     }
   };
 
+  const handlePublishNewsletter = () => {
+    setPageStatus("publishing");
+    publishNewsletter(newsletter.newsletterId, selectedPlan)
+      .then((result) => {
+        if (result.success) {
+          setEditorData(result.newsletter.body);
+          setFormData({
+            reference: result.newsletter.reference,
+            subject: result.newsletter.emailSubject,
+            keyword: "",
+          });
+          setKeywordsList(result.newsletter.keywords);
+          setSuccess("Newsletter has been sent Successfully");
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        } else {
+          setError(result.message);
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setPageStatus("loaded");
+        publishModalDisclosure.onClose();
+      });
+  };
+
+  useEffect(() => {
+    // Refresh recipientCount every time the plan is selected
+    if (selectedPlan && selectedPlan.length > 0) {
+      getPlan(selectedPlan)
+        .then((result) => {
+          if (result.success) {
+            setRecipientCount(result.plan.subscribers.length);
+          } else {
+            publishModalDisclosure.onClose();
+            setError(result.message);
+          }
+        })
+        .catch((e) => {
+          publishModalDisclosure.onClose();
+          setError(e.message);
+        });
+    }
+  }, [selectedPlan]);
+
   return (
-    <Flex flexDirection="column" w="100%">
+    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
+      <PublishModal
+        disclosure={publishModalDisclosure}
+        selectedPlan={selectedPlan}
+        selectPlan={selectPlan}
+        recipientCount={recipientCount}
+        publishNewsletter={handlePublishNewsletter}
+        pageStatus={pageStatus}
+      />
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -158,7 +221,9 @@ const EditNewsletter = ({ newsletter }) => {
         pt={[0, 0, 0, 0, 5]}
       >
         <Flex mb={[5, 5, 5, 0, 0]} mt={[5, 5, 5, 0, 0]} ml={[0, 0, 0, 0]}>
-          <Heading>Edit Newsletter</Heading>
+          <Heading fontSize={["3xl", "3xl", "3xl", "4xl", "4xl"]}>
+            Edit Newsletter
+          </Heading>
         </Flex>
         <Flex
           flexDirection={"row"}
@@ -214,6 +279,8 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </Flex>
       </Flex>
+      {successMessage && <SuccessAlert message={successMessage} />}
+      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
@@ -254,73 +321,59 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </FormControl>
       </Flex>
-      <Flex alignItems="center" flexWrap="wrap" width={"100%"}>
-        <FormControl
-          pl={[0, 0, 0, 0, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 5, 5, 10]}
-          width={["100%", "100%", "50%"]}
-        >
-          <FormLabel>Keywords</FormLabel>
-          <Flex>
-            <Input
-              type="text"
-              name="keyword"
-              focusBorderColor="bright.fg"
-              borderColor="bright.light"
-              border="1px solid"
-              borderRadius={0}
-              value={formData.keyword}
-              onChange={handleInputChange}
-            />
-            <IconButton
-              aria-label="Add Keyword"
-              icon={<FiPlus />}
-              ml={2}
-              fontSize="2xl"
-              borderRadius={0}
-              backgroundColor="bright.fg"
-              color="bright.bg"
-              _focus={{ boxShadow: "none" }}
-              onClick={handleAddKeyword}
-            />
-          </Flex>
-        </FormControl>
+      <Flex
+        flexDir="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        w={["100%", "100%", "50%"]}
+        pl={[0, 0, 0, 0, 5]}
+        pt={2}
+        pb={[2, 2, 2, 2, 5]}
+        pr={[0, 0, 5, 5, 10]}
+      >
+        <Text mb={2}>Tags</Text>
         <Flex
-          pl={[0, 0, 5, 5, 5]}
-          pt={2}
-          pb={[2, 2, 2, 2, 5]}
-          pr={[0, 0, 0, 0, 5]}
+          w={["100%", "100%", "100%"]}
+          borderColor="bright.light"
+          borderWidth="1px"
           flexWrap="wrap"
-          width={["100%", "100%", "50%"]}
+          p={2}
+          alignItems="center"
         >
-          <Box width="100%" height="20px"></Box>
           {keywordsList.length > 0 &&
-            keywordsList.map((keyword, k) => (
-              <Badge
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                variant="subtle"
-                colorScheme="teal"
-                key={k}
-                fontSize="0.8em"
+            keywordsList.map((keyword, index) => (
+              <Tag
+                size="sm"
+                key={index + 1}
+                borderRadius={0}
+                variant="solid"
                 backgroundColor="bright.fg"
                 color="bright.bg"
+                textTransform="uppercase"
+                mt={1}
                 mr={2}
-                mt={[2]}
+                mb={1}
               >
-                <Text pl={1}>{keyword}</Text>
-                <CloseButton
-                  size="sm"
-                  borderRadius={0}
-                  onClick={() => handleRemoveKeyword(keyword.id)}
-                  backgroundColor="bright.fg"
-                  color="bright.bg"
+                <TagLabel>{keyword}</TagLabel>
+                <TagCloseButton
+                  onClick={() => handleRemoveKeyword(index)}
+                  _focus={{ outline: "none", boxShadow: "none" }}
                 />
-              </Badge>
+              </Tag>
             ))}
+          <Input
+            flex="1"
+            variant="unstyled"
+            placeholder="Press Enter to add Tags"
+            type="text"
+            name="keyword"
+            focusBorderColor="none"
+            value={formData.keyword}
+            onKeyUp={(event) =>
+              event.key === "Enter" ? handleAddKeyword() : null
+            }
+            onChange={handleInputChange}
+          />
         </Flex>
       </Flex>
       <Flex
@@ -352,7 +405,7 @@ const EditNewsletter = ({ newsletter }) => {
           pt={2}
           pb={2}
           pr={[0, 0, 0, 0, 5]}
-          mt={2}
+          mt={[2, 2, 2, 2, 0]}
         >
           <Text fontWeight="bold" fontSize="lg" mb={3}>
             Preview
@@ -403,6 +456,7 @@ export const getServerSideProps = withIronSession(async (ctx) => {
     newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
     newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
     newsletter.creator = newsletter.creator.toString();
+    newsletter.recipients = newsletter.recipients.length;
     return {
       props: {
         ...props,

@@ -47,7 +47,7 @@ export default withIronSession(
           recipients: [],
         });
 
-        createdLetter.save();
+        await createdLetter.save();
 
         return res.send({
           success: true,

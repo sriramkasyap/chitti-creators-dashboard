@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorMessage from "../common/ErrorAlert/ErrorAlert";
+import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { getFormattedDate } from "../../utils";
 
 const NewslettersPage = ({
@@ -80,7 +80,7 @@ const NewslettersPage = ({
         w="100%"
       >
         {error ? (
-          <ErrorMessage message={error} />
+          <ErrorAlert message={error} />
         ) : isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (

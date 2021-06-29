@@ -7,15 +7,15 @@ import Topbar from "../Topbar/Topbar";
 const Layout = ({ children }) => {
   const router = useRouter();
   const route = router.asPath;
-  const isHideTopbar = route.startsWith("/newsletters/");
+  const shouldHideTopbar = route.startsWith("/newsletters/");
 
   return (
     <Box pl={[0, 0, 0, 0, "300px"]}>
       <Sidebar />
       <Flex w="100%" flexDir="column">
-        <Topbar isTopbarDisplay={isHideTopbar ? "none" : "flex"} />
+        <Topbar isTopbarDisplay={shouldHideTopbar ? "none" : "flex"} />
         <main>
-          <Flex flexDir="row" p={5}>
+          <Flex flexDir="row" p={5} overflow="auto">
             {children}
           </Flex>
         </main>

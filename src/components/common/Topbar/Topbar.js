@@ -67,8 +67,19 @@ const Topbar = ({ isTopbarDisplay }) => {
         </Heading>
       </Flex>
 
-      <Flex pt={isTopbarDisplay ? 0 : 5} pl={5} mt={[20, 24, 28, 36, 0]}>
+      <Flex
+        pl={5}
+        mt="10vh"
+        display={[
+          isTopbarDisplay,
+          isTopbarDisplay,
+          isTopbarDisplay,
+          isTopbarDisplay,
+          "none",
+        ]}
+      >
         <PageTitle
+          pt={5}
           display={[
             isTopbarDisplay,
             isTopbarDisplay,
@@ -78,7 +89,7 @@ const Topbar = ({ isTopbarDisplay }) => {
           ]}
         />
       </Flex>
-      {/* Topbar for Widescreen End */}
+      {/* Topbar for Smallscreen End */}
     </>
   );
 };
