@@ -41,17 +41,18 @@ const Login = () => {
 
   const handleLogin = async () => {
     setIsLoading(true);
+    setError("");
     setTimeout(async () => {
       // Only to demostrate loading state. To be removed later
 
       try {
         if (await userLogin(formData)) {
           router.replace("/");
+        } else {
+          setIsLoading(false);
         }
-        setIsLoading(false);
       } catch (err) {
         setError(loginError);
-        setIsLoading(false);
         setFormData({
           emailId: "",
           password: "",
