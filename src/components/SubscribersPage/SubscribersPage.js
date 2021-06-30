@@ -23,10 +23,13 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
 
   const getPlan = () => {
     const planData = plans?.find((plan) => plan._id === subscribers[0].planId);
-    if (planData.planFee === 0) {
-      return "Free";
+    if (planData) {
+      if (planData.planFee === 0) {
+        return "Free";
+      }
+      return "Paid";
     }
-    return "Paid";
+    return "";
   };
 
   const data = useMemo(() => {
