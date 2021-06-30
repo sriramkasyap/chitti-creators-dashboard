@@ -1,9 +1,9 @@
 import { serializeObject } from "../utils";
 
 export const getNewsletters = async (filters = {}) => {
-  return fetch(
-    `/api/newsletters?status=draft&${serializeObject(filters)}`
-  ).then((r) => r.json());
+  return fetch(`/api/newsletters${serializeObject(filters)}`).then((r) =>
+    r.json()
+  );
 };
 
 export const getSubscribers = async () => {

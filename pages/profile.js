@@ -146,7 +146,12 @@ const Profile = () => {
         longBio.length > 0,
         displayPicture.length > 0
       );
-      showNotification("Please fill all the details");
+      console.log(fullName, shortBio, longBio, displayPicture);
+      if (displayPicture) {
+        showNotification("Please fill all the details");
+      } else {
+        showNotification("Please Upload a Display Picture");
+      }
       return false;
     }
   };

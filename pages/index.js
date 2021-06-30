@@ -36,7 +36,7 @@ const Home = () => {
             },
             {
               id: 3,
-              title: "Revenue Till Date",
+              title: "Revenue (per month)",
               total: <span>&#x20b9;{revenue}</span>,
               icon: "money.png",
             },
