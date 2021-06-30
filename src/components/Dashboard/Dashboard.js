@@ -1,12 +1,9 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 import Button from "../common/Button/Button";
 import Card from "./Card/Card";
-import { getCardsData } from "../../helpers/cardsFetcher";
 
-const Dashboard = () => {
-  const cards = getCardsData();
-
+const Dashboard = ({ cards, isLoading, error }) => {
   return (
     <Flex flexDir="column" w="100%">
       {/* "Create New Newsletter" button display in small screen Start */}

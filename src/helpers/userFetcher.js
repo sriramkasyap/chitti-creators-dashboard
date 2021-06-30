@@ -73,3 +73,7 @@ export const publishNewsletter = async (newsletterId, planId) => {
     body: JSON.stringify({ planId }),
   }).then((r) => r.json());
 };
+
+export const getCardsDetails = async () => {
+  return fetch(`/api/creators/cards`).then((r) => r.json());
+};
