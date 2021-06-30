@@ -10,11 +10,7 @@ export const getServerSideProps = withIronSession(async ({ req, res }) => {
 
   res.setHeader("Location", "/login");
   res.statusCode = 302;
-  res.end();
-
-  return {
-    props: { standardLayout: false },
-  };
+  return res.end();
 }, getIronConfig());
 
 export default Logout;

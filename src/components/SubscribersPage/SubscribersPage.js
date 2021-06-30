@@ -14,12 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 const SubscribersPage = ({ subscribers, isLoading, error }) => {
   const { loggedInUser } = useContext(AuthContext);
   const { plans } = loggedInUser;
+
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
+    }
+  }, [error]);
 
   // merge two array of subscribers with different subscription plan
   const getPlan = () => {
@@ -88,9 +93,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
         w="100%"
         overflow="auto"
       >
-        {error ? (
-          <ErrorAlert message={error} />
-        ) : isLoading ? (
+        {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
           <Table {...getTableProps()} size="sm">

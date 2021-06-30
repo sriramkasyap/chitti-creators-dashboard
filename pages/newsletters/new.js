@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+import juice from "juice";
 
 import {
   Flex,
@@ -17,9 +19,7 @@ import {
   TagCloseButton,
 } from "@chakra-ui/react";
 
-import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
 import Button from "../../src/components/common/Button/Button";
-import dynamic from "next/dynamic";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -28,8 +28,11 @@ const RichTextEditor = dynamic(
   }
 );
 
-import { checkAuthentication, getIronConfig } from "../../src/utils";
-import juice from "juice";
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 import { createNewsletter } from "../../src/helpers/userFetcher";
 
@@ -46,7 +49,6 @@ const CreateNewNewsletter = () => {
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving
-  const [errorMessage, setError] = useState(null);
 
   const router = useRouter();
 
@@ -106,14 +108,15 @@ const CreateNewNewsletter = () => {
       createNewsletter(requestBody)
         .then((result) => {
           if (result.success) {
+            showNotification("Newsletter Saved Successfully!");
             router.push(`/newsletters/${result.newsletter._id}`);
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -136,7 +139,6 @@ const CreateNewNewsletter = () => {
   };
 
   const valdateFormData = () => {
-    setError("");
     if (
       formData &&
       formData.reference &&
@@ -149,7 +151,7 @@ const CreateNewNewsletter = () => {
     ) {
       return true;
     } else {
-      setError("Please Enter all the details");
+      showNotification("Please Enter all the details");
       return false;
     }
   };
@@ -246,7 +248,6 @@ const CreateNewNewsletter = () => {
           </Flex>
         </Flex>
       </Flex>
-      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}

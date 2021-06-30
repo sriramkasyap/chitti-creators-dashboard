@@ -44,9 +44,8 @@ const CreatorPlan = ({
       justifyContent="center"
       alignItems="stretch"
       mt={5}
-      mr={[5, 5, 5, 10, 20]}
+      mr={[0, 5, 5, 10, 20]}
       mb={5}
-      ml={0}
     >
       <Box
         display="flex"
@@ -107,16 +106,13 @@ const CreatorPlan = ({
                   {f + 1}.
                 </Text>
                 <Input
+                  variant="flushed"
                   textAlign="center"
-                  borderRadius={0}
                   focusBorderColor="bright.fg"
-                  borderTop={0}
-                  borderLeft={0}
-                  borderRight={0}
                   borderColor="bright.light"
                   mt={1}
                   mb={1}
-                  fontSize={[16]}
+                  fontSize={16}
                   placeholder="Add your plan features here"
                   value={feature}
                   onChange={handleFeatureUpdate}
@@ -161,7 +157,14 @@ const CreatorPlan = ({
           variant="solid"
           size="md"
           mt={10}
+          color="bright.bg"
           backgroundColor="bright.fg"
+          border="1px solid"
+          borderColor="bright.fg"
+          _hover={{
+            backgroundColor: "bright.bg",
+            color: "bright.fg",
+          }}
           p="1rem 2rem"
           fontWeight="normal"
           onClick={() => handlePlanSave(plan._id)}

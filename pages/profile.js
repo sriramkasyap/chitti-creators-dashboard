@@ -18,12 +18,9 @@ import { AuthContext } from "../contexts/AuthContext";
 import {
   checkAuthentication,
   getIronConfig,
-  ucFirst,
-  validateURL,
+  showNotification,
 } from "../src/utils";
 import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
-import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
-import SuccessAlert from "../src/components/common/SuccessAlert/SuccessAlert";
 import { uploadFile } from "../src/helpers/uploadHelper";
 import CreatorPlan from "../src/components/ProfilePage/CreatorPlan";
 
@@ -33,8 +30,6 @@ const Profile = () => {
   const [profile, setProfile] = useState(loggedInUser.profile); // Profile Content of the creator
   const [plans, setPlans] = useState(loggedInUser.plans); // Plans content of the creator
   const [pageStatus, setStatus] = useState("loading"); // Page Status
-  const [error, setError] = useState(""); // Error message
-  const [successMessage, setSuccessMessage] = useState(""); // Success message
 
   const displayPictureRef = useRef();
 
@@ -45,32 +40,24 @@ const Profile = () => {
     setStatus("loaded");
   }, [loggedInUser]);
 
-  useEffect(() => {
-    // Hide Success message after 5 seconds
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 5000);
-  }, [successMessage]);
-
   const handleUpdateProfile = () => {
     // Handle Save profile action
     setStatus("savingProfile");
-    setSuccessMessage("");
     if (validateProfile()) {
       updateProfile(profile)
         .then((result) => {
           if (result.success) {
-            setSuccessMessage("Profile Saved successfully");
+            showNotification("Profile Saved successfully");
             setStatus("loaded");
             setProfile(result.creator.profile);
             fetchMe();
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setStatus("loaded");
         });
     } else {
@@ -91,12 +78,12 @@ const Profile = () => {
           fetchMe();
           setStatus("loaded");
         } else {
-          setError(result.message);
+          showNotification(result.message);
           setStatus("loaded");
         }
       })
       .catch((e) => {
-        setError(e.message);
+        showNotification(e.message);
         setStatus("loaded");
       });
   };
@@ -111,15 +98,15 @@ const Profile = () => {
           .then((result) => {
             if (result.success) {
               fetchMe();
-              setSuccessMessage("Plan saved successfully");
+              showNotification("Plan saved successfully");
               setStatus("loaded");
             } else {
-              setError(result.message);
+              showNotification(result.message);
               setStatus("loaded");
             }
           })
           .catch((e) => {
-            setError(e.message);
+            showNotification(e.message);
             setStatus("loaded");
           });
       } else {
@@ -129,7 +116,6 @@ const Profile = () => {
   };
 
   const validateProfile = () => {
-    setError("");
     var { fullName, shortBio, longBio, displayPicture } = profile;
 
     if (
@@ -160,13 +146,12 @@ const Profile = () => {
         longBio.length > 0,
         displayPicture.length > 0
       );
-      setError("Please fill all the details");
+      showNotification("Please fill all the details");
       return false;
     }
   };
 
   const validatePlan = (plan) => {
-    setError("");
     var { planFee, planFeatures } = plan;
 
     if (
@@ -184,7 +169,7 @@ const Profile = () => {
       });
       return flag;
     } else {
-      setError("Please add features for the plan");
+      showNotification("Please add features for the plan");
       return false;
     }
   };
@@ -198,7 +183,6 @@ const Profile = () => {
 
   const handleDisplayPictureUpload = (e) => {
     setStatus("uploading");
-    setSuccessMessage("");
     var imageToUpload = displayPictureRef.current.files[0];
     console.log(imageToUpload);
     uploadFile(imageToUpload)
@@ -209,13 +193,14 @@ const Profile = () => {
             displayPicture: result.secure_url,
           });
         }
-        setSuccessMessage(
+        showNotification(
           "New display picture updated. Hit Save to publish the changes"
         );
+
         setStatus("loaded");
       })
       .catch((e) => {
-        setError(e.message);
+        showNotification(e.message);
       });
   };
 
@@ -373,13 +358,12 @@ const Profile = () => {
           maxW="200px"
           border="1px solid"
           borderColor="bright.fg"
+          color="bright.bg"
           _hover={{
             backgroundColor: "transparent",
             color: "bright.fg",
           }}
         />
-        {successMessage && <SuccessAlert message={successMessage} />}
-        {error && <ErrorAlert message={error} />}
       </Flex>
       <Divider
         mt={10}

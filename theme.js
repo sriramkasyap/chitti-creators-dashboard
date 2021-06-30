@@ -21,39 +21,31 @@ const breakpoints = createBreakpoints({
   "2xl": "96em",
 });
 
-const theme = extendTheme(
-  {
-    colors: {
-      bright: {
-        bg: "#ffffff",
-        light: "#e1e1e1",
-        gray: "#7e7e7e",
-        fg: "#252525",
-      },
-      dark: {
-        bg: "#252525",
-        light: "#e1e1e1",
-        gray: "#7e7e7e",
-        fg: "#ffffff",
-      },
+const theme = extendTheme({
+  colors: {
+    bright: {
+      bg: "#ffffff",
+      light: "#e1e1e1",
+      gray: "#7e7e7e",
+      fg: "#252525",
     },
-    components: {
-      Drawer: {
-        defaultProps: {
-          colorScheme: "#252525",
-        },
-      },
-      Table: {
-        defaultProps: {
-          colorScheme: "#252525",
-        },
-      },
+    dark: {
+      bg: "#252525",
+      light: "#e1e1e1",
+      gray: "#7e7e7e",
+      fg: "#ffffff",
     },
-    letterSpacings,
-    fonts,
-    breakpoints,
   },
-  withDefaultColorScheme({ colorScheme: "bright" })
-);
+  components: {
+    Drawer: {
+      defaultProps: {
+        colorScheme: "#252525",
+      },
+    },
+  },
+  letterSpacings,
+  fonts,
+  breakpoints,
+});
 
 export default theme;
