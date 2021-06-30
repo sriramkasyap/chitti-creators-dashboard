@@ -15,7 +15,6 @@
     "@fontsource/josefin-sans": "^4.4.5",
     "@fontsource/quicksand": "^4.4.5",
     "ckeditor5-custom-build": "file:./ckeditor5",
-    "cloudinary-react": "^1.7.0",
     "framer-motion": "^4",
     "juice": "^8.0.0",
     "mongoose": "^5.12.14",
