@@ -40,6 +40,7 @@ export default withIronSession(
           return {
             planId: plan._id,
             subscribers: planSubs,
+            subscriptionType: plan.planFee === 0 ? "Free" : "Paid",
             count: planSubs.length,
           };
         });

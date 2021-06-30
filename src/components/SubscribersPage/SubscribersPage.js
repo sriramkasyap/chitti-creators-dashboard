@@ -21,20 +21,18 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
   const { loggedInUser } = useContext(AuthContext);
   const { plans } = loggedInUser;
 
-  const getPlan = () => {
-    const planData = plans?.find((plan) => plan._id === subscribers[0].planId);
-    if (planData.planFee === 0) {
-      return "Free";
-    }
-    return "Paid";
-  };
-
+  // merge two array of subscribers with different subscription plan
   const data = useMemo(() => {
-    return subscribers[0]?.subscribers.map((subscriber) => ({
-      subscriberName: subscriber.name,
-      subscriberEmail: subscriber.email,
-      type: getPlan(),
-    }));
+    let allSubscribers = [];
+    subscribers.map((subscriber) => {
+      const tempSubscribers = subscriber.subscribers.map((s) => ({
+        subscriberName: s.name,
+        subscriberEmail: s.email,
+        type: subscriber.subscriptionType,
+      }));
+      allSubscribers.push(...tempSubscribers);
+    });
+    return allSubscribers;
   }, [subscribers]);
 
   const columns = useMemo(

@@ -1,6 +1,7 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 
 import Button from "../common/Button/Button";
+import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import Card from "./Card/Card";
 
 const Dashboard = ({ cards, isLoading, error }) => {
@@ -39,9 +40,16 @@ const Dashboard = ({ cards, isLoading, error }) => {
         flexWrap="wrap"
         mt={[0, 5, 5, 5, 0]}
       >
-        {cards?.map((card) => (
-          <Card key={card.id} card={card} />
-        ))}
+        {error && <ErrorAlert message={error} />}
+        {isLoading ? (
+          <Image src="loader_black.gif" h="5rem" />
+        ) : (
+          <>
+            {cards?.map((card) => (
+              <Card key={card.id} card={card} />
+            ))}
+          </>
+        )}
       </Flex>
       {/* Dashboard Card End */}
     </Flex>
