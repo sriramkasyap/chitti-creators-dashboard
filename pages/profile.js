@@ -78,28 +78,27 @@ const Profile = () => {
     }
   };
 
-  const addPlan = (planIdToEdit) => {
+  const handleAddPlan = () => {
     // Handle create new Plan
-    setStatus("loading");
-    var plan = plans.filter(planId === planIdToEdit)[0];
-    if (validatePlan(plan)) {
-      addPlan(plan)
-        .then((result) => {
-          if (result.success) {
-            setSuccessMessage("Plan added successfully");
-            setStatus("loaded");
-          } else {
-            setError(result.message);
-            setStatus("loaded");
-          }
-        })
-        .catch((e) => {
-          setError(e.message);
+    setStatus("addingPlan");
+    var plan = {
+      planFee: 10,
+      planFeatures: [],
+    };
+    addPlan(plan)
+      .then((result) => {
+        if (result.success) {
+          fetchMe();
           setStatus("loaded");
-        });
-    } else {
-      setStatus("loaded");
-    }
+        } else {
+          setError(result.message);
+          setStatus("loaded");
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setStatus("loaded");
+      });
   };
 
   const savePlan = (planIdToEdit) => {
@@ -389,8 +388,31 @@ const Profile = () => {
         backgroundColor="bright.gray"
       />
       <Flex flexDir="column" mt={6} ml={[0, 0, 3, 5, 8]}>
-        <Flex w="100%">
+        <Flex w="100%" alignItems="center">
           <Heading>Subscription Plans</Heading>
+          {plans && plans.length < 2 ? (
+            <Button
+              rounded={"full"}
+              text={
+                pageStatus === "addingPlan" ? (
+                  <Image src="/loader_black.gif" h="2rem" />
+                ) : (
+                  "Add New Plan"
+                )
+              }
+              variant="outline"
+              size="sm"
+              fontWeight="light"
+              onClick={handleAddPlan}
+              ml={5}
+              _hover={{
+                backgroundColor: "bright.fg",
+                color: "bright.bg",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </Flex>
 
         <Flex

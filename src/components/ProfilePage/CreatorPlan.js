@@ -102,7 +102,7 @@ const CreatorPlan = ({
         <Flex w="100%" mt={2} flexDir="column" alignItems="center">
           {plan.planFeatures.length > 0 ? (
             plan.planFeatures.map((feature, f) => (
-              <Flex w="100%" alignItems="flex-end">
+              <Flex w="100%" alignItems="flex-end" key={f}>
                 <Text mr={4} mb={2} fontSize={[20]} lineHeight={1}>
                   {f + 1}.
                 </Text>
@@ -144,7 +144,7 @@ const CreatorPlan = ({
             backgroundColor="bright.light"
             color="bright.fg"
             _focus={{ boxShadow: "none" }}
-            mt={5}
+            mt={2}
             onClick={handleFeatureAdd}
           />
         </Flex>
