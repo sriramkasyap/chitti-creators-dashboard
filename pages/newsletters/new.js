@@ -81,15 +81,9 @@ const CreateNewNewsletter = () => {
   };
 
   const handleDiscardDraft = () => {
-    setFormData({
-      reference: "",
-      subject: "",
-      keyword: "",
-    });
-    setKeywordsList([]);
-    setEditorData(
-      `<p style="text-align:center;">Start Creating your Newsletter!</p>`
-    );
+    if (confirm("All changes will be lost. Are you sure?")) {
+      router.back();
+    }
   };
 
   const handleSaveDraft = () => {
@@ -119,20 +113,6 @@ const CreateNewNewsletter = () => {
     } else {
       setPageStatus("loaded");
     }
-  };
-
-  const handlePublishSend = () => {
-    setPageStatus("publishing");
-    const requestBody = {
-      newsletter: {
-        reference: formData.reference,
-        emailSubject: formData.subject,
-        body: editorData,
-        keywords: keywordsList.map((keyword) => keyword.text),
-      },
-    };
-
-    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
   };
 
   const valdateFormData = () => {
@@ -203,7 +183,7 @@ const CreateNewNewsletter = () => {
                 pageStatus == "saving" ? (
                   <Image src="/loader_black.gif" h="2rem" />
                 ) : (
-                  "Save Draft"
+                  "Save Newsletter"
                 )
               }
               variant="outline"
@@ -216,30 +196,6 @@ const CreateNewNewsletter = () => {
               }}
               color="bright.fg"
               onClick={handleSaveDraft}
-              fontSize={[12, 14, 16]}
-              p="1rem 2rem"
-            />
-            <Button
-              rounded={"full"}
-              disabled={pageStatus !== "loaded"}
-              text={
-                pageStatus === "publishing" ? (
-                  <Image src="/loader_white.gif" h="2rem" />
-                ) : (
-                  "Publish & Send"
-                )
-              }
-              variant="outline"
-              fontWeight={400}
-              ml={[2, 2, 2, 5]}
-              backgroundColor="bright.fg"
-              _hover={{
-                bg: "transparent",
-                color: "bright.fg",
-                borderColor: "bright.fg",
-              }}
-              color="bright.bg"
-              onClick={handlePublishSend}
               fontSize={[12, 14, 16]}
               p="1rem 2rem"
             />
