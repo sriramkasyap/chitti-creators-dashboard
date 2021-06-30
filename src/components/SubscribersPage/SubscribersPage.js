@@ -22,6 +22,17 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
   const { plans } = loggedInUser;
 
   // merge two array of subscribers with different subscription plan
+  const getPlan = () => {
+    const planData = plans?.find((plan) => plan._id === subscribers[0].planId);
+    if (planData) {
+      if (planData.planFee === 0) {
+        return "Free";
+      }
+      return "Paid";
+    }
+    return "";
+  };
+
   const data = useMemo(() => {
     let allSubscribers = [];
     subscribers.map((subscriber) => {

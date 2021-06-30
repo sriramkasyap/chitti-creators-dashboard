@@ -5,20 +5,15 @@ import {
   FormControl,
   FormLabel,
   Input,
-  FormErrorMessage,
   Textarea,
   Image,
-  Link,
   Divider,
   Heading,
-  Text,
   Box,
-  IconButton,
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
 
-import { FiPlus } from "react-icons/fi";
 import { AuthContext } from "../contexts/AuthContext";
 import {
   checkAuthentication,
@@ -30,12 +25,13 @@ import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
 import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 import SuccessAlert from "../src/components/common/SuccessAlert/SuccessAlert";
 import { uploadFile } from "../src/helpers/uploadHelper";
+import CreatorPlan from "../src/components/ProfilePage/CreatorPlan";
 
 const Profile = () => {
   const { fetchMe, loggedInUser, loginError } = useContext(AuthContext); // Loading user data from the Authentication Context
 
   const [profile, setProfile] = useState(loggedInUser.profile); // Profile Content of the creator
-  const [plans, setPlans] = useState([]); // Plans content of the creator
+  const [plans, setPlans] = useState(loggedInUser.plans); // Plans content of the creator
   const [pageStatus, setStatus] = useState("loading"); // Page Status
   const [error, setError] = useState(""); // Error message
   const [successMessage, setSuccessMessage] = useState(""); // Success message
@@ -58,7 +54,7 @@ const Profile = () => {
 
   const handleUpdateProfile = () => {
     // Handle Save profile action
-    setStatus("loading");
+    setStatus("savingProfile");
     setSuccessMessage("");
     if (validateProfile()) {
       updateProfile(profile)
@@ -82,52 +78,54 @@ const Profile = () => {
     }
   };
 
-  const addPlan = (planIdToEdit) => {
+  const handleAddPlan = () => {
     // Handle create new Plan
-    setStatus("loading");
-    var plan = plans.filter(planId === planIdToEdit)[0];
-    if (validatePlan(plan)) {
-      addPlan(plan)
-        .then((result) => {
-          if (result.success) {
-            setSuccessMessage("Plan added successfully");
-            setStatus("loaded");
-          } else {
-            setError(result.message);
-            setStatus("loaded");
-          }
-        })
-        .catch((e) => {
-          setError(e.message);
+    setStatus("addingPlan");
+    var plan = {
+      planFee: 10,
+      planFeatures: [],
+    };
+    addPlan(plan)
+      .then((result) => {
+        if (result.success) {
+          fetchMe();
           setStatus("loaded");
-        });
-    } else {
-      setStatus("loaded");
-    }
+        } else {
+          setError(result.message);
+          setStatus("loaded");
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setStatus("loaded");
+      });
   };
 
-  const updatePlan = (planIdToEdit) => {
+  const savePlan = (planIdToEdit) => {
     // Handle Save plan
-    setStatus("loading");
-    var plan = plans.filter(planId === planIdToEdit)[0];
-    if (validatePlan(plan)) {
-      updatePlan(planIdToEdit, plan)
-        .then((result) => {
-          if (result.success) {
-            setSuccessMessage("Plan added successfully");
+    setStatus("savingPlan");
+    setTimeout(() => {
+      var plan = plans.filter(({ _id }) => _id === planIdToEdit)[0];
+      if (validatePlan(plan)) {
+        updatePlan(planIdToEdit, plan)
+          .then((result) => {
+            if (result.success) {
+              fetchMe();
+              setSuccessMessage("Plan saved successfully");
+              setStatus("loaded");
+            } else {
+              setError(result.message);
+              setStatus("loaded");
+            }
+          })
+          .catch((e) => {
+            setError(e.message);
             setStatus("loaded");
-          } else {
-            setError(result.message);
-            setStatus("loaded");
-          }
-        })
-        .catch((e) => {
-          setError(e.message);
-          setStatus("loaded");
-        });
-    } else {
-      setStatus("loaded");
-    }
+          });
+      } else {
+        setStatus("loaded");
+      }
+    }, 2000);
   };
 
   const validateProfile = () => {
@@ -221,6 +219,16 @@ const Profile = () => {
       });
   };
 
+  const handlePlanUpdate = (newPlan) => {
+    // Update plan state on component update
+    var newPlans = plans.map((plan) => {
+      if (plan._id === newPlan._id) return newPlan;
+      return plan;
+    });
+
+    setPlans(newPlans);
+  };
+
   return (
     <Flex
       flexDir="column"
@@ -299,8 +307,8 @@ const Profile = () => {
           >
             <Box pos="relative">
               <Image
-                height={["100px", "100px", "100px", "150px"]}
-                w={["100px", "100px", "100px", "150px"]}
+                height={["100px", "100px", "150px", "200px"]}
+                w={["100px", "100px", "150px", "200px"]}
                 borderRadius="50%"
                 zIndex={1}
                 src={profile.displayPicture}
@@ -348,10 +356,10 @@ const Profile = () => {
           rounded={"full"}
           disabled={pageStatus !== "loaded"}
           text={
-            pageStatus === "loaded" ? (
-              "Save Profile"
-            ) : (
+            pageStatus === "savingProfile" ? (
               <Image src="/loader_white.gif" h="2rem" />
+            ) : (
+              "Save Profile"
             )
           }
           variant="solid"
@@ -380,198 +388,50 @@ const Profile = () => {
         backgroundColor="bright.gray"
       />
       <Flex flexDir="column" mt={6} ml={[0, 0, 3, 5, 8]}>
-        <Flex w="100%">
-          <Heading>Subscriptions</Heading>
+        <Flex w="100%" alignItems="center">
+          <Heading>Subscription Plans</Heading>
+          {plans && plans.length < 2 ? (
+            <Button
+              rounded={"full"}
+              text={
+                pageStatus === "addingPlan" ? (
+                  <Image src="/loader_black.gif" h="2rem" />
+                ) : (
+                  "Add New Plan"
+                )
+              }
+              variant="outline"
+              size="sm"
+              fontWeight="light"
+              onClick={handleAddPlan}
+              ml={5}
+              _hover={{
+                backgroundColor: "bright.fg",
+                color: "bright.bg",
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </Flex>
-        <Flex flexDir={["column", "row"]} mt={5} alignItems="center" w="100%">
-          <Flex
-            w="100%"
-            maxW={["100%", "100%", "400px", "450px"]}
-            flexDir="column"
-            justifyContent="center"
-            alignItems="stretch"
-            mt={5}
-            mr={[5, 5, 5, 10]}
-            mb={5}
-            ml={0}
-          >
-            <Box
-              display="flex"
-              flexDir="column"
-              justifyContent="center"
-              alignItems="center"
-              border="1px solid"
-              borderColor="bright.gray"
-              borderRadius={5}
-              p={5}
-            >
-              <Text
-                textAlign="center"
-                mb={5}
-                fontSize={25}
-                fontWeight="semibold"
-              >
-                Free Plan
-              </Text>
-              <Input
-                placeholder="0"
-                display="block"
-                w="20%"
-                fontSize={40}
-                isReadOnly
-                borderColor="bright.light"
-                focusBorderColor="bright.light"
-                borderRadius={0}
-                textAlign="center"
-                p={15}
-                h={20}
+
+        <Flex
+          flexDir={["column", "column", "row"]}
+          mt={5}
+          alignItems="center"
+          w="100%"
+        >
+          {plans &&
+            plans.length > 0 &&
+            plans.map((plan, p) => (
+              <CreatorPlan
+                handlePlanUpdate={handlePlanUpdate}
+                handlePlanSave={savePlan}
+                plan={plan}
+                pageStatus={pageStatus}
+                key={p}
               />
-              <Text mt={1} fontWeight="light">
-                Pricing
-              </Text>
-              <Divider
-                w="60%"
-                mt={2}
-                mb={5}
-                borderTop="1px solid"
-                borderBottom="0"
-                borderColor="bright.light"
-              />
-              <Text fontWeight="semibold">Features</Text>
-              <Flex w="100%" mt={5} flexDir="column" alignItems="center">
-                <Flex w="100%" alignItems="center">
-                  <Text mr={4} fontSize={[20]} lineHeight={1}>
-                    1.
-                  </Text>
-                  <Input
-                    textAlign="center"
-                    borderRadius={0}
-                    focusBorderColor="bright.fg"
-                    borderColor="bright.light"
-                    mt={2}
-                    mb={2}
-                    fontSize={[16]}
-                    placeholder="Add your plan offerings here"
-                  />
-                </Flex>
-                <IconButton
-                  aria-label="Add Plan Feature"
-                  icon={<FiPlus />}
-                  ml={2}
-                  fontSize="2xl"
-                  borderRadius={0}
-                  backgroundColor="bright.light"
-                  color="bright.fg"
-                  _focus={{ boxShadow: "none" }}
-                  mt={5}
-                />
-              </Flex>
-              <Button
-                rounded={"full"}
-                text="Save Plan"
-                variant="solid"
-                size="md"
-                mt={50}
-                backgroundColor="bright.fg"
-                p="1rem 2rem"
-                fontWeight="normal"
-              />
-            </Box>
-          </Flex>
-          <Flex
-            w="100%"
-            maxW={["100%", "100%", "400px", "450px"]}
-            flexDir="column"
-            justifyContent="center"
-            alignItems="stretch"
-            mt={5}
-            mr={[5, 5, 5, 10]}
-            mb={5}
-            ml={0}
-          >
-            <Box
-              display="flex"
-              flexDir="column"
-              justifyContent="center"
-              alignItems="center"
-              border="1px solid"
-              borderColor="bright.gray"
-              borderRadius={5}
-              p={5}
-            >
-              <Text
-                textAlign="center"
-                mb={5}
-                fontSize={25}
-                fontWeight="semibold"
-              >
-                Paid Plan
-              </Text>
-              <Input
-                placeholder="0"
-                display="block"
-                w="20%"
-                fontSize={40}
-                isReadOnly
-                borderColor="bright.light"
-                focusBorderColor="bright.light"
-                borderRadius={0}
-                textAlign="center"
-                p={15}
-                h={20}
-              />
-              <Text mt={1} fontWeight="light">
-                Pricing
-              </Text>
-              <Divider
-                w="60%"
-                mt={2}
-                mb={5}
-                borderTop="1px solid"
-                borderBottom="0"
-                borderColor="bright.light"
-              />
-              <Text fontWeight="semibold">Features</Text>
-              <Flex w="100%" mt={5} flexDir="column" alignItems="center">
-                <Flex w="100%" alignItems="center">
-                  <Text mr={4} fontSize={[20]} lineHeight={1}>
-                    1.
-                  </Text>
-                  <Input
-                    textAlign="center"
-                    borderRadius={0}
-                    focusBorderColor="bright.fg"
-                    borderColor="bright.light"
-                    mt={2}
-                    mb={2}
-                    fontSize={[16]}
-                    placeholder="Add your plan offerings here"
-                  />
-                </Flex>
-                <IconButton
-                  aria-label="Add Plan Feature"
-                  icon={<FiPlus />}
-                  ml={2}
-                  fontSize="2xl"
-                  borderRadius={0}
-                  backgroundColor="bright.light"
-                  color="bright.fg"
-                  _focus={{ boxShadow: "none" }}
-                  mt={5}
-                />
-              </Flex>
-              <Button
-                rounded={"full"}
-                text="Save Plan"
-                variant="solid"
-                size="md"
-                mt={50}
-                backgroundColor="bright.fg"
-                p="1rem 2rem"
-                fontWeight="normal"
-              />
-            </Box>
-          </Flex>
+            ))}
         </Flex>
       </Flex>
     </Flex>
