@@ -244,6 +244,8 @@ const Profile = () => {
                 value={profile.longBio || ""}
                 onChange={handleProfileInput}
                 name="longBio"
+                size="lg"
+                minH="300px"
               />
             </FormControl>
           </Flex>
