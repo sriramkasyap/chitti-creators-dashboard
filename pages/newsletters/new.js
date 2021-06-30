@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
@@ -15,9 +15,11 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
+import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
 import Button from "../../src/components/common/Button/Button";
 import dynamic from "next/dynamic";
 
@@ -31,7 +33,12 @@ const RichTextEditor = dynamic(
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 import juice from "juice";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
-import { createNewsletter } from "../../src/helpers/userFetcher";
+import {
+  createNewsletter,
+  getPlan,
+  publishNewsletter,
+} from "../../src/helpers/userFetcher";
+import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 
 const CreateNewNewsletter = () => {
   const [editorData, setEditorData] = useState(
@@ -42,11 +49,20 @@ const CreateNewNewsletter = () => {
     subject: "",
     keyword: "",
   });
+  const [selectedPlan, selectPlan] = useState();
+  const [recipientCount, setRecipientCount] = useState();
   const [keywordsList, setKeywordsList] = useState([]);
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving
   const [errorMessage, setError] = useState(null);
+  const [newLetterId, setNewletterId] = useState();
+  const [successMessage, setSuccess] = useState();
+
+  const publishModalDisclosure = useDisclosure({
+    defaultIsOpen: false,
+    id: "publishModal",
+  });
 
   const router = useRouter();
 
@@ -115,6 +131,65 @@ const CreateNewNewsletter = () => {
     }
   };
 
+  const handlePublishSend = () => {
+    setPageStatus("publishing");
+    if (valdateFormData()) {
+      const requestBody = {
+        reference: formData.reference,
+        emailSubject: formData.subject,
+        body: editorData,
+        keywords: keywordsList,
+      };
+
+      createNewsletter(requestBody)
+        .then((result) => {
+          if (result.success) {
+            setPageStatus("loaded");
+            setNewletterId(result.newsletter._id);
+            publishModalDisclosure.onOpen();
+          } else {
+            setError(result.message);
+            setPageStatus("loaded");
+          }
+        })
+        .catch((e) => {
+          setError(e.message);
+          setPageStatus("loaded");
+        });
+    } else {
+      setPageStatus("loaded");
+    }
+  };
+
+  const handlePublishNewsletter = () => {
+    setPageStatus("publishing");
+    publishNewsletter(newLetterId, selectedPlan)
+      .then((result) => {
+        if (result.success) {
+          setEditorData(result.newsletter.body);
+          setFormData({
+            reference: result.newsletter.reference,
+            subject: result.newsletter.emailSubject,
+            keyword: "",
+          });
+          setKeywordsList(result.newsletter.keywords);
+          setSuccess("Newsletter has been sent Successfully");
+          setPageStatus("loaded");
+          router.push(`/newsletters/${result.newsletter._id}`);
+          publishModalDisclosure.onClose();
+        } else {
+          setError(result.message);
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setPageStatus("loaded");
+        publishModalDisclosure.onClose();
+      });
+  };
+
   const valdateFormData = () => {
     setError("");
     if (
@@ -134,6 +209,25 @@ const CreateNewNewsletter = () => {
     }
   };
 
+  useEffect(() => {
+    // Refresh recipientCount every time the plan is selected
+    if (selectedPlan && selectedPlan.length > 0) {
+      getPlan(selectedPlan)
+        .then((result) => {
+          if (result.success) {
+            setRecipientCount(result.plan.subscribers.length);
+          } else {
+            publishModalDisclosure.onClose();
+            setError(result.message);
+          }
+        })
+        .catch((e) => {
+          publishModalDisclosure.onClose();
+          setError(e.message);
+        });
+    }
+  }, [selectedPlan]);
+
   return (
     <Flex
       flexDirection="column"
@@ -143,6 +237,14 @@ const CreateNewNewsletter = () => {
       mr="auto"
       maxW={["100%", "100%", "100%", "100%", "1440px"]}
     >
+      <PublishModal
+        disclosure={publishModalDisclosure}
+        selectedPlan={selectedPlan}
+        selectPlan={selectPlan}
+        recipientCount={recipientCount}
+        publishNewsletter={handlePublishNewsletter}
+        pageStatus={pageStatus}
+      />
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -199,9 +301,34 @@ const CreateNewNewsletter = () => {
               fontSize={[12, 14, 16]}
               p="1rem 2rem"
             />
+            <Button
+              rounded={"full"}
+              disabled={pageStatus !== "loaded"}
+              text={
+                pageStatus === "publishing" ? (
+                  <Image src="/loader_white.gif" h="2rem" />
+                ) : (
+                  "Publish & Send"
+                )
+              }
+              variant="outline"
+              fontWeight={400}
+              ml={[2, 2, 2, 5]}
+              backgroundColor="bright.fg"
+              _hover={{
+                bg: "transparent",
+                color: "bright.fg",
+                borderColor: "bright.fg",
+              }}
+              color="bright.bg"
+              onClick={handlePublishSend}
+              fontSize={[12, 14, 16]}
+              p="1rem 2rem"
+            />
           </Flex>
         </Flex>
       </Flex>
+      {successMessage && <SuccessAlert message={successMessage} />}
       {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
