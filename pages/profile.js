@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { withIronSession } from "next-iron-session";
 import {
   Flex,
@@ -29,6 +29,7 @@ import {
 import { addPlan, updatePlan, updateProfile } from "../src/helpers/userFetcher";
 import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 import SuccessAlert from "../src/components/common/SuccessAlert/SuccessAlert";
+import { uploadFile } from "../src/helpers/uploadHelper";
 
 const Profile = () => {
   const { fetchMe, loggedInUser, loginError } = useContext(AuthContext); // Loading user data from the Authentication Context
@@ -38,6 +39,8 @@ const Profile = () => {
   const [pageStatus, setStatus] = useState("loading"); // Page Status
   const [error, setError] = useState(""); // Error message
   const [successMessage, setSuccessMessage] = useState(""); // Success message
+
+  const displayPictureRef = useRef();
 
   useEffect(() => {
     // Refresh creator profile if the value in provider changes
@@ -195,6 +198,29 @@ const Profile = () => {
     });
   };
 
+  const handleDisplayPictureUpload = (e) => {
+    setStatus("uploading");
+    setSuccessMessage("");
+    var imageToUpload = displayPictureRef.current.files[0];
+    console.log(imageToUpload);
+    uploadFile(imageToUpload)
+      .then((result) => {
+        if (result.secure_url) {
+          setProfile({
+            ...profile,
+            displayPicture: result.secure_url,
+          });
+        }
+        setSuccessMessage(
+          "New display picture updated. Hit Save to publish the changes"
+        );
+        setStatus("loaded");
+      })
+      .catch((e) => {
+        setError(e.message);
+      });
+  };
+
   return (
     <Flex
       flexDir="column"
@@ -271,15 +297,49 @@ const Profile = () => {
             flexDir="column"
             alignItems={["flex-start", "flex-start", "center"]}
           >
-            <Image
-              height={["100px", "100px", "100px", "150px"]}
-              w={["100px", "100px", "100px", "150px"]}
-              borderRadius="50%"
-              src={profile.displayPicture || "/media.png"}
+            <Box pos="relative">
+              <Image
+                height={["100px", "100px", "100px", "150px"]}
+                w={["100px", "100px", "100px", "150px"]}
+                borderRadius="50%"
+                zIndex={1}
+                src={profile.displayPicture}
+                fallbackSrc={"/media.png"}
+              />
+              {pageStatus === "uploading" ? (
+                <Flex
+                  alignItems="center"
+                  justifyContent="center"
+                  top={0}
+                  left={0}
+                  zIndex={2}
+                  pos="absolute"
+                  w="100%"
+                  h="100%"
+                  bgColor="#ffffffcc"
+                >
+                  <Image src="/loader_black.gif" h="2rem" />
+                </Flex>
+              ) : (
+                <></>
+              )}
+            </Box>
+            <Button
+              color="bright.gray"
+              textAlign="center"
+              mt={5}
+              textDecor="underline"
+              fontWeight="light"
+              text={"Change Display Picture"}
+              onClick={() => displayPictureRef.current.click()}
             />
-            <Link textAlign="center" mt={5} textDecor="underline">
-              Upload Profile Picture
-            </Link>
+            <input
+              style={{ display: "none" }}
+              type="file"
+              name="displayPicture"
+              ref={displayPictureRef}
+              onChange={handleDisplayPictureUpload}
+            />
           </Flex>
         </Flex>
       </Flex>
@@ -291,7 +351,7 @@ const Profile = () => {
             pageStatus === "loaded" ? (
               "Save Profile"
             ) : (
-              <Image src="/loader_black.gif" h="2rem" />
+              <Image src="/loader_white.gif" h="2rem" />
             )
           }
           variant="solid"
