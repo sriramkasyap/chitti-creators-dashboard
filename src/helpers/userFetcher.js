@@ -36,7 +36,7 @@ export const updatePlan = async (planId, plan) => {
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify(plan),
+    body: JSON.stringify({ plan }),
   }).then((r) => r.json());
 };
 
