@@ -150,17 +150,12 @@ const Profile = () => {
       //   return false;
       // }
     } else {
-      console.log(
-        fullName,
-        shortBio,
-        longBio,
-        displayPicture,
-        fullName.length > 0,
-        shortBio.length > 0,
-        longBio.length > 0,
-        displayPicture.length > 0
-      );
-      setError("Please fill all the details");
+      console.log(fullName, shortBio, longBio, displayPicture);
+      if (displayPicture) {
+        setError("Please fill all the details");
+      } else {
+        setError("Please Upload a Display Picture");
+      }
       return false;
     }
   };
@@ -199,6 +194,7 @@ const Profile = () => {
   const handleDisplayPictureUpload = (e) => {
     setStatus("uploading");
     setSuccessMessage("");
+    setError("");
     var imageToUpload = displayPictureRef.current.files[0];
     console.log(imageToUpload);
     uploadFile(imageToUpload)
