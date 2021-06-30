@@ -57,6 +57,7 @@ const Profile = () => {
             setSuccessMessage("Profile Saved successfully");
             setStatus("loaded");
             setProfile(result.creator.profile);
+            fetchMe();
           } else {
             setError(result.message);
             setStatus("loaded");
