@@ -46,6 +46,13 @@ const Profile = () => {
     setStatus("loaded");
   }, [loggedInUser]);
 
+  useEffect(() => {
+    // Hide Success message after 5 seconds
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 5000);
+  }, [successMessage]);
+
   const handleUpdateProfile = () => {
     // Handle Save profile action
     setStatus("loading");
