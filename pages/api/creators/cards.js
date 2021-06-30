@@ -1,9 +1,12 @@
 import { withIronSession } from "next-iron-session";
-import withCreatorAuth from "../../src/middleware/withCreatorAuth";
-import Creator from "../../src/models/Creator";
-import Subscriber from "../../src/models/Subscriber";
-import SubscriptionPlan from "../../src/models/SubscriptionPlan";
-import { getIronConfig } from "../../src/utils";
+
+import withCreatorAuth from "../../../src/middleware/withCreatorAuth";
+import { getIronConfig } from "../../../src/utils";
+
+import Creator from "../../../src/models/Creator";
+import Subscriber from "../../../src/models/Subscriber";
+import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
+import Newsletters from "../../../src/models/Newsletter";
 
 export default withIronSession(
   withCreatorAuth(async (req, res) => {
@@ -12,7 +15,7 @@ export default withIronSession(
         var { creatorId } = req.creator;
 
         var creator = await Creator.findById(creatorId);
-        if (!creator) throw new Error("Unauthorized Request");
+        if (!creator) throw new Error("User not found");
 
         var plans = await SubscriptionPlan.find({
           _id: {
@@ -39,20 +42,39 @@ export default withIronSession(
 
           return {
             planId: plan._id,
-            subscribers: planSubs,
             subscriptionType: plan.planFee === 0 ? "Free" : "Paid",
+            subscribers: planSubs,
             count: planSubs.length,
+            planFee: plan.planFee,
           };
         });
 
+        var newsletters = await Newsletters.find();
+        var publishedNewsletters = newsletters.filter(
+          (newsletter) => newsletter.status === "published"
+        );
+
         var subscribers = await Promise.all(subscriberPromises);
-        var count = subscribers.reduce((sum, { count }) => sum + count, 0);
+        var activeSubscribers = subscribers.reduce(
+          (sum, { count }) => sum + count,
+          0
+        );
+        var paidSubscribers = subscribers.find(
+          (sub) => sub.subscriptionType === "Paid"
+        );
+        var revenue =
+          paidSubscribers.planFee * paidSubscribers.subscribers.length;
 
         return res.send({
           success: true,
           subscribers,
-          count,
+          activeSubscribers,
+          totalPaidSubscribers: paidSubscribers.subscribers.length,
+          revenue,
+          newslettersSent: publishedNewsletters.length,
         });
+      } else {
+        throw new Error("Invalid Request");
       }
     } catch (error) {
       console.error(error);

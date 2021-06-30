@@ -1,12 +1,10 @@
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 
 import Button from "../common/Button/Button";
+import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import Card from "./Card/Card";
-import { getCardsData } from "../../helpers/cardsFetcher";
 
-const Dashboard = () => {
-  const cards = getCardsData();
-
+const Dashboard = ({ cards, isLoading, error }) => {
   return (
     <Flex flexDir="column" w="100%">
       {/* "Create New Newsletter" button display in small screen Start */}
@@ -42,9 +40,16 @@ const Dashboard = () => {
         flexWrap="wrap"
         mt={[0, 5, 5, 5, 0]}
       >
-        {cards?.map((card) => (
-          <Card key={card.id} card={card} />
-        ))}
+        {error && <ErrorAlert message={error} />}
+        {isLoading ? (
+          <Image src="loader_black.gif" h="5rem" />
+        ) : (
+          <>
+            {cards?.map((card) => (
+              <Card key={card.id} card={card} />
+            ))}
+          </>
+        )}
       </Flex>
       {/* Dashboard Card End */}
     </Flex>

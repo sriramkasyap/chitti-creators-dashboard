@@ -1,9 +1,9 @@
 import { serializeObject } from "../utils";
 
 export const getNewsletters = async (filters = {}) => {
-  return fetch(`/api/newsletters?${serializeObject(filters)}`).then((r) =>
-    r.json()
-  );
+  return fetch(
+    `/api/newsletters?status=draft&${serializeObject(filters)}`
+  ).then((r) => r.json());
 };
 
 export const getSubscribers = async () => {
@@ -72,4 +72,8 @@ export const publishNewsletter = async (newsletterId, planId) => {
     },
     body: JSON.stringify({ planId }),
   }).then((r) => r.json());
+};
+
+export const getCardsDetails = async () => {
+  return fetch(`/api/creators/cards`).then((r) => r.json());
 };

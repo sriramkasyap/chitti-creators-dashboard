@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
@@ -10,7 +11,6 @@ import {
   Input,
   Text,
   Heading,
-  IconButton,
   Box,
   Image,
   Tag,
@@ -18,7 +18,6 @@ import {
   TagCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
 
 import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
 import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
@@ -44,6 +43,7 @@ import { isValidObjectId } from "mongoose";
 import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 
 const EditNewsletter = ({ newsletter }) => {
+  const router = useRouter();
   const [editorData, setEditorData] = useState(newsletter.body);
   const [formData, setFormData] = useState({
     reference: newsletter.reference,
@@ -168,6 +168,7 @@ const EditNewsletter = ({ newsletter }) => {
           setKeywordsList(result.newsletter.keywords);
           setSuccess("Newsletter has been sent Successfully");
           setPageStatus("loaded");
+          router.replace("/newsletters");
           publishModalDisclosure.onClose();
         } else {
           setError(result.message);
@@ -457,22 +458,30 @@ export const getServerSideProps = withIronSession(async (ctx) => {
   }
 
   if (newsletter && newsletter._id) {
-    var newsletterId = newsletter._id.toString();
-    delete newsletter._id;
-    newsletter.createdAt = newsletter.createdAt.toString();
-    newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
-    newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
-    newsletter.creator = newsletter.creator.toString();
-    newsletter.recipients = newsletter.recipients.length;
-    return {
-      props: {
-        ...props,
-        newsletter: {
-          ...newsletter,
-          newsletterId,
+    if (newsletter.status === "published") {
+      res.setHeader("Location", "/newsletters");
+      res.statusCode = 302;
+      return res.end();
+    } else {
+      var newsletterId = newsletter._id.toString();
+      delete newsletter._id;
+      newsletter.createdAt = newsletter.createdAt.toString();
+      newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
+      newsletter.sentAt = newsletter.sentAt
+        ? newsletter.sentAt.toString()
+        : null;
+      newsletter.creator = newsletter.creator.toString();
+      newsletter.recipients = newsletter.recipients.length;
+      return {
+        props: {
+          ...props,
+          newsletter: {
+            ...newsletter,
+            newsletterId,
+          },
         },
-      },
-    };
+      };
+    }
   } else {
     res.statusCode = 404;
     return res.end();
