@@ -27,51 +27,55 @@ export default withIronSession(
           throw new Error("You haven't created any plans");
 
         var subscriberPromises = plans.map(async (plan) => {
-          var planSubs = await Subscriber.find(
-            {
-              _id: {
-                $in: plan.subscribers,
-              },
+          var subscriberCount = await Subscriber.count({
+            _id: {
+              $in: plan.subscribers,
             },
-            {
-              name: 1,
-              email: 1,
-              _id: 0,
-            }
-          ).lean(true);
+          });
 
           return {
             planId: plan._id,
-            subscriptionType: plan.planFee === 0 ? "Free" : "Paid",
-            subscribers: planSubs,
-            count: planSubs.length,
             planFee: plan.planFee,
+            subscriberCount,
           };
         });
 
-        var newsletters = await Newsletters.find();
-        var publishedNewsletters = newsletters.filter(
-          (newsletter) => newsletter.status === "published"
-        );
+        var newslettersSent = await Newsletters.count({
+          creator: creatorId,
+          status: "published",
+        });
 
         var subscribers = await Promise.all(subscriberPromises);
-        var activeSubscribers = subscribers.reduce(
-          (sum, { count }) => sum + count,
-          0
+
+        var subscribersByPlans = subscribers.reduce(
+          (counts, { planFee, subscriberCount }) => {
+            if (planFee > 0) {
+              return {
+                activeCount: counts.activeCount + subscriberCount,
+                paidCount: counts.paidCount + subscriberCount,
+                paidFee: (counts.paidCount + subscriberCount) * planFee,
+              };
+            } else {
+              return {
+                activeCount: counts.activeCount + subscriberCount,
+                paidCount: counts.paidCount,
+                paidFee: counts.paidFee,
+              };
+            }
+          },
+          {
+            activeCount: 0,
+            paidCount: 0,
+            paidFee: 0,
+          }
         );
-        var paidSubscribers = subscribers.find(
-          (sub) => sub.subscriptionType === "Paid"
-        );
-        var revenue =
-          paidSubscribers.planFee * paidSubscribers.subscribers.length;
 
         return res.send({
           success: true,
-          subscribers,
-          activeSubscribers,
-          totalPaidSubscribers: paidSubscribers.subscribers.length,
-          revenue,
-          newslettersSent: publishedNewsletters.length,
+          activeSubscribers: subscribersByPlans.activeCount,
+          totalPaidSubscribers: subscribersByPlans.paidCount,
+          revenue: subscribersByPlans.paidFee,
+          newslettersSent,
         });
       } else {
         throw new Error("Invalid Request");
