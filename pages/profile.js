@@ -204,10 +204,13 @@ const Profile = () => {
             ...profile,
             displayPicture: result.secure_url,
           });
+          setSuccessMessage(
+            "New display picture updated. Hit Save to publish the changes"
+          );
+        } else {
+          console.error(result);
+          setError("An Error Occured. Please try a different file");
         }
-        setSuccessMessage(
-          "New display picture updated. Hit Save to publish the changes"
-        );
         setStatus("loaded");
       })
       .catch((e) => {
@@ -309,6 +312,8 @@ const Profile = () => {
                 zIndex={1}
                 src={profile.displayPicture}
                 fallbackSrc={"/media.png"}
+                border="5px solid"
+                borderColor="bright.light"
               />
               {pageStatus === "uploading" ? (
                 <Flex
@@ -340,6 +345,7 @@ const Profile = () => {
             <input
               style={{ display: "none" }}
               type="file"
+              accept=".jpg, .png, .jpeg"
               name="displayPicture"
               ref={displayPictureRef}
               onChange={handleDisplayPictureUpload}
