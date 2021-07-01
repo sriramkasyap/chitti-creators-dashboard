@@ -201,13 +201,6 @@ const EditNewsletter = ({ newsletter }) => {
     }
   }, [selectedPlan]);
 
-  useEffect(() => {
-    // Hide Success message after 5 seconds
-    setTimeout(() => {
-      setSuccess("");
-    }, 5000);
-  }, [successMessage]);
-
   return (
     <Flex
       flexDirection="column"
