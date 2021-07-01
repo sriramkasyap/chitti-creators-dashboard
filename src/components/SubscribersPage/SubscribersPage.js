@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../../../contexts/AuthContext";
 import Pagination from "../common/Pagination/Pagination";
 
@@ -26,6 +25,15 @@ const SubscribersPage = ({
   pagination,
   setPagination,
 }) => {
+  const { loggedInUser } = useContext(AuthContext);
+  // const { plans } = loggedInUser;
+
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
+    }
+  }, [error]);
+
   const columns = useMemo(
     () => [
       {
@@ -67,9 +75,7 @@ const SubscribersPage = ({
         w="100%"
         overflow="auto"
       >
-        {error ? (
-          <ErrorAlert message={error} />
-        ) : isLoading ? (
+        {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
           <Table {...getTableProps()} size="sm">

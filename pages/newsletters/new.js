@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+import juice from "juice";
 
 import {
   Flex,
@@ -18,10 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
-import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
 import Button from "../../src/components/common/Button/Button";
-import dynamic from "next/dynamic";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -30,8 +29,11 @@ const RichTextEditor = dynamic(
   }
 );
 
-import { checkAuthentication, getIronConfig } from "../../src/utils";
-import juice from "juice";
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 import {
   createNewsletter,
@@ -55,9 +57,7 @@ const CreateNewNewsletter = () => {
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving
-  const [errorMessage, setError] = useState(null);
   const [newLetterId, setNewletterId] = useState();
-  const [successMessage, setSuccess] = useState();
 
   const publishModalDisclosure = useDisclosure({
     defaultIsOpen: false,
@@ -116,14 +116,15 @@ const CreateNewNewsletter = () => {
       createNewsletter(requestBody)
         .then((result) => {
           if (result.success) {
+            showNotification("Newsletter Saved Successfully!");
             router.push(`/newsletters/${result.newsletter._id}`);
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -148,12 +149,12 @@ const CreateNewNewsletter = () => {
             setNewletterId(result.newsletter._id);
             publishModalDisclosure.onOpen();
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -173,25 +174,24 @@ const CreateNewNewsletter = () => {
             keyword: "",
           });
           setKeywordsList(result.newsletter.keywords);
-          setSuccess("Newsletter has been sent Successfully");
+          showNotification("Newsletter has been sent Successfully");
           setPageStatus("loaded");
           router.push(`/newsletters/${result.newsletter._id}`);
           publishModalDisclosure.onClose();
         } else {
-          setError(result.message);
+          showNotification(result.message);
           setPageStatus("loaded");
           publishModalDisclosure.onClose();
         }
       })
       .catch((e) => {
-        setError(e.message);
+        showNotification(e.message);
         setPageStatus("loaded");
         publishModalDisclosure.onClose();
       });
   };
 
   const valdateFormData = () => {
-    setError("");
     if (
       formData &&
       formData.reference &&
@@ -204,7 +204,7 @@ const CreateNewNewsletter = () => {
     ) {
       return true;
     } else {
-      setError("Please Enter all the details");
+      showNotification("Please Enter all the details");
       return false;
     }
   };
@@ -218,12 +218,12 @@ const CreateNewNewsletter = () => {
             setRecipientCount(result.plan.subscribers.length);
           } else {
             publishModalDisclosure.onClose();
-            setError(result.message);
+            showNotification(result.message);
           }
         })
         .catch((e) => {
           publishModalDisclosure.onClose();
-          setError(e.message);
+          showNotification(e.message);
         });
     }
   }, [selectedPlan]);
@@ -328,8 +328,6 @@ const CreateNewNewsletter = () => {
           </Flex>
         </Flex>
       </Flex>
-      {successMessage && <SuccessAlert message={successMessage} />}
-      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
