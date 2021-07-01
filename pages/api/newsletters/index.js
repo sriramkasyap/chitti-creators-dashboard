@@ -13,6 +13,9 @@ export default withIronSession(
 
         var { page, limit, status } = req.query;
 
+        page = parseInt(page) || 0;
+        limit = Math.min(parseInt(limit) || 10, 50); // Don't accept to return more than 50 records
+
         var newsletters = await Newsletter.find(
           {
             creator: creatorId,
@@ -23,8 +26,8 @@ export default withIronSession(
             sort: { createdAt: -1 },
           }
         )
-          .limit(limit || 10)
-          .skip((limit || 10) * (page || 0));
+          .limit(limit)
+          .skip(limit * page);
 
         var totalCount = await Newsletter.count({
           creator: creatorId,
@@ -33,8 +36,8 @@ export default withIronSession(
         return res.send({
           success: true,
           newsletters,
-          page: page || 0,
-          limit: limit || 20,
+          page,
+          limit,
           totalCount,
         });
       } else if (req.method === "POST") {

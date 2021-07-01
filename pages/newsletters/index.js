@@ -12,13 +12,20 @@ const Newsletters = () => {
   var [newsletters, setNewsletters] = useState([]); // Newsletters
   var [loading, setLoading] = useState(true); // Loading State
   var [error, setError] = useState(""); // Error message
+  const [totalCount, setTotalCount] = useState(0);
+  const [pagination, setPagination] = useState({
+    // Pagination State
+    limit: 10,
+    page: 0,
+  });
 
   useEffect(() => {
     // Set newsletters on first load
-    getNewsletters()
+    getNewsletters({ ...pagination })
       .then((data) => {
         if (data.success) {
           setNewsletters(data.newsletters);
+          setTotalCount(data.totalCount);
           setLoading(false);
         } else {
           setError(data.message);
@@ -29,7 +36,7 @@ const Newsletters = () => {
         setError(e.message);
         setLoading(false);
       });
-  }, []);
+  }, [pagination]);
 
   const getNewsletterLink = (newsletterId) => {
     // Get link component for Editing newsletter
@@ -50,6 +57,9 @@ const Newsletters = () => {
       isLoading={loading}
       error={error}
       getNewsletterLink={getNewsletterLink}
+      pagination={pagination}
+      setPagination={setPagination}
+      totalCount={totalCount}
     />
   );
 };

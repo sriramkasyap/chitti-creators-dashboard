@@ -26,22 +26,6 @@ const SubscribersPage = ({
   pagination,
   setPagination,
 }) => {
-  const { loggedInUser } = useContext(AuthContext);
-  // const { plans } = loggedInUser;
-
-  // const data = useMemo(() => {
-  //   let allSubscribers = [];
-  //   subscribers.map((subscriber) => {
-  //     const tempSubscribers = subscriber.subscribers.map((s) => ({
-  //       subscriberName: s.name,
-  //       subscriberEmail: s.email,
-  //       type: subscriber.subscriptionType,
-  //     }));
-  //     allSubscribers.push(...tempSubscribers);
-  //   });
-  //   return allSubscribers;
-  // }, [subscribers]);
-
   const columns = useMemo(
     () => [
       {

@@ -12,18 +12,21 @@ import {
   Td,
   chakra,
   Image,
-  Heading,
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
 import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { getFormattedDate } from "../../utils";
+import Pagination from "../common/Pagination/Pagination";
 
 const NewslettersPage = ({
   newsletters,
   isLoading,
   error,
   getNewsletterLink,
+  pagination,
+  setPagination,
+  totalCount,
 }) => {
   const data = useMemo(() => {
     return newsletters.map((newsletter) => ({
@@ -128,6 +131,16 @@ const NewslettersPage = ({
               })}
             </Tbody>
           </Table>
+        )}
+
+        {totalCount > newsletters.length ? (
+          <Pagination
+            {...pagination}
+            totalCount={totalCount}
+            setPagination={setPagination}
+          />
+        ) : (
+          <></>
         )}
       </Flex>
     </Flex>
