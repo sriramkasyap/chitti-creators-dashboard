@@ -58,7 +58,6 @@ export default withIronSession(
         });
 
         var subscribers = await Promise.all(subscriberPromises);
-        // var count = subscribers.reduce((sum, { count }) => sum + count, 0);
 
         return res.send({
           success: true,
