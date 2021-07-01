@@ -37,7 +37,7 @@ const Dashboard = ({ cards, isLoading, error }) => {
       {/* Dashboard Card Start */}
       <Flex
         flexDir={["column", "row"]}
-        justifyContent={["unset", "unset", "flex-start"]}
+        justifyContent={["unset", "unset", "space-between"]}
         flexWrap="wrap"
         mt={[5, 5, 10, 10, 0]}
       >
