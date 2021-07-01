@@ -20,6 +20,7 @@ export function generateRandomString(length = 6, numbers = false) {
 export const getIronConfig = () => ({
   cookieName: process.env.AUTH_COOKIE_NAME,
   password: process.env.APPLICATION_SECRET,
+  ttl: 60 * 60 * 24,
   cookieOptions: {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
