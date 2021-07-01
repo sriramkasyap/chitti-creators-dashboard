@@ -19,6 +19,24 @@ export default async (req, res) => {
 
     var resut = await Subscriber.insertMany(data);
 
+    data = (
+      await fetch("https://dummyapi.io/data/api/user?limit=50&page=1", {
+        headers: {
+          "app-id": "60cf03b08eb6a1260f81ff55",
+        },
+      }).then((response) => response.json())
+    ).data;
+
+    data = data.map((user) => ({
+      ...user,
+      name: `${ucFirst(user.title)}. ${user.firstName} ${user.lastName}`,
+      registeredAt: Date.now(),
+      subscriptions: [],
+      payments: [],
+    }));
+
+    resut = await Subscriber.insertMany(data);
+
     return res.send({
       success: true,
       resut,

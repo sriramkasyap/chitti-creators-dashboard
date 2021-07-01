@@ -6,8 +6,10 @@ export const getNewsletters = async (filters = {}) => {
   );
 };
 
-export const getSubscribers = async () => {
-  return fetch(`/api/subscribers`).then((r) => r.json());
+export const getSubscribers = async (pagination = {}) => {
+  return fetch(`/api/subscribers?${serializeObject(pagination)}`).then((r) =>
+    r.json()
+  );
 };
 
 export const updateProfile = async (profile) => {
@@ -36,7 +38,7 @@ export const updatePlan = async (planId, plan) => {
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify(plan),
+    body: JSON.stringify({ plan }),
   }).then((r) => r.json());
 };
 
@@ -72,4 +74,8 @@ export const publishNewsletter = async (newsletterId, planId) => {
     },
     body: JSON.stringify({ planId }),
   }).then((r) => r.json());
+};
+
+export const getCardsDetails = async () => {
+  return fetch(`/api/creators/cards`).then((r) => r.json());
 };

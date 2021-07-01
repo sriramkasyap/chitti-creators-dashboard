@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+import juice from "juice";
 
 import {
   Flex,
@@ -15,11 +17,10 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 
-import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
 import Button from "../../src/components/common/Button/Button";
-import dynamic from "next/dynamic";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -28,10 +29,18 @@ const RichTextEditor = dynamic(
   }
 );
 
-import { checkAuthentication, getIronConfig } from "../../src/utils";
-import juice from "juice";
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
-import { createNewsletter } from "../../src/helpers/userFetcher";
+import {
+  createNewsletter,
+  getPlan,
+  publishNewsletter,
+} from "../../src/helpers/userFetcher";
+import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 
 const CreateNewNewsletter = () => {
   const [editorData, setEditorData] = useState(
@@ -42,11 +51,18 @@ const CreateNewNewsletter = () => {
     subject: "",
     keyword: "",
   });
+  const [selectedPlan, selectPlan] = useState();
+  const [recipientCount, setRecipientCount] = useState();
   const [keywordsList, setKeywordsList] = useState([]);
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving
-  const [errorMessage, setError] = useState(null);
+  const [newLetterId, setNewletterId] = useState();
+
+  const publishModalDisclosure = useDisclosure({
+    defaultIsOpen: false,
+    id: "publishModal",
+  });
 
   const router = useRouter();
 
@@ -81,15 +97,9 @@ const CreateNewNewsletter = () => {
   };
 
   const handleDiscardDraft = () => {
-    setFormData({
-      reference: "",
-      subject: "",
-      keyword: "",
-    });
-    setKeywordsList([]);
-    setEditorData(
-      `<p style="text-align:center;">Start Creating your Newsletter!</p>`
-    );
+    if (confirm("All changes will be lost. Are you sure?")) {
+      router.back();
+    }
   };
 
   const handleSaveDraft = () => {
@@ -106,14 +116,15 @@ const CreateNewNewsletter = () => {
       createNewsletter(requestBody)
         .then((result) => {
           if (result.success) {
+            showNotification("Newsletter Saved Successfully!");
             router.push(`/newsletters/${result.newsletter._id}`);
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -123,20 +134,64 @@ const CreateNewNewsletter = () => {
 
   const handlePublishSend = () => {
     setPageStatus("publishing");
-    const requestBody = {
-      newsletter: {
+    if (valdateFormData()) {
+      const requestBody = {
         reference: formData.reference,
         emailSubject: formData.subject,
         body: editorData,
-        keywords: keywordsList.map((keyword) => keyword.text),
-      },
-    };
+        keywords: keywordsList,
+      };
 
-    console.log("RB:: File: new.js, Line: 98 ==> requestBody", requestBody);
+      createNewsletter(requestBody)
+        .then((result) => {
+          if (result.success) {
+            setPageStatus("loaded");
+            setNewletterId(result.newsletter._id);
+            publishModalDisclosure.onOpen();
+          } else {
+            showNotification(result.message);
+            setPageStatus("loaded");
+          }
+        })
+        .catch((e) => {
+          showNotification(e.message);
+          setPageStatus("loaded");
+        });
+    } else {
+      setPageStatus("loaded");
+    }
+  };
+
+  const handlePublishNewsletter = () => {
+    setPageStatus("publishing");
+    publishNewsletter(newLetterId, selectedPlan)
+      .then((result) => {
+        if (result.success) {
+          setEditorData(result.newsletter.body);
+          setFormData({
+            reference: result.newsletter.reference,
+            subject: result.newsletter.emailSubject,
+            keyword: "",
+          });
+          setKeywordsList(result.newsletter.keywords);
+          showNotification("Newsletter has been sent Successfully");
+          setPageStatus("loaded");
+          router.push(`/newsletters/${result.newsletter._id}`);
+          publishModalDisclosure.onClose();
+        } else {
+          showNotification(result.message);
+          setPageStatus("loaded");
+          publishModalDisclosure.onClose();
+        }
+      })
+      .catch((e) => {
+        showNotification(e.message);
+        setPageStatus("loaded");
+        publishModalDisclosure.onClose();
+      });
   };
 
   const valdateFormData = () => {
-    setError("");
     if (
       formData &&
       formData.reference &&
@@ -149,10 +204,29 @@ const CreateNewNewsletter = () => {
     ) {
       return true;
     } else {
-      setError("Please Enter all the details");
+      showNotification("Please Enter all the details");
       return false;
     }
   };
+
+  useEffect(() => {
+    // Refresh recipientCount every time the plan is selected
+    if (selectedPlan && selectedPlan.length > 0) {
+      getPlan(selectedPlan)
+        .then((result) => {
+          if (result.success) {
+            setRecipientCount(result.plan.subscribers.length);
+          } else {
+            publishModalDisclosure.onClose();
+            showNotification(result.message);
+          }
+        })
+        .catch((e) => {
+          publishModalDisclosure.onClose();
+          showNotification(e.message);
+        });
+    }
+  }, [selectedPlan]);
 
   return (
     <Flex
@@ -163,6 +237,14 @@ const CreateNewNewsletter = () => {
       mr="auto"
       maxW={["100%", "100%", "100%", "100%", "1440px"]}
     >
+      <PublishModal
+        disclosure={publishModalDisclosure}
+        selectedPlan={selectedPlan}
+        selectPlan={selectPlan}
+        recipientCount={recipientCount}
+        publishNewsletter={handlePublishNewsletter}
+        pageStatus={pageStatus}
+      />
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
@@ -203,7 +285,7 @@ const CreateNewNewsletter = () => {
                 pageStatus == "saving" ? (
                   <Image src="/loader_black.gif" h="2rem" />
                 ) : (
-                  "Save Draft"
+                  "Save Newsletter"
                 )
               }
               variant="outline"
@@ -246,7 +328,6 @@ const CreateNewNewsletter = () => {
           </Flex>
         </Flex>
       </Flex>
-      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}

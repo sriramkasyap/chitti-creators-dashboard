@@ -11,6 +11,11 @@ export default withIronSession(
       if (req.method === "GET") {
         var { creatorId } = req.creator;
 
+        var { page, limit } = req.query;
+
+        limit = Math.min(parseInt(limit || 10), 50);
+        page = parseInt(page || 0);
+
         var creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("Unauthorized Request");
 
@@ -18,39 +23,60 @@ export default withIronSession(
           _id: {
             $in: creator.plans,
           },
-        }).lean(true);
+        }) // Find the creator's plans
+          .lean(true); // Get only Javascript objects
 
-        if (!plans || plans.length < 1)
-          throw new Error("You haven't created any plans");
+        var [paidPlan] = plans.filter((plan) => plan.planFee !== 0); // Find the paid plan
 
-        var subscriberPromises = plans.map(async (plan) => {
-          var planSubs = await Subscriber.find(
-            {
-              _id: {
-                $in: plan.subscribers,
-              },
+        var subscribers = await Subscriber.find(
+          {
+            subscriptions: {
+              $in: creator.plans,
             },
-            {
-              name: 1,
-              email: 1,
-              _id: 0,
-            }
-          ).lean(true);
+          }, // Get all subscribers for the creator's plans
+          {
+            name: 1,
+            email: 1,
+            subscriptions: 1,
+            _id: 0,
+          }, // Project only required fields
+          {
+            limit,
+            skip: page * limit,
+          } // Limit as per pagination request
+        ).lean(true);
 
+        subscribers = subscribers.map((sub) => {
+          // Determine the subscription type
+          var subscriptionType = "Free";
+          if (paidPlan && paidPlan._id) {
+            // If the creator has a paid plan
+            sub.subscriptions = sub.subscriptions.map((s) => s.toString());
+            subscriptionType = sub.subscriptions.includes(
+              paidPlan._id.toString()
+            )
+              ? "Paid"
+              : "Free";
+          }
+          delete sub.subscriptions; // Do not send other subscriptions' details
           return {
-            planId: plan._id,
-            subscribers: planSubs,
-            count: planSubs.length,
+            ...sub,
+            subscriptionType,
           };
         });
 
-        var subscribers = await Promise.all(subscriberPromises);
-        var count = subscribers.reduce((sum, { count }) => sum + count, 0);
+        var totalCount = await Subscriber.count({
+          subscriptions: {
+            $in: creator.plans,
+          },
+        });
 
         return res.send({
           success: true,
           subscribers,
-          count,
+          totalCount,
+          limit,
+          page,
         });
       }
     } catch (error) {

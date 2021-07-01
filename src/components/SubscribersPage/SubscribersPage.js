@@ -14,43 +14,39 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../../../contexts/AuthContext";
+import Pagination from "../common/Pagination/Pagination";
 
-const SubscribersPage = ({ subscribers, isLoading, error }) => {
+const SubscribersPage = ({
+  subscribers,
+  isLoading,
+  error,
+  totalCount,
+  pagination,
+  setPagination,
+}) => {
   const { loggedInUser } = useContext(AuthContext);
-  const { plans } = loggedInUser;
+  // const { plans } = loggedInUser;
 
-  const getPlan = () => {
-    const planData = plans?.find((plan) => plan._id === subscribers[0].planId);
-    if (planData.planFee === 0) {
-      return "Free";
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
     }
-    return "Paid";
-  };
-
-  const data = useMemo(() => {
-    return subscribers[0]?.subscribers.map((subscriber) => ({
-      subscriberName: subscriber.name,
-      subscriberEmail: subscriber.email,
-      type: getPlan(),
-    }));
-  }, [subscribers]);
+  }, [error]);
 
   const columns = useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "subscriberName",
-        isVisible: window.innerWidth > 7680,
+        accessor: "name",
       },
       {
         Header: "Email",
-        accessor: "subscriberEmail",
+        accessor: "email",
       },
       {
         Header: "Subscription Type",
-        accessor: "type",
+        accessor: "subscriptionType",
       },
     ],
     []
@@ -63,7 +59,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
     rows,
     prepareRow,
     setHiddenColumns,
-  } = useTable({ columns, data }, useSortBy);
+  } = useTable({ columns, data: subscribers }, useSortBy);
 
   useEffect(() => {
     if (window.innerWidth < 768) setHiddenColumns(["subscriberName"]); // Hide Subscriber name if the window size is less than 768px
@@ -79,9 +75,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
         w="100%"
         overflow="auto"
       >
-        {error ? (
-          <ErrorAlert message={error} />
-        ) : isLoading ? (
+        {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
           <Table {...getTableProps()} size="sm">
@@ -132,6 +126,16 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
               })}
             </Tbody>
           </Table>
+        )}
+
+        {totalCount > subscribers.length ? (
+          <Pagination
+            {...pagination}
+            totalCount={totalCount}
+            setPagination={setPagination}
+          />
+        ) : (
+          <></>
         )}
       </Flex>
     </Flex>

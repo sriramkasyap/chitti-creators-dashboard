@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
@@ -10,7 +11,6 @@ import {
   Input,
   Text,
   Heading,
-  IconButton,
   Box,
   Image,
   Tag,
@@ -18,20 +18,12 @@ import {
   TagCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
 
-import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
-import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
-import Button from "../../src/components/common/Button/Button";
-
-const RichTextEditor = dynamic(
-  () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
-  {
-    ssr: false,
-  }
-);
-
-import { checkAuthentication, getIronConfig } from "../../src/utils";
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
 import juice from "juice";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 import {
@@ -41,9 +33,19 @@ import {
 } from "../../src/helpers/userFetcher";
 import Newsletter from "../../src/models/Newsletter";
 import { isValidObjectId } from "mongoose";
+
 import PublishModal from "../../src/components/common/PublishModal/PublishModal";
+import Button from "../../src/components/common/Button/Button";
+
+const RichTextEditor = dynamic(
+  () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
+  {
+    ssr: false,
+  }
+);
 
 const EditNewsletter = ({ newsletter }) => {
+  const router = useRouter();
   const [editorData, setEditorData] = useState(newsletter.body);
   const [formData, setFormData] = useState({
     reference: newsletter.reference,
@@ -56,8 +58,6 @@ const EditNewsletter = ({ newsletter }) => {
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving, publishing
-  const [errorMessage, setError] = useState();
-  const [successMessage, setSuccess] = useState();
   const publishModalDisclosure = useDisclosure({
     defaultIsOpen: false,
     id: "publishModal",
@@ -114,14 +114,14 @@ const EditNewsletter = ({ newsletter }) => {
             });
             setKeywordsList(result.newsletter.keywords);
             setPageStatus("loaded");
-            setSuccess("Newsletter Saved Successfully!");
+            showNotification("Newsletter Saved Successfully!");
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -136,7 +136,6 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   const valdateFormData = () => {
-    setError("");
     if (
       formData &&
       formData.reference &&
@@ -149,7 +148,7 @@ const EditNewsletter = ({ newsletter }) => {
     ) {
       return true;
     } else {
-      setError("Please Enter all the details");
+      showNotification("Please Enter all the details");
       return false;
     }
   };
@@ -166,17 +165,18 @@ const EditNewsletter = ({ newsletter }) => {
             keyword: "",
           });
           setKeywordsList(result.newsletter.keywords);
-          setSuccess("Newsletter has been sent Successfully");
+          showNotification("Newsletter has been sent Successfully");
           setPageStatus("loaded");
+          router.replace("/newsletters");
           publishModalDisclosure.onClose();
         } else {
-          setError(result.message);
+          showNotification(result.message);
           setPageStatus("loaded");
           publishModalDisclosure.onClose();
         }
       })
       .catch((e) => {
-        setError(e.message);
+        showNotification(e.message);
         setPageStatus("loaded");
         publishModalDisclosure.onClose();
       });
@@ -191,18 +191,25 @@ const EditNewsletter = ({ newsletter }) => {
             setRecipientCount(result.plan.subscribers.length);
           } else {
             publishModalDisclosure.onClose();
-            setError(result.message);
+            showNotification(result.message);
           }
         })
         .catch((e) => {
           publishModalDisclosure.onClose();
-          setError(e.message);
+          showNotification(e.message);
         });
     }
   }, [selectedPlan]);
 
   return (
-    <Flex flexDirection="column" w="100%" mt={["8vh", "8vh", "8vh", "10vh", 0]}>
+    <Flex
+      flexDirection="column"
+      w="100%"
+      mt={["8vh", "8vh", "8vh", "10vh", 0]}
+      ml="auto"
+      mr="auto"
+      maxW={["100%", "100%", "100%", "100%", "1440px"]}
+    >
       <PublishModal
         disclosure={publishModalDisclosure}
         selectedPlan={selectedPlan}
@@ -279,8 +286,6 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </Flex>
       </Flex>
-      {successMessage && <SuccessAlert message={successMessage} />}
-      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
@@ -450,22 +455,30 @@ export const getServerSideProps = withIronSession(async (ctx) => {
   }
 
   if (newsletter && newsletter._id) {
-    var newsletterId = newsletter._id.toString();
-    delete newsletter._id;
-    newsletter.createdAt = newsletter.createdAt.toString();
-    newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
-    newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
-    newsletter.creator = newsletter.creator.toString();
-    newsletter.recipients = newsletter.recipients.length;
-    return {
-      props: {
-        ...props,
-        newsletter: {
-          ...newsletter,
-          newsletterId,
+    if (newsletter.status === "published") {
+      res.setHeader("Location", "/newsletters");
+      res.statusCode = 302;
+      return res.end();
+    } else {
+      var newsletterId = newsletter._id.toString();
+      delete newsletter._id;
+      newsletter.createdAt = newsletter.createdAt.toString();
+      newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
+      newsletter.sentAt = newsletter.sentAt
+        ? newsletter.sentAt.toString()
+        : null;
+      newsletter.creator = newsletter.creator.toString();
+      newsletter.recipients = newsletter.recipients.length;
+      return {
+        props: {
+          ...props,
+          newsletter: {
+            ...newsletter,
+            newsletterId,
+          },
         },
-      },
-    };
+      };
+    }
   } else {
     res.statusCode = 404;
     return res.end();

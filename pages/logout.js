@@ -5,15 +5,14 @@ const Logout = () => {
   return <></>;
 };
 
-export const getServerSideProps = withIronSession(async ({ req, res }) => {
-  if (req.session) req.session.destroy();
-
-  res.setHeader("Location", "/login");
-  res.statusCode = 302;
-  res.end();
+export const getServerSideProps = withIronSession(async ({ req }) => {
+  if (req.session) await req.session.destroy();
 
   return {
-    props: { standardLayout: false },
+    redirect: {
+      destination: "/login",
+      permanent: false,
+    },
   };
 }, getIronConfig());
 

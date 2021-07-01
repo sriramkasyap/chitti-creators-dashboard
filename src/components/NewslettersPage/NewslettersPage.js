@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import Link from "next/link";
+import { useEffect, useMemo } from "react";
 import { useTable, useSortBy } from "react-table";
 import {
   Flex,
@@ -12,19 +11,26 @@ import {
   Td,
   chakra,
   Image,
-  Heading,
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
-
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
-import { getFormattedDate } from "../../utils";
+import Pagination from "../common/Pagination/Pagination";
+import { getFormattedDate, showNotification } from "../../utils";
 
 const NewslettersPage = ({
   newsletters,
   isLoading,
   error,
   getNewsletterLink,
+  pagination,
+  setPagination,
+  totalCount,
 }) => {
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
+    }
+  }, [error]);
+
   const data = useMemo(() => {
     return newsletters.map((newsletter) => ({
       newsletterName: newsletter.reference,
@@ -79,9 +85,7 @@ const NewslettersPage = ({
         h="auto"
         w="100%"
       >
-        {error ? (
-          <ErrorAlert message={error} />
-        ) : isLoading ? (
+        {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
           <Table {...getTableProps()} size={("sm", "sm", "md", "lg")}>
@@ -128,6 +132,16 @@ const NewslettersPage = ({
               })}
             </Tbody>
           </Table>
+        )}
+
+        {totalCount > newsletters.length ? (
+          <Pagination
+            {...pagination}
+            totalCount={totalCount}
+            setPagination={setPagination}
+          />
+        ) : (
+          <></>
         )}
       </Flex>
     </Flex>
