@@ -11,7 +11,10 @@ export default withIronSession(
       if (req.method === "GET") {
         var { creatorId } = req.creator;
 
-        const { page, limit } = req.query;
+        var { page, limit } = req.query;
+
+        limit = parseInt(limit || 10);
+        page = parseInt(page || 0);
 
         var creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("Unauthorized Request");
@@ -38,8 +41,8 @@ export default withIronSession(
               _id: 0,
             },
             {
-              limit: limit || 10,
-              skip: (page || 0) * (limit || 10),
+              limit,
+              skip: page * limit,
             }
           ).lean(true);
 
@@ -63,6 +66,8 @@ export default withIronSession(
           success: true,
           subscribers,
           totalCount,
+          limit,
+          page,
         });
       }
     } catch (error) {

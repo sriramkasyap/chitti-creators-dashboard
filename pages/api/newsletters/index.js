@@ -33,6 +33,8 @@ export default withIronSession(
         return res.send({
           success: true,
           newsletters,
+          page: page || 0,
+          limit: limit || 20,
           totalCount,
         });
       } else if (req.method === "POST") {
