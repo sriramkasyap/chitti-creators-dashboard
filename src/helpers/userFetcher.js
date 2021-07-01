@@ -1,13 +1,15 @@
 import { serializeObject } from "../utils";
 
 export const getNewsletters = async (filters = {}) => {
-  return fetch(`/api/newsletters${serializeObject(filters)}`).then((r) =>
+  return fetch(`/api/newsletters?${serializeObject(filters)}`).then((r) =>
     r.json()
   );
 };
 
-export const getSubscribers = async () => {
-  return fetch(`/api/subscribers`).then((r) => r.json());
+export const getSubscribers = async (pagination = {}) => {
+  return fetch(`/api/subscribers?${serializeObject(pagination)}`).then((r) =>
+    r.json()
+  );
 };
 
 export const updateProfile = async (profile) => {
