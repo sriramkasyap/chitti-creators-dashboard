@@ -15,10 +15,19 @@ import {
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
 import { AuthContext } from "../../../contexts/AuthContext";
+import Pagination from "../common/Pagination/Pagination";
 
-const SubscribersPage = ({ subscribers, isLoading, error }) => {
+const SubscribersPage = ({
+  subscribers,
+  isLoading,
+  error,
+  totalCount,
+  pagination,
+  setPagination,
+}) => {
   const { loggedInUser } = useContext(AuthContext);
-  const { plans } = loggedInUser;
+  // const { plans } = loggedInUser;
+
 
   useEffect(() => {
     if (error) {
@@ -26,45 +35,19 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
     }
   }, [error]);
 
-  // merge two array of subscribers with different subscription plan
-  const getPlan = () => {
-    const planData = plans?.find((plan) => plan._id === subscribers[0].planId);
-    if (planData) {
-      if (planData.planFee === 0) {
-        return "Free";
-      }
-      return "Paid";
-    }
-    return "";
-  };
-
-  const data = useMemo(() => {
-    let allSubscribers = [];
-    subscribers.map((subscriber) => {
-      const tempSubscribers = subscriber.subscribers.map((s) => ({
-        subscriberName: s.name,
-        subscriberEmail: s.email,
-        type: subscriber.subscriptionType,
-      }));
-      allSubscribers.push(...tempSubscribers);
-    });
-    return allSubscribers;
-  }, [subscribers]);
-
   const columns = useMemo(
     () => [
       {
         Header: "Name",
-        accessor: "subscriberName",
-        isVisible: window.innerWidth > 7680,
+        accessor: "name",
       },
       {
         Header: "Email",
-        accessor: "subscriberEmail",
+        accessor: "email",
       },
       {
         Header: "Subscription Type",
-        accessor: "type",
+        accessor: "subscriptionType",
       },
     ],
     []
@@ -77,7 +60,7 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
     rows,
     prepareRow,
     setHiddenColumns,
-  } = useTable({ columns, data }, useSortBy);
+  } = useTable({ columns, data: subscribers }, useSortBy);
 
   useEffect(() => {
     if (window.innerWidth < 768) setHiddenColumns(["subscriberName"]); // Hide Subscriber name if the window size is less than 768px
@@ -144,6 +127,16 @@ const SubscribersPage = ({ subscribers, isLoading, error }) => {
               })}
             </Tbody>
           </Table>
+        )}
+
+        {totalCount > subscribers.length ? (
+          <Pagination
+            {...pagination}
+            totalCount={totalCount}
+            setPagination={setPagination}
+          />
+        ) : (
+          <></>
         )}
       </Flex>
     </Flex>

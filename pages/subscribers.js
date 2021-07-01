@@ -10,26 +10,43 @@ const Subscribers = () => {
   const [subscribers, setSubscribers] = useState([]); // Subscribers
   const [loading, setLoading] = useState(true); // Loading State
   const [error, setError] = useState(""); // Error message
-  const [subscribersCount, setSubscribersCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [pagination, setPagination] = useState({
+    limit: 15,
+    page: 0,
+  });
 
-  useEffect(() => {
-    // Set Subscribers on first load
-    getSubscribers()
-      .then((data) => {
-        if (data.success) {
-          setSubscribers(data.subscribers);
-          setSubscribersCount(data.count);
+  useEffect(
+    (prev) => {
+      // Set Subscribers on first load
+      setLoading(true);
+      getSubscribers(pagination)
+        .then((data) => {
+          if (data.success) {
+            setSubscribers(data.subscribers);
+            setTotalCount(data.totalCount);
+            if (
+              pagination.page !== data.page ||
+              pagination.limit !== data.limit
+            ) {
+              setPagination({
+                limit: data.limit,
+                page: data.page,
+              });
+            }
+            setLoading(false);
+          } else {
+            setError(data.message);
+            setLoading(false);
+          }
+        })
+        .catch((e) => {
+          setError(e.message);
           setLoading(false);
-        } else {
-          setError(data.message);
-          setLoading(false);
-        }
-      })
-      .catch((e) => {
-        setError(e.message);
-        setLoading(false);
-      });
-  }, []);
+        });
+    },
+    [pagination]
+  );
 
   return (
     <>
@@ -38,7 +55,9 @@ const Subscribers = () => {
           subscribers={subscribers}
           isLoading={loading}
           error={error}
-          subscribersCount={subscribersCount}
+          totalCount={totalCount}
+          pagination={pagination}
+          setPagination={setPagination}
         />
       )}
     </>
