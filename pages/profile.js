@@ -196,7 +196,12 @@ const Profile = () => {
     setSuccessMessage("");
     setError("");
     var imageToUpload = displayPictureRef.current.files[0];
-    console.log(imageToUpload);
+    if (imageToUpload.size > 2000000) {
+      // File size is greater than 20MB
+      setError("File Size has to be smaller than 20 MB.");
+      setStatus("loaded");
+      return;
+    }
     uploadFile(imageToUpload)
       .then((result) => {
         if (result.secure_url) {
