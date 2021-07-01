@@ -11,6 +11,8 @@ export default withIronSession(
       if (req.method === "GET") {
         var { creatorId } = req.creator;
 
+        const { page, limit } = req.query;
+
         var creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("Unauthorized Request");
 
@@ -34,6 +36,10 @@ export default withIronSession(
               name: 1,
               email: 1,
               _id: 0,
+            },
+            {
+              limit: limit || 10,
+              skip: (page || 0) * (limit || 10),
             }
           ).lean(true);
 
@@ -45,13 +51,19 @@ export default withIronSession(
           };
         });
 
+        var totalCount = await Subscriber.count({
+          subscriptions: {
+            $in: creator.plans,
+          },
+        });
+
         var subscribers = await Promise.all(subscriberPromises);
-        var count = subscribers.reduce((sum, { count }) => sum + count, 0);
+        // var count = subscribers.reduce((sum, { count }) => sum + count, 0);
 
         return res.send({
           success: true,
           subscribers,
-          count,
+          totalCount,
         });
       }
     } catch (error) {

@@ -26,9 +26,14 @@ export default withIronSession(
           .limit(limit || 10)
           .skip((limit || 10) * (page || 0));
 
+        var totalCount = await Newsletter.count({
+          creator: creatorId,
+        });
+
         return res.send({
           success: true,
           newsletters,
+          totalCount,
         });
       } else if (req.method === "POST") {
         // Create a newsletter
