@@ -7,6 +7,7 @@ import NewslettersPage from "../../src/components/NewslettersPage/NewslettersPag
 import { checkAuthentication, getIronConfig } from "../../src/utils";
 import { useEffect, useState } from "react";
 import { getNewsletters } from "../../src/helpers/userFetcher";
+import Button from "../../src/components/common/Button/Button";
 
 const Newsletters = () => {
   var [newsletters, setNewsletters] = useState([]); // Newsletters
@@ -41,13 +42,22 @@ const Newsletters = () => {
   const getNewsletterLink = (newsletterId) => {
     // Get link component for Editing newsletter
     return (
-      <Link
-        prefetch={false}
-        href={`/newsletters/[newsletterId]`}
-        as={`/newsletters/${newsletterId}`}
-      >
-        Edit
-      </Link>
+      <Button
+        variant="solid"
+        size="sm"
+        rounded="full"
+        fontWeight="light"
+        px={7}
+        text={
+          <Link
+            prefetch={false}
+            href={`/newsletters/[newsletterId]`}
+            as={`/newsletters/${newsletterId}`}
+          >
+            Edit
+          </Link>
+        }
+      />
     );
   };
 
