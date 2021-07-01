@@ -128,13 +128,7 @@ const Profile = () => {
       longBio.length > 0 &&
       displayPicture.length > 0
     ) {
-      // if (validateURL(displayPicture)) {
       return true;
-      // } else {
-      //   console.log(displayPicture);
-      //   setError("Invalid Display picture url");
-      //   return false;
-      // }
     } else {
       console.log(
         fullName,
@@ -191,7 +185,7 @@ const Profile = () => {
     var imageToUpload = displayPictureRef.current.files[0];
     if (imageToUpload.size > 2000000) {
       // File size is greater than 20MB
-      setError("File Size has to be smaller than 20 MB.");
+      showNotification("File Size has to be smaller than 20 MB.");
       setStatus("loaded");
       return;
     }
@@ -202,12 +196,12 @@ const Profile = () => {
             ...profile,
             displayPicture: result.secure_url,
           });
-          setSuccessMessage(
+          showNotification(
             "New display picture updated. Hit Save to publish the changes"
           );
         } else {
           console.error(result);
-          setError("An Error Occured. Please try a different file");
+          showNotification("An Error Occured. Please try a different file");
         }
         showNotification(
           "New display picture updated. Hit Save to publish the changes"
