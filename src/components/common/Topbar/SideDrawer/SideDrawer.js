@@ -29,6 +29,7 @@ const SideDrawer = () => {
         onClick={onOpen}
         fontSize="4xl"
         color="bright.gray"
+        backgroundColor="bright.fg"
         _focus={{ boxShadow: "none" }}
       />
       <Drawer

@@ -19,18 +19,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import ErrorAlert from "../../src/components/common/ErrorAlert/ErrorAlert";
-import SuccessAlert from "../../src/components/common/SuccessAlert/SuccessAlert";
-import Button from "../../src/components/common/Button/Button";
-
-const RichTextEditor = dynamic(
-  () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
-  {
-    ssr: false,
-  }
-);
-
-import { checkAuthentication, getIronConfig } from "../../src/utils";
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
 import juice from "juice";
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 import {
@@ -40,7 +33,16 @@ import {
 } from "../../src/helpers/userFetcher";
 import Newsletter from "../../src/models/Newsletter";
 import { isValidObjectId } from "mongoose";
+
 import PublishModal from "../../src/components/common/PublishModal/PublishModal";
+import Button from "../../src/components/common/Button/Button";
+
+const RichTextEditor = dynamic(
+  () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
+  {
+    ssr: false,
+  }
+);
 
 const EditNewsletter = ({ newsletter }) => {
   const router = useRouter();
@@ -56,8 +58,6 @@ const EditNewsletter = ({ newsletter }) => {
   const [pageStatus, setPageStatus] = useState("loaded");
   // enum for Page status. Values as below
   // loaded, saving, publishing
-  const [errorMessage, setError] = useState();
-  const [successMessage, setSuccess] = useState();
   const publishModalDisclosure = useDisclosure({
     defaultIsOpen: false,
     id: "publishModal",
@@ -114,14 +114,14 @@ const EditNewsletter = ({ newsletter }) => {
             });
             setKeywordsList(result.newsletter.keywords);
             setPageStatus("loaded");
-            setSuccess("Newsletter Saved Successfully!");
+            showNotification("Newsletter Saved Successfully!");
           } else {
-            setError(result.message);
+            showNotification(result.message);
             setPageStatus("loaded");
           }
         })
         .catch((e) => {
-          setError(e.message);
+          showNotification(e.message);
           setPageStatus("loaded");
         });
     } else {
@@ -136,7 +136,6 @@ const EditNewsletter = ({ newsletter }) => {
   };
 
   const valdateFormData = () => {
-    setError("");
     if (
       formData &&
       formData.reference &&
@@ -149,7 +148,7 @@ const EditNewsletter = ({ newsletter }) => {
     ) {
       return true;
     } else {
-      setError("Please Enter all the details");
+      showNotification("Please Enter all the details");
       return false;
     }
   };
@@ -166,18 +165,18 @@ const EditNewsletter = ({ newsletter }) => {
             keyword: "",
           });
           setKeywordsList(result.newsletter.keywords);
-          setSuccess("Newsletter has been sent Successfully");
+          showNotification("Newsletter has been sent Successfully");
           setPageStatus("loaded");
           router.replace("/newsletters");
           publishModalDisclosure.onClose();
         } else {
-          setError(result.message);
+          showNotification(result.message);
           setPageStatus("loaded");
           publishModalDisclosure.onClose();
         }
       })
       .catch((e) => {
-        setError(e.message);
+        showNotification(e.message);
         setPageStatus("loaded");
         publishModalDisclosure.onClose();
       });
@@ -192,12 +191,12 @@ const EditNewsletter = ({ newsletter }) => {
             setRecipientCount(result.plan.subscribers.length);
           } else {
             publishModalDisclosure.onClose();
-            setError(result.message);
+            showNotification(result.message);
           }
         })
         .catch((e) => {
           publishModalDisclosure.onClose();
-          setError(e.message);
+          showNotification(e.message);
         });
     }
   }, [selectedPlan]);
@@ -294,8 +293,6 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </Flex>
       </Flex>
-      {successMessage && <SuccessAlert message={successMessage} />}
-      {errorMessage && <ErrorAlert message={errorMessage} />}
       <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}

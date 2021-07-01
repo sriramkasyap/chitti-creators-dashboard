@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { BiCaretDown, BiCaretUp } from "react-icons/bi";
 
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../../../contexts/AuthContext";
 import Pagination from "../common/Pagination/Pagination";
 
@@ -29,18 +28,12 @@ const SubscribersPage = ({
   const { loggedInUser } = useContext(AuthContext);
   // const { plans } = loggedInUser;
 
-  // const data = useMemo(() => {
-  //   let allSubscribers = [];
-  //   subscribers.map((subscriber) => {
-  //     const tempSubscribers = subscriber.subscribers.map((s) => ({
-  //       subscriberName: s.name,
-  //       subscriberEmail: s.email,
-  //       type: subscriber.subscriptionType,
-  //     }));
-  //     allSubscribers.push(...tempSubscribers);
-  //   });
-  //   return allSubscribers;
-  // }, [subscribers]);
+
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
+    }
+  }, [error]);
 
   const columns = useMemo(
     () => [
@@ -83,9 +76,7 @@ const SubscribersPage = ({
         w="100%"
         overflow="auto"
       >
-        {error ? (
-          <ErrorAlert message={error} />
-        ) : isLoading ? (
+        {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (
           <Table {...getTableProps()} size="sm">

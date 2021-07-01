@@ -1,10 +1,17 @@
 import { Flex, Image } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 import Button from "../common/Button/Button";
-import ErrorAlert from "../common/ErrorAlert/ErrorAlert";
 import Card from "./Card/Card";
 
+import { showNotification } from "../../utils";
+
 const Dashboard = ({ cards, isLoading, error }) => {
+  useEffect(() => {
+    if (error) {
+      showNotification(error);
+    }
+  }, [error]);
   return (
     <Flex flexDir="column" w="100%">
       {/* "Create New Newsletter" button display in small screen Start */}
@@ -34,7 +41,6 @@ const Dashboard = ({ cards, isLoading, error }) => {
         flexWrap="wrap"
         mt={[0, 5, 10, 10, 0]}
       >
-        {error && <ErrorAlert message={error} />}
         {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
         ) : (

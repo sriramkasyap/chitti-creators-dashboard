@@ -1,3 +1,7 @@
+import { createStandaloneToast } from "@chakra-ui/react";
+import Notification from "./components/common/Notification/Notification";
+
+import theme from "../theme";
 export function ucFirst(word) {
   return word[0].toUpperCase() + word.slice(1, word.length);
 }
@@ -72,4 +76,16 @@ export const getFormattedDate = (date) => {
     month = "0" + month;
   }
   return `${dt}-${month}-${year} ${time}`;
+};
+
+export const showNotification = (message) => {
+  const toast = createStandaloneToast({ theme });
+  const id = "active-notification-toast";
+  if (!toast.isActive(id)) {
+    toast({
+      position: "bottom-right",
+      variant: "left-accent",
+      render: () => <Notification message={message} />,
+    });
+  }
 };
