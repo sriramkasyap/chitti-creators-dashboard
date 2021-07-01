@@ -7,7 +7,7 @@ const Card = ({ card }) => {
   return (
     <Box
       rounded={25}
-      flex={["100%", "100%", "50%", "50%", "350px"]}
+      flex={["auto", "100%", "50%", "50%", "350px"]}
       h={[125, 150, 160, 180, 180]}
       backgroundColor="bright.fg"
       color="bright.bg"
