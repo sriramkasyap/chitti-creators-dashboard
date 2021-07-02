@@ -1,8 +1,10 @@
 import { withIronSession } from "next-iron-session";
+import { sendMail } from "../../../../src/helpers/mailHelper";
 import withCreatorAuth from "../../../../src/middleware/withCreatorAuth";
+import Creator from "../../../../src/models/Creator";
 import Newsletter from "../../../../src/models/Newsletter";
 import SubscriptionPlan from "../../../../src/models/SubscriptionPlan";
-import { getIronConfig } from "../../../../src/utils";
+import { getIronConfig, tablifyEmailer } from "../../../../src/utils";
 
 export default withIronSession(
   withCreatorAuth(async (req, res) => {
@@ -10,7 +12,7 @@ export default withIronSession(
       if (req.method === "POST") {
         // Publish the newsleter and send
 
-        var { creatorId } = req.creator;
+        var { creatorId, emailId } = req.creator;
 
         var { newsletterId } = req.query;
         var { planId } = req.body;
@@ -29,14 +31,24 @@ export default withIronSession(
         var plan = await SubscriptionPlan.findById(planId);
         if (!plan) throw new Error("Plan does not exist");
 
+        var creator = await Creator.findById(creatorId);
+
         // Queue the newsletter to be sent to all the recipients
 
         newsletter.recipients = plan.subscribers;
         newsletter.status = "published";
         newsletter.lastSavedAt = Date.now();
         newsletter.sentAt = Date.now();
+        var tabled = tablifyEmailer(newsletter.body);
 
-        newsletter.save();
+        await sendMail(
+          creator.emailId,
+          creator.fullName,
+          newsletter.emailSubject,
+          tabled
+        );
+
+        await newsletter.save();
 
         return res.send({
           success: true,
