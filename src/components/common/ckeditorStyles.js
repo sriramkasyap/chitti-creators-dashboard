@@ -5,6 +5,9 @@ const ckEditorStyles = `
  * For more information, check out https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/content-styles.html
  */
 
+* {
+    font-family: Quicksand
+}
 
 /* ckeditor5-highlight/theme/highlight.css */
 .marker-yellow {
