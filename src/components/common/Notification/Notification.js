@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Box } from "@chakra-ui/react";
 
 const Notification = ({ message }) => {
@@ -6,6 +7,10 @@ const Notification = ({ message }) => {
       {message}
     </Box>
   );
+};
+
+Notification.propTypes = {
+  message: PropTypes.string.isRequired,
 };
 
 export default Notification;

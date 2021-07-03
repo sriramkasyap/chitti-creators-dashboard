@@ -1,7 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Box } from "@chakra-ui/react";
 import Editor from "ckeditor5-custom-build/build/ckeditor";
+
+import { noop } from "../../../utils";
 
 import classes from "./RichTextEditor.module.scss";
 
@@ -70,6 +73,15 @@ const RichTextEditor = ({ data, handleChange }) => {
       />
     </Box>
   );
+};
+
+RichTextEditor.propTypes = {
+  data: PropTypes.string.isRequired,
+  handleChange: PropTypes.func,
+};
+
+RichTextEditor.defaultProps = {
+  handleChange: noop,
 };
 
 export default RichTextEditor;

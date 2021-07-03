@@ -1,10 +1,12 @@
-import Link from "next/link";
 import { useContext } from "react";
+import PropTypes from "prop-types";
+import Link from "next/link";
 import { Flex, Text, Avatar } from "@chakra-ui/react";
 
 import "@fontsource/josefin-sans/400.css";
 
 import { AuthContext } from "../../../../../../contexts/AuthContext";
+import { noop } from "../../../../../utils";
 
 const Footer = ({ onClose }) => {
   const {
@@ -54,6 +56,14 @@ const Footer = ({ onClose }) => {
       </Flex>
     </Flex>
   );
+};
+
+Footer.propTypes = {
+  onClose: PropTypes.func,
+};
+
+Footer.defaultProps = {
+  onClose: noop,
 };
 
 export default Footer;

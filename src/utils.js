@@ -2,11 +2,14 @@ import { createStandaloneToast } from "@chakra-ui/react";
 import Notification from "./components/common/Notification/Notification";
 
 import theme from "../theme";
-export function ucFirst(word) {
-  return word[0].toUpperCase() + word.slice(1, word.length);
-}
 
-export function generateRandomString(length = 6, numbers = false) {
+export const noop = () => {};
+
+export const ucFirst = (word) => {
+  return word[0].toUpperCase() + word.slice(1, word.length);
+};
+
+export const generateRandomString = (length = 6, numbers = false) => {
   var result = "";
   var characters = numbers
     ? "1234567890"
@@ -15,7 +18,7 @@ export function generateRandomString(length = 6, numbers = false) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
-}
+};
 
 export const getIronConfig = () => ({
   cookieName: process.env.AUTH_COOKIE_NAME,
@@ -172,4 +175,15 @@ export const tablifyEmailer = (body) => {
     </body>
   </html>
   `;
+};
+
+export const debounce = (fn, delay) => {
+  let timer;
+  return () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      fn.apply(this, arguments);
+    }, delay);
+  };
 };

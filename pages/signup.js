@@ -19,7 +19,7 @@ import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 import { AuthContext } from "../contexts/AuthContext";
 import { getIronConfig } from "../src/utils";
 
-const Login = () => {
+const Signup = () => {
   const router = useRouter();
   const { loggedInUser, userSignup } = useContext(AuthContext);
   const [error, setError] = useState("");
@@ -264,4 +264,4 @@ export const getServerSideProps = withIronSession(async ({ req, res }) => {
   };
 }, getIronConfig());
 
-export default Login;
+export default Signup;

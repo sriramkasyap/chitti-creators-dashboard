@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import { Heading } from "@chakra-ui/react";
 
 const Header = ({ title }) => {
@@ -6,6 +8,10 @@ const Header = ({ title }) => {
       {title}
     </Heading>
   );
+};
+
+Header.propTypes = {
+  title: PropTypes.string.isRequired,
 };
 
 export default Header;

@@ -1,6 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Flex, Text } from "@chakra-ui/react";
+
 import Button from "../Button/Button";
+import { noop } from "../../../utils";
 
 const Pagination = ({ limit, page, setPagination, totalCount }) => {
   return (
@@ -36,6 +39,20 @@ const Pagination = ({ limit, page, setPagination, totalCount }) => {
       </Flex>
     </>
   );
+};
+
+Pagination.propTypes = {
+  limit: PropTypes.number,
+  page: PropTypes.number,
+  totalCount: PropTypes.number,
+  setPagination: PropTypes.func,
+};
+
+Pagination.defaultProps = {
+  limit: 0,
+  page: 0,
+  totalCount: 0,
+  setPagination: noop,
 };
 
 export default Pagination;

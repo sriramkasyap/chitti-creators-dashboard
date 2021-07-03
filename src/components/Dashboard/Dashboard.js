@@ -1,17 +1,17 @@
-import { Flex, Image } from "@chakra-ui/react";
 import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { Flex, Heading, Image } from "@chakra-ui/react";
 
-import Button from "../common/Button/Button";
 import Card from "./Card/Card";
+import NewslettersList from "../NewslettersList/NewslettersList";
 
-import { showNotification } from "../../utils";
-
-const Dashboard = ({ cards, isLoading, error }) => {
+const Dashboard = ({ isLoading, error, cards }) => {
   useEffect(() => {
     if (error) {
       showNotification(error);
     }
   }, [error]);
+
   return (
     <Flex flexDir="column" w="100%" alignItems={["unset", "center"]}>
       {/* Dashboard Card Start */}
@@ -33,8 +33,31 @@ const Dashboard = ({ cards, isLoading, error }) => {
         )}
       </Flex>
       {/* Dashboard Card End */}
+
+      {/* Newsletters List Start */}
+      <Flex flexDir="column" mt={10} w="100%">
+        <Flex>
+          <Heading mb={5}>Newsletters List</Heading>
+        </Flex>
+        <Flex w="100%" overflow="auto">
+          <NewslettersList />
+        </Flex>
+      </Flex>
+      {/* Newsletters List End */}
     </Flex>
   );
+};
+
+Dashboard.propTypes = {
+  isLoading: PropTypes.bool,
+  error: PropTypes.string,
+  cards: PropTypes.instanceOf(Array),
+};
+
+Dashboard.defaultProps = {
+  isLoading: false,
+  error: "",
+  cards: [],
 };
 
 export default Dashboard;

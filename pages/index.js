@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { withIronSession } from "next-iron-session";
 
 import Dashboard from "../src/components/Dashboard/Dashboard";
+import { NewslettersProvider } from "../contexts/NewslettersContext";
 
 import { checkAuthentication, getIronConfig } from "../src/utils";
 import { getCardsDetails } from "../src/helpers/userFetcher";
@@ -59,7 +60,11 @@ const Home = () => {
       });
   }, []);
 
-  return <Dashboard cards={cardsDetail} isLoading={loading} error={error} />;
+  return (
+    <NewslettersProvider>
+      <Dashboard cards={cardsDetail} isLoading={loading} error={error} />
+    </NewslettersProvider>
+  );
 };
 
 export const getServerSideProps = withIronSession(

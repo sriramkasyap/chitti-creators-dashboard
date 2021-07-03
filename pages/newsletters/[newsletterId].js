@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
+import PropTypes from "prop-types";
 
 import {
   Flex,
@@ -484,5 +485,9 @@ export const getServerSideProps = withIronSession(async (ctx) => {
     return res.end();
   }
 }, getIronConfig());
+
+EditNewsletter.propTypes = {
+  newsletter: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default EditNewsletter;

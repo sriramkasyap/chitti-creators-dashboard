@@ -1,10 +1,13 @@
 import Head from "next/head";
+import Router from "next/router";
+import NProgress from "nprogress";
+import PropTypes from "prop-types";
 import { ChakraProvider } from "@chakra-ui/react";
+
 import AuthProvider from "../contexts/AuthContext";
 import Layout from "../src/components/common/layout/Layout";
+
 import theme from "../theme";
-import NProgress from "nprogress";
-import Router from "next/router";
 import "nprogress/nprogress.css";
 
 import "../styles/global.scss";
@@ -41,5 +44,14 @@ function MyApp({ Component, pageProps }) {
     </>
   );
 }
+
+MyApp.propTypes = {
+  Component: PropTypes.func.isRequired,
+  pageProps: PropTypes.instanceOf(Object),
+};
+
+MyApp.defaultPropd = {
+  pageProps: {},
+};
 
 export default MyApp;

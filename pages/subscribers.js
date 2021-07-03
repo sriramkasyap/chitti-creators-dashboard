@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { withIronSession } from "next-iron-session";
 
-import SubscribersPage from "../src/components/SubscribersPage/SubscribersPage";
+import SubscribersList from "../src/components/SubscribersList/SubscribersList";
 
 import { checkAuthentication, getIronConfig } from "../src/utils";
 import { getSubscribers } from "../src/helpers/userFetcher";
@@ -51,7 +51,7 @@ const Subscribers = () => {
   return (
     <>
       {Object.keys(subscribers).length > 0 && (
-        <SubscribersPage
+        <SubscribersList
           subscribers={subscribers}
           isLoading={loading}
           error={error}
