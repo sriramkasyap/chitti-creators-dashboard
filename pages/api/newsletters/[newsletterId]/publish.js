@@ -43,7 +43,7 @@ export default withIronSession(
 
         await sendMail(
           creator.emailId,
-          creator.fullName,
+          creator.profile.fullName,
           newsletter.emailSubject,
           tabled
         );
