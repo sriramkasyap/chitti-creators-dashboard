@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 import AuthProvider from "../contexts/AuthContext";
 import Layout from "../src/components/common/layout/Layout";
@@ -22,17 +23,22 @@ function MyApp({ Component, pageProps }) {
   Router.events.on("routeChangeComplete", () => NProgress.done());
   Router.events.on("routeChangeError", () => NProgress.done());
   return (
-    <AuthProvider>
-      <ChakraProvider resetCSS theme={theme}>
-        {pageProps.standardLayout ? (
-          <Layout>
+    <>
+      <Head>
+        <title>Chitti</title>
+      </Head>
+      <AuthProvider>
+        <ChakraProvider resetCSS theme={theme}>
+          {pageProps.standardLayout ? (
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          ) : (
             <Component {...pageProps} />
-          </Layout>
-        ) : (
-          <Component {...pageProps} />
-        )}
-      </ChakraProvider>
-    </AuthProvider>
+          )}
+        </ChakraProvider>
+      </AuthProvider>
+    </>
   );
 }
 

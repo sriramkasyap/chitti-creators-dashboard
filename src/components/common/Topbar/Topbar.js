@@ -10,6 +10,7 @@ const Topbar = ({ isTopbarDisplay }) => {
 
   const goToCreatePage = (e) => {
     e.preventDefault();
+    console.log("RB:: File: Topbar.js, Line: 13 ==> goToCretePage");
     router.push("/newsletters/new");
   };
   return (
@@ -29,7 +30,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         </Flex>
         <Flex>
           <Button
-            onClick={goToCreatePage}
+            onClick={(e) => goToCreatePage(e)}
             rounded={"full"}
             variant="outline"
             text="Create New Newsletter"
@@ -68,8 +69,6 @@ const Topbar = ({ isTopbarDisplay }) => {
       </Flex>
 
       <Flex
-        pl={5}
-        mt="10vh"
         display={[
           isTopbarDisplay,
           isTopbarDisplay,
@@ -77,17 +76,43 @@ const Topbar = ({ isTopbarDisplay }) => {
           isTopbarDisplay,
           "none",
         ]}
+        pl={5}
+        pr={5}
+        pt={5}
+        mt="10vh"
+        flexDir={["column", "row"]}
+        justifyContent="space-between"
       >
-        <PageTitle
-          pt={5}
-          display={[
-            isTopbarDisplay,
-            isTopbarDisplay,
-            isTopbarDisplay,
-            isTopbarDisplay,
-            "none",
-          ]}
-        />
+        <Flex>
+          <PageTitle
+            pt={5}
+            display={[
+              isTopbarDisplay,
+              isTopbarDisplay,
+              isTopbarDisplay,
+              isTopbarDisplay,
+              "none",
+            ]}
+          />
+        </Flex>
+        <Flex mt={5}>
+          <Button
+            onClick={(e) => goToCreatePage(e)}
+            rounded={"full"}
+            variant="outline"
+            text="Create New Newsletter"
+            color="bright.fg"
+            borderColor="bright.fg"
+            fontWeight={400}
+            fontSize={["lg", "lg", "xl", "2xl"]}
+            size="lg"
+            _hover={{
+              backgroundColor: "bright.fg",
+              color: "bright.bg",
+              borderColor: "bright.fg",
+            }}
+          />
+        </Flex>
       </Flex>
       {/* Topbar for Smallscreen End */}
     </>

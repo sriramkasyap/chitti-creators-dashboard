@@ -166,6 +166,7 @@ const Profile = () => {
           return false;
         }
       });
+      if (!flag) showNotification("Plan Feature cannot be empty");
       return flag;
     } else {
       showNotification("Please add features for the plan");
