@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { withIronSession } from "next-iron-session";
 import Creator from "../../../src/models/Creator";
+import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { getIronConfig } from "../../../src/utils";
 export default withIronSession(async (req, res) => {
   try {
@@ -27,6 +28,15 @@ export default withIronSession(async (req, res) => {
 
       creator = creator.toObject();
       delete creator.password;
+
+      creator.plans = await SubscriptionPlan.find(
+        {
+          creator: creator._id,
+        },
+        {
+          subscribers: 0,
+        }
+      ).lean();
 
       req.session.set("creator", {
         creatorId: creator._id,
