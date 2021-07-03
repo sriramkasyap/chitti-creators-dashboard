@@ -20,6 +20,7 @@ const Dashboard = ({ cards, isLoading, error }) => {
         justifyContent={["unset", "unset", "space-between"]}
         flexWrap="wrap"
         alignItems="center"
+        w="100%"
       >
         {isLoading ? (
           <Image src="loader_black.gif" h="5rem" />
