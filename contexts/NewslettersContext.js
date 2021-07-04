@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import Link from "next/link";
 
 import Button from "../src/components/common/Button/Button";
@@ -7,9 +8,9 @@ import { getNewsletters } from "../src/helpers/userFetcher";
 export const NewslettersContext = createContext();
 
 export const NewslettersProvider = ({ children, newsletterStatus = {} }) => {
-  var [newsletters, setNewsletters] = useState([]); // Newsletters
-  var [loading, setLoading] = useState(true); // Loading State
-  var [error, setError] = useState(""); // Error message
+  const [newsletters, setNewsletters] = useState([]); // Newsletters
+  const [loading, setLoading] = useState(true); // Loading State
+  const [error, setError] = useState(""); // Error message
   const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState({
     // Pagination State
@@ -48,7 +49,7 @@ export const NewslettersProvider = ({ children, newsletterStatus = {} }) => {
         text={
           <Link
             prefetch={false}
-            href={`/newsletters/[newsletterId]`}
+            href="/newsletters/[newsletterId]"
             as={`/newsletters/${newsletterId}`}
           >
             Edit
@@ -72,4 +73,13 @@ export const NewslettersProvider = ({ children, newsletterStatus = {} }) => {
       {children}
     </NewslettersContext.Provider>
   );
+};
+
+NewslettersProvider.propTypes = {
+  children: PropTypes.element.isRequired,
+  newsletterStatus: PropTypes.instanceOf(Object),
+};
+
+NewslettersProvider.defaultProps = {
+  newsletterStatus: {},
 };

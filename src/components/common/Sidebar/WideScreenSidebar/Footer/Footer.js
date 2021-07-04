@@ -15,7 +15,7 @@ const Footer = () => {
     <Flex flexDir="column" alignItems="center" mb={10} mt={5}>
       <Link
         href="/profile"
-        as={`/profile`}
+        as="/profile"
         _hover={{ textDecor: "none" }}
         _focus={{ boxShadow: "none" }}
       >

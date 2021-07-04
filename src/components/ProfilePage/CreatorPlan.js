@@ -123,7 +123,7 @@ const CreatorPlan = ({
             ))
           ) : (
             <Text
-              color={"bright.gray"}
+              color="bright.gray"
               fontWeight="light"
               fontSize={14}
               fontStyle="italic"
@@ -147,7 +147,7 @@ const CreatorPlan = ({
         </Flex>
 
         <Button
-          rounded={"full"}
+          rounded="full"
           text={
             pageStatus === "savingPlan" ? (
               <Image src="/loader_white.gif" h="2rem" />

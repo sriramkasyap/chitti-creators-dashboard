@@ -47,7 +47,7 @@ export const getPlan = async (planId) => {
 };
 
 export const createNewsletter = async (newsletter) => {
-  return fetch(`/api/newsletters`, {
+  return fetch("/api/newsletters", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -77,5 +77,5 @@ export const publishNewsletter = async (newsletterId, planId) => {
 };
 
 export const getCardsDetails = async () => {
-  return fetch(`/api/creators/cards`).then((r) => r.json());
+  return fetch("/api/creators/cards").then((r) => r.json());
 };

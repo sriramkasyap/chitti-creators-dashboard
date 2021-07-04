@@ -26,7 +26,7 @@ const Footer = ({ onClose }) => {
       <Flex mb={5}>
         <Link
           href="profile"
-          as={`/profile`}
+          as="/profile"
           _hover={{ textDecor: "none" }}
           _focus={{ boxShadow: "none" }}
         >
@@ -48,7 +48,7 @@ const Footer = ({ onClose }) => {
         </Link>
       </Flex>
       <Flex>
-        <Link href="logout" as={`/logout`} _focus={{ boxShadow: "none" }}>
+        <Link href="logout" as="/logout" _focus={{ boxShadow: "none" }}>
           <Text color="bright.gray" _hover={{ color: "bright.bg" }}>
             Logout
           </Text>

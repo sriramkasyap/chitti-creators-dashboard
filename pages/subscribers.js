@@ -16,37 +16,34 @@ const Subscribers = () => {
     page: 0,
   });
 
-  useEffect(
-    (prev) => {
-      // Set Subscribers on first load
-      setLoading(true);
-      getSubscribers(pagination)
-        .then((data) => {
-          if (data.success) {
-            setSubscribers(data.subscribers);
-            setTotalCount(data.totalCount);
-            if (
-              pagination.page !== data.page ||
-              pagination.limit !== data.limit
-            ) {
-              setPagination({
-                limit: data.limit,
-                page: data.page,
-              });
-            }
-            setLoading(false);
-          } else {
-            setError(data.message);
-            setLoading(false);
+  useEffect(() => {
+    // Set Subscribers on first load
+    setLoading(true);
+    getSubscribers(pagination)
+      .then((data) => {
+        if (data.success) {
+          setSubscribers(data.subscribers);
+          setTotalCount(data.totalCount);
+          if (
+            pagination.page !== data.page ||
+            pagination.limit !== data.limit
+          ) {
+            setPagination({
+              limit: data.limit,
+              page: data.page,
+            });
           }
-        })
-        .catch((e) => {
-          setError(e.message);
           setLoading(false);
-        });
-    },
-    [pagination]
-  );
+        } else {
+          setError(data.message);
+          setLoading(false);
+        }
+      })
+      .catch((e) => {
+        setError(e.message);
+        setLoading(false);
+      });
+  }, [pagination]);
 
   return (
     <>

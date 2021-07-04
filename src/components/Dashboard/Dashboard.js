@@ -5,6 +5,8 @@ import { Flex, Heading, Image } from "@chakra-ui/react";
 import Card from "./Card/Card";
 import NewslettersList from "../NewslettersList/NewslettersList";
 
+import { showNotification } from "../../utils";
+
 const Dashboard = ({ isLoading, error, cards }) => {
   useEffect(() => {
     if (error) {

@@ -15,7 +15,6 @@ const Navitems = ({ navItems }) => {
               <Flex
                 flexDir="row"
                 alignItems="center"
-                color="bright.gray"
                 mb={5}
                 _hover={{ color: "bright.bg" }}
                 cursor="pointer"

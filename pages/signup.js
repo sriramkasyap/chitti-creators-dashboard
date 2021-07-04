@@ -21,10 +21,9 @@ import { getIronConfig } from "../src/utils";
 
 const Signup = () => {
   const router = useRouter();
-  const { loggedInUser, userSignup } = useContext(AuthContext);
+  const { loginError, userSignup } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { loginError, userLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     fullName: "",
     emailId: "",
@@ -202,7 +201,7 @@ const Signup = () => {
           </FormControl>
 
           <Button
-            rounded={"full"}
+            rounded="full"
             text={
               isLoading ? (
                 <Image src="loader_white.gif" h="2.5rem" />

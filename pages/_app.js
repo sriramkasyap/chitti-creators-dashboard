@@ -14,7 +14,6 @@ import "../styles/global.scss";
 
 function MyApp({ Component, pageProps }) {
   NProgress.configure({
-    minimum: 0.3,
     easing: "ease",
     speed: 800,
     showSpinner: false,
@@ -50,7 +49,7 @@ MyApp.propTypes = {
   pageProps: PropTypes.instanceOf(Object),
 };
 
-MyApp.defaultPropd = {
+MyApp.defaultProps = {
   pageProps: {},
 };
 

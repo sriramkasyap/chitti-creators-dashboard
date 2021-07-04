@@ -33,7 +33,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         <Flex>
           <Button
             onClick={(e) => goToCreatePage(e)}
-            rounded={"full"}
+            rounded="full"
             variant="outline"
             text="Create New Newsletter"
             marginLeft="1.5rem"
@@ -100,7 +100,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         <Flex mt={5}>
           <Button
             onClick={(e) => goToCreatePage(e)}
-            rounded={"full"}
+            rounded="full"
             variant="outline"
             text="Create New Newsletter"
             color="bright.fg"
@@ -125,7 +125,7 @@ Topbar.propTypes = {
   isTopbarDisplay: PropTypes.oneOf(["none", "flex"]),
 };
 
-Topbar.defaultProp = {
+Topbar.defaultProps = {
   isTopbarDisplay: "flex",
 };
 

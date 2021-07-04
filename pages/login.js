@@ -171,7 +171,7 @@ const Login = () => {
           </FormControl>
 
           <Button
-            rounded={"full"}
+            rounded="full"
             text={
               isLoading ? <Image src="loader_white.gif" h="2.5rem" /> : "Login"
             }

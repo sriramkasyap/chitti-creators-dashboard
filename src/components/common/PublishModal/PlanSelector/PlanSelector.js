@@ -6,7 +6,7 @@ import { noop } from "../../../../utils";
 const PlanSelector = ({ planName, planId, selectedPlan, selectPlan }) => {
   return (
     <>
-      <Box mr={"-1px"}>
+      <Box mr="-1px">
         <Button
           border="1px"
           borderColor="bright.fg"

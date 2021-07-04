@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import renderHTML from "react-render-html";
 import { withIronSession } from "next-iron-session";
 import PropTypes from "prop-types";
+import juice from "juice";
+import { isValidObjectId } from "mongoose";
 
 import {
   Flex,
@@ -25,16 +27,15 @@ import {
   getIronConfig,
   showNotification,
 } from "../../src/utils";
-import juice from "juice";
+
 import ckeditorStyles from "../../src/components/common/ckeditorStyles";
 import {
   getPlan,
   publishNewsletter,
   updateNewsletter,
 } from "../../src/helpers/userFetcher";
-import Newsletter from "../../src/models/Newsletter";
-import { isValidObjectId } from "mongoose";
 
+import Newsletter from "../../src/models/Newsletter";
 import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 import Button from "../../src/components/common/Button/Button";
 
@@ -148,10 +149,9 @@ const EditNewsletter = ({ newsletter }) => {
       editorData.length > 0
     ) {
       return true;
-    } else {
-      showNotification("Please Enter all the details");
-      return false;
     }
+    showNotification("Please Enter all the details");
+    return false;
   };
 
   const handlePublishNewsletter = () => {
@@ -222,7 +222,7 @@ const EditNewsletter = ({ newsletter }) => {
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
-        alignItems={"center"}
+        alignItems="center"
         width="100%"
         pl={[0, 0, 0, 0, 5]}
         pr={[0, 0, 0, 0, 5]}
@@ -234,11 +234,11 @@ const EditNewsletter = ({ newsletter }) => {
           </Heading>
         </Flex>
         <Flex
-          flexDirection={"row"}
+          flexDirection="row"
           justifyContent={["flex-start", "flex-start", "flex-end"]}
         >
           <Button
-            rounded={"full"}
+            rounded="full"
             disabled={pageStatus !== "loaded"}
             text={
               pageStatus === "saving" ? (
@@ -262,7 +262,7 @@ const EditNewsletter = ({ newsletter }) => {
             p="1rem 2rem"
           />
           <Button
-            rounded={"full"}
+            rounded="full"
             disabled={pageStatus !== "loaded"}
             text={
               pageStatus === "publishing" ? (
@@ -287,7 +287,7 @@ const EditNewsletter = ({ newsletter }) => {
           />
         </Flex>
       </Flex>
-      <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
+      <Flex w="100%" flexWrap="wrap" mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
           pl={[0, 0, 0, 0, 5]}
@@ -385,7 +385,7 @@ const EditNewsletter = ({ newsletter }) => {
       <Flex
         flexDirection="row"
         justifyContent="center"
-        flexWrap={"wrap"}
+        flexWrap="wrap"
         width="100%"
       >
         <Flex
@@ -436,19 +436,19 @@ const EditNewsletter = ({ newsletter }) => {
 };
 
 export const getServerSideProps = withIronSession(async (ctx) => {
-  var { props } = await checkAuthentication(ctx);
+  const { props } = await checkAuthentication(ctx);
 
-  var { req, res } = ctx;
+  const { req, res } = ctx;
 
-  var { newsletterId } = ctx.query;
+  const { newsletterId } = ctx.query;
 
   if (!isValidObjectId(newsletterId)) {
     res.statusCode = 404;
     return res.end();
   }
 
-  var newsletter = await Newsletter.findById(newsletterId).lean();
-  var creator = req.session.get("creator");
+  const newsletter = await Newsletter.findById(newsletterId).lean();
+  const creator = req.session.get("creator");
 
   if (!newsletter.creator.equals(creator.creatorId)) {
     res.statusCode = 401;
@@ -460,30 +460,26 @@ export const getServerSideProps = withIronSession(async (ctx) => {
       res.setHeader("Location", "/newsletters");
       res.statusCode = 302;
       return res.end();
-    } else {
-      var newsletterId = newsletter._id.toString();
-      delete newsletter._id;
-      newsletter.createdAt = newsletter.createdAt.toString();
-      newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
-      newsletter.sentAt = newsletter.sentAt
-        ? newsletter.sentAt.toString()
-        : null;
-      newsletter.creator = newsletter.creator.toString();
-      newsletter.recipients = newsletter.recipients.length;
-      return {
-        props: {
-          ...props,
-          newsletter: {
-            ...newsletter,
-            newsletterId,
-          },
-        },
-      };
     }
-  } else {
-    res.statusCode = 404;
-    return res.end();
+    const newsletterIdString = newsletter._id.toString();
+    delete newsletter._id;
+    newsletter.createdAt = newsletter.createdAt.toString();
+    newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
+    newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
+    newsletter.creator = newsletter.creator.toString();
+    newsletter.recipients = newsletter.recipients.length;
+    return {
+      props: {
+        ...props,
+        newsletter: {
+          ...newsletter,
+          newsletterId: newsletterIdString,
+        },
+      },
+    };
   }
+  res.statusCode = 404;
+  return res.end();
 }, getIronConfig());
 
 EditNewsletter.propTypes = {

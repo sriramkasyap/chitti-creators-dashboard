@@ -5,7 +5,7 @@ import { Flex, Image } from "@chakra-ui/react";
 import Table from "../common/Table/Table";
 import Pagination from "../common/Pagination/Pagination";
 
-import { debounce, noop } from "../../utils";
+import { debounce, noop, showNotification } from "../../utils";
 
 const SubscribersList = ({
   isLoading,

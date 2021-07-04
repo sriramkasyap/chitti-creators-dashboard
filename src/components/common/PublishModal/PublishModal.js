@@ -32,24 +32,22 @@ const PublishModal = ({
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay blur={"10px"} />
+        <ModalOverlay blur="10px" />
         <ModalContent>
           <ModalBody mt={10}>
             <Text textAlign="center">Select recipients for the Newsletter</Text>
             <Flex alignItems="stretch" justifyContent="center">
               <Flex flexWrap="nowrap" mt={2}>
                 {plans && plans.length > 0 ? (
-                  plans.map(({ planFee, _id }, p) => {
-                    return (
-                      <PlanSelector
-                        key={p}
-                        planName={planFee === 0 ? "Free Plan" : "Paid Plan"}
-                        planId={_id}
-                        selectedPlan={selectedPlan}
-                        selectPlan={selectPlan}
-                      />
-                    );
-                  })
+                  plans.map(({ planFee, _id }) => (
+                    <PlanSelector
+                      key={_id}
+                      planName={planFee === 0 ? "Free Plan" : "Paid Plan"}
+                      planId={_id}
+                      selectedPlan={selectedPlan}
+                      selectPlan={selectPlan}
+                    />
+                  ))
                 ) : (
                   <></>
                 )}

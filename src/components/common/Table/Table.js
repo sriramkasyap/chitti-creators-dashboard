@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTable, useSortBy } from "react-table";
