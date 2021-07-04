@@ -61,7 +61,7 @@ const Home = () => {
   }, []);
 
   return (
-    <NewslettersProvider>
+    <NewslettersProvider newsletterStatus={{ status: "draft" }}>
       <Dashboard cards={cardsDetail} isLoading={loading} error={error} />
     </NewslettersProvider>
   );

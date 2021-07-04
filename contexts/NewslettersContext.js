@@ -6,7 +6,7 @@ import { getNewsletters } from "../src/helpers/userFetcher";
 
 export const NewslettersContext = createContext();
 
-export const NewslettersProvider = ({ children }) => {
+export const NewslettersProvider = ({ children, newsletterStatus = {} }) => {
   var [newsletters, setNewsletters] = useState([]); // Newsletters
   var [loading, setLoading] = useState(true); // Loading State
   var [error, setError] = useState(""); // Error message
@@ -19,7 +19,7 @@ export const NewslettersProvider = ({ children }) => {
 
   useEffect(() => {
     // Set newsletters on first load
-    getNewsletters({ ...pagination })
+    getNewsletters({ ...pagination, ...newsletterStatus })
       .then((data) => {
         if (data.success) {
           setNewsletters(data.newsletters);
