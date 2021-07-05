@@ -3,6 +3,7 @@ import { withIronSession } from "next-iron-session";
 import Creator from "../../../src/models/Creator";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { getIronConfig } from "../../../src/utils";
+
 export default withIronSession(async (req, res) => {
   try {
     if (req.method === "POST") {
@@ -11,12 +12,15 @@ export default withIronSession(async (req, res) => {
       if (req.session && req.session.get("creator"))
         throw new Error("You are already logged in!");
 
-      var { emailId, password } = req.body;
+      const { emailId, password } = req.body;
       if (!(emailId && password)) throw new Error("Invalid Credentials");
 
-      var hashedpass = crypto.createHash("md5").update(password).digest("hex");
+      const hashedpass = crypto
+        .createHash("md5")
+        .update(password)
+        .digest("hex");
 
-      var creator = await Creator.findOne({
+      let creator = await Creator.findOne({
         emailId,
       });
 
@@ -49,9 +53,8 @@ export default withIronSession(async (req, res) => {
         success: true,
         creator,
       });
-    } else {
-      throw new Error("Invalid Request");
     }
+    throw new Error("Invalid Request");
   } catch (error) {
     console.error(error);
     res.status(501).send({

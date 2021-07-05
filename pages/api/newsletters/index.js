@@ -9,14 +9,15 @@ export default withIronSession(
       if (req.method === "GET") {
         // Get newsletters by creator
 
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { page, limit, status } = req.query;
+        const { status } = req.query;
+        let { page, limit } = req.query;
 
-        page = parseInt(page) || 0;
-        limit = Math.min(parseInt(limit) || 10, 50); // Don't accept to return more than 50 records
+        page = parseInt(page, 10) || 0;
+        limit = Math.min(parseInt(limit, 10) || 10, 50); // Don't accept to return more than 50 records
 
-        var newsletters = await Newsletter.find(
+        const newsletters = await Newsletter.find(
           {
             creator: creatorId,
             ...(status && { status }),
@@ -29,7 +30,7 @@ export default withIronSession(
           .limit(limit)
           .skip(limit * page);
 
-        var totalCount = await Newsletter.count({
+        const totalCount = await Newsletter.count({
           creator: creatorId,
         });
 
@@ -40,14 +41,15 @@ export default withIronSession(
           limit,
           totalCount,
         });
-      } else if (req.method === "POST") {
+      }
+      if (req.method === "POST") {
         // Create a newsletter
 
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { newsletter } = req.body;
+        const { newsletter } = req.body;
 
-        var createdLetter = new Newsletter({
+        const createdLetter = new Newsletter({
           ...newsletter,
           createdAt: Date.now(),
           lastSavedAt: Date.now(),

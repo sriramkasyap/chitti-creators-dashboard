@@ -41,6 +41,7 @@
     "react/jsx-props-no-spreading": 0,
     "react/react-in-jsx-scope": "off",
     "arrow-body-style": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "consistent-return": "off"
   }
 }

@@ -12,14 +12,14 @@ export default withIronSession(
       if (req.method === "POST") {
         // Publish the newsleter and send
 
-        var { creatorId, emailId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { newsletterId } = req.query;
-        var { planId } = req.body;
+        const { newsletterId } = req.query;
+        const { planId } = req.body;
 
         if (!(newsletterId && planId)) throw new Error("Invalid  Request");
 
-        var newsletter = await Newsletter.findById(newsletterId);
+        const newsletter = await Newsletter.findById(newsletterId);
 
         if (!newsletter) throw new Error("Newsletter does not exist");
         if (newsletter.status !== "draft")
@@ -28,10 +28,10 @@ export default withIronSession(
         if (!newsletter.creator.equals(creatorId))
           throw new Error("You are not authorized to perform this action.");
 
-        var plan = await SubscriptionPlan.findById(planId);
+        const plan = await SubscriptionPlan.findById(planId);
         if (!plan) throw new Error("Plan does not exist");
 
-        var creator = await Creator.findById(creatorId);
+        const creator = await Creator.findById(creatorId);
 
         // Queue the newsletter to be sent to all the recipients
 
@@ -39,7 +39,7 @@ export default withIronSession(
         newsletter.status = "published";
         newsletter.lastSavedAt = Date.now();
         newsletter.sentAt = Date.now();
-        var tabled = tablifyEmailer(newsletter.body);
+        const tabled = tablifyEmailer(newsletter.body);
 
         await sendMail(
           creator.emailId,
@@ -54,12 +54,11 @@ export default withIronSession(
           success: true,
           newsletter,
         });
-      } else {
-        res.status(404).send({
-          error: true,
-          message: "Invalid Request",
-        });
       }
+      res.status(404).send({
+        error: true,
+        message: "Invalid Request",
+      });
     } catch (error) {
       console.error(error);
       res.status(501).send({

@@ -3,7 +3,7 @@ import { ucFirst } from "../../../src/utils";
 
 export default async (req, res) => {
   try {
-    var { data } = await fetch("https://dummyapi.io/data/api/user?limit=50", {
+    let { data } = await fetch("https://dummyapi.io/data/api/user?limit=50", {
       headers: {
         "app-id": "60cf03b08eb6a1260f81ff55",
       },
@@ -17,7 +17,7 @@ export default async (req, res) => {
       payments: [],
     }));
 
-    var resut = await Subscriber.insertMany(data);
+    let resut = await Subscriber.insertMany(data);
 
     data = (
       await fetch("https://dummyapi.io/data/api/user?limit=50&page=1", {
