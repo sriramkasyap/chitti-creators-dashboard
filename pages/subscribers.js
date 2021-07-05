@@ -12,7 +12,7 @@ const Subscribers = () => {
   const [error, setError] = useState(""); // Error message
   const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState({
-    limit: 15,
+    limit: 10,
     page: 0,
   });
 
