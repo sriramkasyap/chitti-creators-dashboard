@@ -43,9 +43,7 @@ const RichTextEditor = dynamic(
 );
 
 const CreateNewNewsletter = () => {
-  const [editorData, setEditorData] = useState(
-    '<p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span class="text-huge" style="font-size: 1.8em; color: hsl(270, 75%, 60%);">Hello World!</span></p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span style="color:hsl(270, 75%, 60%);">Welcome to the First newsletter ever written on <strong>Chitti</strong></span></p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span style="color:hsl(270, 75%, 60%);">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</span></p><p style="text-align:center;"><br>&nbsp;</p>'
-  );
+  const [editorData, setEditorData] = useState("");
   const [formData, setFormData] = useState({
     reference: "",
     subject: "",
@@ -97,9 +95,27 @@ const CreateNewNewsletter = () => {
   };
 
   const handleDiscardDraft = () => {
-    if (confirm("All changes will be lost. Are you sure?")) {
+    // eslint-disable-next-line no-alert
+    if (window.confirm("All changes will be lost. Are you sure?")) {
       router.back();
     }
+  };
+
+  const valdateFormData = () => {
+    if (
+      formData &&
+      formData.reference &&
+      formData.subject &&
+      formData.reference.length > 0 &&
+      formData.subject.length > 0 &&
+      keywordsList &&
+      keywordsList.length > 0 &&
+      editorData.length > 0
+    ) {
+      return true;
+    }
+    showNotification("Please Enter all the details");
+    return false;
   };
 
   const handleSaveDraft = () => {
@@ -189,23 +205,6 @@ const CreateNewNewsletter = () => {
         setPageStatus("loaded");
         publishModalDisclosure.onClose();
       });
-  };
-
-  const valdateFormData = () => {
-    if (
-      formData &&
-      formData.reference &&
-      formData.subject &&
-      formData.reference.length > 0 &&
-      formData.subject.length > 0 &&
-      keywordsList &&
-      keywordsList.length > 0 &&
-      editorData.length > 0
-    ) {
-      return true;
-    }
-    showNotification("Please Enter all the details");
-    return false;
   };
 
   useEffect(() => {
@@ -390,6 +389,7 @@ const CreateNewNewsletter = () => {
             keywordsList.map((keyword, index) => (
               <Tag
                 size="sm"
+                // eslint-disable-next-line react/no-array-index-key
                 key={index + 1}
                 borderRadius={0}
                 variant="solid"

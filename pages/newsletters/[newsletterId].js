@@ -95,6 +95,23 @@ const EditNewsletter = ({ newsletter }) => {
     setEditorData(juice.inlineContent(data, ckeditorStyles));
   };
 
+  const valdateFormData = () => {
+    if (
+      formData &&
+      formData.reference &&
+      formData.subject &&
+      formData.reference.length > 0 &&
+      formData.subject.length > 0 &&
+      keywordsList &&
+      keywordsList.length > 0 &&
+      editorData.length > 0
+    ) {
+      return true;
+    }
+    showNotification("Please Enter all the details");
+    return false;
+  };
+
   const handleSaveDraft = () => {
     setPageStatus("saving");
     if (valdateFormData()) {
@@ -135,23 +152,6 @@ const EditNewsletter = ({ newsletter }) => {
     setPageStatus("publishing");
     handleSaveDraft();
     publishModalDisclosure.onOpen();
-  };
-
-  const valdateFormData = () => {
-    if (
-      formData &&
-      formData.reference &&
-      formData.subject &&
-      formData.reference.length > 0 &&
-      formData.subject.length > 0 &&
-      keywordsList &&
-      keywordsList.length > 0 &&
-      editorData.length > 0
-    ) {
-      return true;
-    }
-    showNotification("Please Enter all the details");
-    return false;
   };
 
   const handlePublishNewsletter = () => {
@@ -350,6 +350,7 @@ const EditNewsletter = ({ newsletter }) => {
             keywordsList.map((keyword, index) => (
               <Tag
                 size="sm"
+                // eslint-disable-next-line react/no-array-index-key
                 key={index + 1}
                 borderRadius={0}
                 variant="solid"

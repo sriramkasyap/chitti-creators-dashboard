@@ -40,6 +40,64 @@ const Profile = () => {
     setStatus("loaded");
   }, [loggedInUser]);
 
+  const validateProfile = () => {
+    const { fullName, shortBio, longBio, displayPicture } = profile;
+
+    if (
+      fullName &&
+      shortBio &&
+      longBio &&
+      displayPicture &&
+      fullName.length > 0 &&
+      shortBio.length > 0 &&
+      longBio.length > 0 &&
+      displayPicture.length > 0
+    ) {
+      return true;
+    }
+    console.log(
+      fullName,
+      shortBio,
+      longBio,
+      displayPicture,
+      fullName.length > 0,
+      shortBio.length > 0,
+      longBio.length > 0,
+      displayPicture.length > 0
+    );
+    console.log(fullName, shortBio, longBio, displayPicture);
+    if (displayPicture) {
+      showNotification("Please fill all the details");
+    } else {
+      showNotification("Please Upload a Display Picture");
+    }
+    return false;
+  };
+
+  const validatePlan = (plan) => {
+    const { planFee, planFeatures } = plan;
+
+    if (
+      planFee !== null &&
+      planFee !== undefined &&
+      planFeatures &&
+      planFeatures.length > 0
+    ) {
+      let flag = true;
+      planFeatures.some((feature) => {
+        if (!feature || !feature.length > 0) {
+          flag = false;
+          return false;
+        }
+        return feature;
+      });
+      if (!flag) showNotification("Plan Feature cannot be empty");
+      return flag;
+    }
+    showNotification("Please add features for the plan");
+    return false;
+  };
+
   const handleUpdateProfile = () => {
     // Handle Save profile action
     setStatus("savingProfile");
@@ -115,63 +173,6 @@ const Profile = () => {
     }, 2000);
   };
 
-  const validateProfile = () => {
-    const { fullName, shortBio, longBio, displayPicture } = profile;
-
-    if (
-      fullName &&
-      shortBio &&
-      longBio &&
-      displayPicture &&
-      fullName.length > 0 &&
-      shortBio.length > 0 &&
-      longBio.length > 0 &&
-      displayPicture.length > 0
-    ) {
-      return true;
-    }
-    console.log(
-      fullName,
-      shortBio,
-      longBio,
-      displayPicture,
-      fullName.length > 0,
-      shortBio.length > 0,
-      longBio.length > 0,
-      displayPicture.length > 0
-    );
-    console.log(fullName, shortBio, longBio, displayPicture);
-    if (displayPicture) {
-      showNotification("Please fill all the details");
-    } else {
-      showNotification("Please Upload a Display Picture");
-    }
-    return false;
-  };
-
-  const validatePlan = (plan) => {
-    const { planFee, planFeatures } = plan;
-
-    if (
-      planFee !== null &&
-      planFee !== undefined &&
-      planFeatures &&
-      planFeatures.length > 0
-    ) {
-      let flag = true;
-      planFeatures.some((feature) => {
-        if (!feature || !feature.length > 0) {
-          flag = false;
-          return false;
-        }
-      });
-      if (!flag) showNotification("Plan Feature cannot be empty");
-      return flag;
-    }
-    showNotification("Please add features for the plan");
-    return false;
-  };
-
   const handleProfileInput = (e) => {
     setProfile({
       ...profile,
@@ -179,7 +180,7 @@ const Profile = () => {
     });
   };
 
-  const handleDisplayPictureUpload = (e) => {
+  const handleDisplayPictureUpload = () => {
     setStatus("uploading");
     const imageToUpload = displayPictureRef.current.files[0];
     if (imageToUpload.size > 2000000) {
