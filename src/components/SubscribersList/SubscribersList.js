@@ -16,7 +16,9 @@ const SubscribersList = ({
   setPagination,
 }) => {
   const [hiddenColumns, setHiddenColumns] = useState([]);
-  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1080
+  );
 
   useEffect(() => {
     if (error) {
@@ -44,13 +46,15 @@ const SubscribersList = ({
 
   useEffect(() => {
     // set viewport width on resize of the window
-    const debouncedHandleResize = debounce(() => {
-      setViewportWidth(window.innerWidth);
-    }, 150);
-    window.addEventListener("resize", debouncedHandleResize);
-    return () => {
-      window.removeEventListener("resize", debouncedHandleResize);
-    };
+    if (typeof window !== "undefined") {
+      const debouncedHandleResize = debounce(() => {
+        setViewportWidth(window.innerWidth);
+      }, 150);
+      window.addEventListener("resize", debouncedHandleResize);
+      return () => {
+        window.removeEventListener("resize", debouncedHandleResize);
+      };
+    }
   });
 
   useEffect(() => {
@@ -73,7 +77,7 @@ const SubscribersList = ({
         overflow="auto"
       >
         {isLoading ? (
-          <Image src="loader_black.gif" h="5rem" />
+          <Image src="/loader_black.gif" h="5rem" />
         ) : (
           <Table
             columns={columns}

@@ -47,16 +47,14 @@ const Subscribers = () => {
 
   return (
     <>
-      {Object.keys(subscribers).length > 0 && (
-        <SubscribersList
-          subscribers={subscribers}
-          isLoading={loading}
-          error={error}
-          totalCount={totalCount}
-          pagination={pagination}
-          setPagination={setPagination}
-        />
-      )}
+      <SubscribersList
+        subscribers={subscribers}
+        isLoading={loading}
+        error={error}
+        totalCount={totalCount}
+        pagination={pagination}
+        setPagination={setPagination}
+      />
     </>
   );
 };
