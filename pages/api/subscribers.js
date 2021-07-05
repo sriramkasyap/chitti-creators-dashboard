@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { withIronSession } from "next-iron-session";
 import withCreatorAuth from "../../src/middleware/withCreatorAuth";
 import Creator from "../../src/models/Creator";
@@ -9,26 +10,26 @@ export default withIronSession(
   withCreatorAuth(async (req, res) => {
     try {
       if (req.method === "GET") {
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { page, limit } = req.query;
+        let { page, limit } = req.query;
 
-        limit = Math.min(parseInt(limit || 10), 50);
-        page = parseInt(page || 0);
+        limit = Math.min(parseInt(limit || 10, 10), 50);
+        page = parseInt(page || 0, 10);
 
-        var creator = await Creator.findById(creatorId);
+        const creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("Unauthorized Request");
 
-        var plans = await SubscriptionPlan.find({
+        const plans = await SubscriptionPlan.find({
           _id: {
             $in: creator.plans,
           },
         }) // Find the creator's plans
           .lean(true); // Get only Javascript objects
 
-        var [paidPlan] = plans.filter((plan) => plan.planFee !== 0); // Find the paid plan
+        const [paidPlan] = plans.filter((plan) => plan.planFee !== 0); // Find the paid plan
 
-        var subscribers = await Subscriber.find(
+        let subscribers = await Subscriber.find(
           {
             subscriptions: {
               $in: creator.plans,
@@ -48,7 +49,7 @@ export default withIronSession(
 
         subscribers = subscribers.map((sub) => {
           // Determine the subscription type
-          var subscriptionType = "Free";
+          let subscriptionType = "Free";
           if (paidPlan && paidPlan._id) {
             // If the creator has a paid plan
             sub.subscriptions = sub.subscriptions.map((s) => s.toString());
@@ -65,7 +66,7 @@ export default withIronSession(
           };
         });
 
-        var totalCount = await Subscriber.count({
+        const totalCount = await Subscriber.count({
           subscriptions: {
             $in: creator.plans,
           },

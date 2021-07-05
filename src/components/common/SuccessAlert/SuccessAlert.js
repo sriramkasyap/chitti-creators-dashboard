@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Flex, Alert, AlertIcon, AlertDescription } from "@chakra-ui/react";
 
 const SuccessAlert = ({ message }) => {
@@ -9,6 +10,10 @@ const SuccessAlert = ({ message }) => {
       </Alert>
     </Flex>
   );
+};
+
+SuccessAlert.propTypes = {
+  message: PropTypes.string.isRequired,
 };
 
 export default SuccessAlert;

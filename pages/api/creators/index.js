@@ -8,12 +8,12 @@ export default withIronSession(
   withCreatorAuth(async (req, res) => {
     try {
       if (req.method === "GET") {
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var creator = await Creator.findById(creatorId);
+        let creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("User not found");
 
-        var plans = await SubscriptionPlan.find(
+        const plans = await SubscriptionPlan.find(
           {
             _id: {
               $in: creator.plans,
@@ -32,9 +32,8 @@ export default withIronSession(
           success: true,
           creator,
         });
-      } else {
-        throw new Error("Invalid Request");
       }
+      throw new Error("Invalid Request");
     } catch (error) {
       console.error(error);
       res.status(501).send({

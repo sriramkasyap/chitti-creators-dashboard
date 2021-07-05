@@ -1,7 +1,9 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 import { Flex, Text, Icon } from "@chakra-ui/react";
 
 import { getNavItems } from "../../../../../helpers/navitemsFetcher";
+import { noop } from "../../../../../utils";
 
 const Navitems = ({ onClose }) => {
   const navItems = getNavItems();
@@ -38,6 +40,14 @@ const Navitems = ({ onClose }) => {
         ))}
     </Flex>
   );
+};
+
+Navitems.propTypes = {
+  onClose: PropTypes.func,
+};
+
+Navitems.defaultProps = {
+  onClose: noop,
 };
 
 export default Navitems;

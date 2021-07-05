@@ -25,7 +25,7 @@ import { uploadFile } from "../src/helpers/uploadHelper";
 import CreatorPlan from "../src/components/ProfilePage/CreatorPlan";
 
 const Profile = () => {
-  const { fetchMe, loggedInUser, loginError } = useContext(AuthContext); // Loading user data from the Authentication Context
+  const { fetchMe, loggedInUser } = useContext(AuthContext); // Loading user data from the Authentication Context
 
   const [profile, setProfile] = useState(loggedInUser.profile); // Profile Content of the creator
   const [plans, setPlans] = useState(loggedInUser.plans); // Plans content of the creator
@@ -39,6 +39,64 @@ const Profile = () => {
     setPlans(loggedInUser.plans);
     setStatus("loaded");
   }, [loggedInUser]);
+
+  const validateProfile = () => {
+    const { fullName, shortBio, longBio, displayPicture } = profile;
+
+    if (
+      fullName &&
+      shortBio &&
+      longBio &&
+      displayPicture &&
+      fullName.length > 0 &&
+      shortBio.length > 0 &&
+      longBio.length > 0 &&
+      displayPicture.length > 0
+    ) {
+      return true;
+    }
+    console.log(
+      fullName,
+      shortBio,
+      longBio,
+      displayPicture,
+      fullName.length > 0,
+      shortBio.length > 0,
+      longBio.length > 0,
+      displayPicture.length > 0
+    );
+    console.log(fullName, shortBio, longBio, displayPicture);
+    if (displayPicture) {
+      showNotification("Please fill all the details");
+    } else {
+      showNotification("Please Upload a Display Picture");
+    }
+    return false;
+  };
+
+  const validatePlan = (plan) => {
+    const { planFee, planFeatures } = plan;
+
+    if (
+      planFee !== null &&
+      planFee !== undefined &&
+      planFeatures &&
+      planFeatures.length > 0
+    ) {
+      let flag = true;
+      planFeatures.some((feature) => {
+        if (!feature || !feature.length > 0) {
+          flag = false;
+          return false;
+        }
+        return feature;
+      });
+      if (!flag) showNotification("Plan Feature cannot be empty");
+      return flag;
+    }
+    showNotification("Please add features for the plan");
+    return false;
+  };
 
   const handleUpdateProfile = () => {
     // Handle Save profile action
@@ -68,7 +126,7 @@ const Profile = () => {
   const handleAddPlan = () => {
     // Handle create new Plan
     setStatus("addingPlan");
-    var plan = {
+    const plan = {
       planFee: 10,
       planFeatures: [],
     };
@@ -92,7 +150,7 @@ const Profile = () => {
     // Handle Save plan
     setStatus("savingPlan");
     setTimeout(() => {
-      var plan = plans.filter(({ _id }) => _id === planIdToEdit)[0];
+      const plan = plans.filter(({ _id }) => _id === planIdToEdit)[0];
       if (validatePlan(plan)) {
         updatePlan(planIdToEdit, plan)
           .then((result) => {
@@ -115,65 +173,6 @@ const Profile = () => {
     }, 2000);
   };
 
-  const validateProfile = () => {
-    var { fullName, shortBio, longBio, displayPicture } = profile;
-
-    if (
-      fullName &&
-      shortBio &&
-      longBio &&
-      displayPicture &&
-      fullName.length > 0 &&
-      shortBio.length > 0 &&
-      longBio.length > 0 &&
-      displayPicture.length > 0
-    ) {
-      return true;
-    } else {
-      console.log(
-        fullName,
-        shortBio,
-        longBio,
-        displayPicture,
-        fullName.length > 0,
-        shortBio.length > 0,
-        longBio.length > 0,
-        displayPicture.length > 0
-      );
-      console.log(fullName, shortBio, longBio, displayPicture);
-      if (displayPicture) {
-        showNotification("Please fill all the details");
-      } else {
-        showNotification("Please Upload a Display Picture");
-      }
-      return false;
-    }
-  };
-
-  const validatePlan = (plan) => {
-    var { planFee, planFeatures } = plan;
-
-    if (
-      planFee !== null &&
-      planFee !== undefined &&
-      planFeatures &&
-      planFeatures.length > 0
-    ) {
-      var flag = true;
-      planFeatures.some((feature) => {
-        if (!feature || !feature.length > 0) {
-          flag = false;
-          return false;
-        }
-      });
-      if (!flag) showNotification("Plan Feature cannot be empty");
-      return flag;
-    } else {
-      showNotification("Please add features for the plan");
-      return false;
-    }
-  };
-
   const handleProfileInput = (e) => {
     setProfile({
       ...profile,
@@ -181,9 +180,9 @@ const Profile = () => {
     });
   };
 
-  const handleDisplayPictureUpload = (e) => {
+  const handleDisplayPictureUpload = () => {
     setStatus("uploading");
-    var imageToUpload = displayPictureRef.current.files[0];
+    const imageToUpload = displayPictureRef.current.files[0];
     if (imageToUpload.size > 2000000) {
       // File size is greater than 20MB
       showNotification("File Size has to be smaller than 20 MB.");
@@ -210,14 +209,14 @@ const Profile = () => {
 
         setStatus("loaded");
       })
-      .catch((e) => {
-        showNotification(e.message);
+      .catch((err) => {
+        showNotification(err.message);
       });
   };
 
   const handlePlanUpdate = (newPlan) => {
     // Update plan state on component update
-    var newPlans = plans.map((plan) => {
+    const newPlans = plans.map((plan) => {
       if (plan._id === newPlan._id) return newPlan;
       return plan;
     });
@@ -308,7 +307,7 @@ const Profile = () => {
                 borderRadius="50%"
                 zIndex={1}
                 src={profile.displayPicture}
-                fallbackSrc={"/media.png"}
+                fallbackSrc="/media.png"
                 border="5px solid"
                 borderColor="bright.light"
               />
@@ -336,7 +335,7 @@ const Profile = () => {
               mt={5}
               textDecor="underline"
               fontWeight="light"
-              text={"Change Display Picture"}
+              text="Change Display Picture"
               onClick={() => displayPictureRef.current.click()}
             />
             <input
@@ -352,7 +351,7 @@ const Profile = () => {
       </Flex>
       <Flex alignItems="center" mt={5} ml={[0, 0, 3, 5, 8]}>
         <Button
-          rounded={"full"}
+          rounded="full"
           disabled={pageStatus !== "loaded"}
           text={
             pageStatus === "savingProfile" ? (
@@ -390,7 +389,7 @@ const Profile = () => {
           <Heading>Subscription Plans</Heading>
           {plans && plans.length < 2 ? (
             <Button
-              rounded={"full"}
+              rounded="full"
               text={
                 pageStatus === "addingPlan" ? (
                   <Image src="/loader_black.gif" h="2rem" />
@@ -421,13 +420,13 @@ const Profile = () => {
         >
           {plans &&
             plans.length > 0 &&
-            plans.map((plan, p) => (
+            plans.map((plan) => (
               <CreatorPlan
+                key={plan._id}
                 handlePlanUpdate={handlePlanUpdate}
                 handlePlanSave={savePlan}
                 plan={plan}
                 pageStatus={pageStatus}
-                key={p}
               />
             ))}
         </Flex>

@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import {
   Flex,
   Box,
@@ -8,15 +8,16 @@ import {
   IconButton,
   Image,
 } from "@chakra-ui/react";
-import Button from "../common/Button/Button";
-
 import { FiPlus } from "react-icons/fi";
 
+import Button from "../common/Button/Button";
+import { noop } from "../../utils";
+
 const CreatorPlan = ({
+  pageStatus,
   plan,
   handlePlanUpdate,
   handlePlanSave,
-  pageStatus,
 }) => {
   const handleFeatureAdd = () => {
     // Add a blank feature field to the plan
@@ -122,7 +123,7 @@ const CreatorPlan = ({
             ))
           ) : (
             <Text
-              color={"bright.gray"}
+              color="bright.gray"
               fontWeight="light"
               fontSize={14}
               fontStyle="italic"
@@ -146,7 +147,7 @@ const CreatorPlan = ({
         </Flex>
 
         <Button
-          rounded={"full"}
+          rounded="full"
           text={
             pageStatus === "savingPlan" ? (
               <Image src="/loader_white.gif" h="2rem" />
@@ -173,6 +174,20 @@ const CreatorPlan = ({
       </Box>
     </Flex>
   );
+};
+
+CreatorPlan.propTypes = {
+  pageStatus: PropTypes.string,
+  plan: PropTypes.instanceOf(Object),
+  handlePlanUpdate: PropTypes.func,
+  handlePlanSave: PropTypes.func,
+};
+
+CreatorPlan.defaultProps = {
+  pageStatus: "",
+  plan: {},
+  handlePlanUpdate: noop,
+  handlePlanSave: noop,
 };
 
 export default CreatorPlan;

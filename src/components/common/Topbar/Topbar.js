@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 import { Flex, Heading } from "@chakra-ui/react";
+
 import "@fontsource/quicksand/400.css";
+
 import Button from "../Button/Button";
 import SmallScreenSidebar from "./SideDrawer/SideDrawer";
 import PageTitle from "../PageTitle/PageTitle";
@@ -10,7 +13,6 @@ const Topbar = ({ isTopbarDisplay }) => {
 
   const goToCreatePage = (e) => {
     e.preventDefault();
-    console.log("RB:: File: Topbar.js, Line: 13 ==> goToCretePage");
     router.push("/newsletters/new");
   };
   return (
@@ -31,7 +33,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         <Flex>
           <Button
             onClick={(e) => goToCreatePage(e)}
-            rounded={"full"}
+            rounded="full"
             variant="outline"
             text="Create New Newsletter"
             marginLeft="1.5rem"
@@ -98,7 +100,7 @@ const Topbar = ({ isTopbarDisplay }) => {
         <Flex mt={5}>
           <Button
             onClick={(e) => goToCreatePage(e)}
-            rounded={"full"}
+            rounded="full"
             variant="outline"
             text="Create New Newsletter"
             color="bright.fg"
@@ -117,6 +119,14 @@ const Topbar = ({ isTopbarDisplay }) => {
       {/* Topbar for Smallscreen End */}
     </>
   );
+};
+
+Topbar.propTypes = {
+  isTopbarDisplay: PropTypes.oneOf(["none", "flex"]),
+};
+
+Topbar.defaultProps = {
+  isTopbarDisplay: "flex",
 };
 
 export default Topbar;

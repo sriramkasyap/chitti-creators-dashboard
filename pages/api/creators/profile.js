@@ -13,11 +13,11 @@ export default withIronSession(
         const { profile } = req.body;
         if (!profile) throw new Error("Invalid request");
 
-        var creator = await Creator.findById(creatorId);
+        const creator = await Creator.findById(creatorId);
 
         if (!creator) throw new Error("Creator does not exist");
 
-        var result = await Creator.findByIdAndUpdate(
+        const result = await Creator.findByIdAndUpdate(
           creatorId,
           {
             $set: {
@@ -44,7 +44,7 @@ export default withIronSession(
         });
       }
     } else {
-      re.status(404).send({
+      res.status(404).send({
         error: true,
         message: "Invalid Request",
       });

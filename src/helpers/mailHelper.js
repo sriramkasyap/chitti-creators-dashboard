@@ -2,6 +2,8 @@ const sgMail = require("@sendgrid/mail");
 
 sgMail.setApiKey(process.env.SENDGRID_DASHBOARD_KEY);
 
+export const fake = "";
+
 export const sendMail = async (to, fromName, subject, html) => {
   const msg = {
     to, // Mail recipient

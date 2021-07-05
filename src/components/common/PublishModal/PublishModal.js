@@ -1,25 +1,29 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
 import {
   Modal,
   ModalBody,
   ModalContent,
   ModalOverlay,
   Text,
-  Box,
   Flex,
   Image,
   Button,
   ModalFooter,
 } from "@chakra-ui/react";
+
 import { AuthContext } from "../../../../contexts/AuthContext";
+import PlanSelector from "./PlanSelector/PlanSelector";
+
+import { noop } from "../../../utils";
 
 const PublishModal = ({
-  disclosure: { isOpen, onOpen, onClose },
   selectedPlan,
+  pageStatus,
   selectPlan,
   recipientCount,
+  disclosure: { isOpen, onOpen, onClose },
   publishNewsletter,
-  pageStatus,
 }) => {
   const {
     loggedInUser: { plans },
@@ -28,24 +32,22 @@ const PublishModal = ({
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay blur={"10px"} />
+        <ModalOverlay blur="10px" />
         <ModalContent>
           <ModalBody mt={10}>
             <Text textAlign="center">Select recipients for the Newsletter</Text>
             <Flex alignItems="stretch" justifyContent="center">
               <Flex flexWrap="nowrap" mt={2}>
                 {plans && plans.length > 0 ? (
-                  plans.map(({ planFee, _id }, p) => {
-                    return (
-                      <PlanSelector
-                        key={p}
-                        planName={planFee === 0 ? "Free Plan" : "Paid Plan"}
-                        planId={_id}
-                        selectedPlan={selectedPlan}
-                        selectPlan={selectPlan}
-                      />
-                    );
-                  })
+                  plans.map(({ planFee, _id }) => (
+                    <PlanSelector
+                      key={_id}
+                      planName={planFee === 0 ? "Free Plan" : "Paid Plan"}
+                      planId={_id}
+                      selectedPlan={selectedPlan}
+                      selectPlan={selectPlan}
+                    />
+                  ))
                 ) : (
                   <></>
                 )}
@@ -117,64 +119,22 @@ const PublishModal = ({
   );
 };
 
-const PlanSelector = ({ planName, planId, selectedPlan, selectPlan }) => {
-  return (
-    <>
-      <Box mr={"-1px"}>
-        <Button
-          border="1px"
-          borderColor="bright.fg"
-          borderRadius={0}
-          pt={8}
-          pb={8}
-          pl={4}
-          pr={4}
-          bgColor={planId === selectedPlan ? "bright.fg" : "transparent"}
-          transitionDuration="0.1s"
-          _hover={
-            planId === selectedPlan
-              ? {}
-              : {
-                  bgColor: "bright.light",
-                }
-          }
-          _focus={{
-            outline: "none",
-          }}
-          onClick={() => selectPlan(planId)}
-        >
-          <Flex alignItems="center">
-            <Flex alignItems="center" mr={3}>
-              <Image
-                src={
-                  planId === selectedPlan ? "/selected.png" : "/unselected.png"
-                }
-                w={5}
-                h={5}
-              />
-            </Flex>
-            <Box>
-              <Text
-                fontSize={20}
-                textAlign="left"
-                color={planId === selectedPlan ? "bright.bg" : "bright.fg"}
-              >
-                {planName}
-              </Text>
-              <Text
-                fontSize={14}
-                fontWeight="light"
-                textAlign="left"
-                color={planId === selectedPlan ? "bright.bg" : "bright.fg"}
-              >
-                Subscribers
-              </Text>
-            </Box>
-          </Flex>
-        </Button>
-      </Box>
-    </>
-  );
+PublishModal.propTypes = {
+  selectedPlan: PropTypes.string,
+  pageStatus: PropTypes.string,
+  recipientCount: PropTypes.number,
+  disclosure: PropTypes.instanceOf(Object),
+  selectPlan: PropTypes.func,
+  publishNewsletter: PropTypes.func,
+};
+
+PublishModal.defaultProps = {
+  selectedPlan: "",
+  pageStatus: "",
+  recipientCount: 0,
+  disclosure: {},
+  selectPlan: noop,
+  publishNewsletter: noop,
 };
 
 export default PublishModal;

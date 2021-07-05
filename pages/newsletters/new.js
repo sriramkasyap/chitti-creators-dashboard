@@ -21,6 +21,19 @@ import {
 } from "@chakra-ui/react";
 
 import Button from "../../src/components/common/Button/Button";
+import ckeditorStyles from "../../src/components/common/ckeditorStyles";
+import PublishModal from "../../src/components/common/PublishModal/PublishModal";
+
+import {
+  checkAuthentication,
+  getIronConfig,
+  showNotification,
+} from "../../src/utils";
+import {
+  createNewsletter,
+  getPlan,
+  publishNewsletter,
+} from "../../src/helpers/userFetcher";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -29,23 +42,8 @@ const RichTextEditor = dynamic(
   }
 );
 
-import {
-  checkAuthentication,
-  getIronConfig,
-  showNotification,
-} from "../../src/utils";
-import ckeditorStyles from "../../src/components/common/ckeditorStyles";
-import {
-  createNewsletter,
-  getPlan,
-  publishNewsletter,
-} from "../../src/helpers/userFetcher";
-import PublishModal from "../../src/components/common/PublishModal/PublishModal";
-
 const CreateNewNewsletter = () => {
-  const [editorData, setEditorData] = useState(
-    `<p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span class="text-huge" style="font-size: 1.8em; color: hsl(270, 75%, 60%);">Hello World!</span></p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span style="color:hsl(270, 75%, 60%);">Welcome to the First newsletter ever written on <strong>Chitti</strong></span></p><p style="text-align:center;">&nbsp;</p><p style="text-align:center;"><span style="color:hsl(270, 75%, 60%);">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</span></p><p style="text-align:center;"><br>&nbsp;</p>`
-  );
+  const [editorData, setEditorData] = useState("");
   const [formData, setFormData] = useState({
     reference: "",
     subject: "",
@@ -97,9 +95,27 @@ const CreateNewNewsletter = () => {
   };
 
   const handleDiscardDraft = () => {
-    if (confirm("All changes will be lost. Are you sure?")) {
+    // eslint-disable-next-line no-alert
+    if (window.confirm("All changes will be lost. Are you sure?")) {
       router.back();
     }
+  };
+
+  const valdateFormData = () => {
+    if (
+      formData &&
+      formData.reference &&
+      formData.subject &&
+      formData.reference.length > 0 &&
+      formData.subject.length > 0 &&
+      keywordsList &&
+      keywordsList.length > 0 &&
+      editorData.length > 0
+    ) {
+      return true;
+    }
+    showNotification("Please Enter all the details");
+    return false;
   };
 
   const handleSaveDraft = () => {
@@ -191,24 +207,6 @@ const CreateNewNewsletter = () => {
       });
   };
 
-  const valdateFormData = () => {
-    if (
-      formData &&
-      formData.reference &&
-      formData.subject &&
-      formData.reference.length > 0 &&
-      formData.subject.length > 0 &&
-      keywordsList &&
-      keywordsList.length > 0 &&
-      editorData.length > 0
-    ) {
-      return true;
-    } else {
-      showNotification("Please Enter all the details");
-      return false;
-    }
-  };
-
   useEffect(() => {
     // Refresh recipientCount every time the plan is selected
     if (selectedPlan && selectedPlan.length > 0) {
@@ -248,7 +246,7 @@ const CreateNewNewsletter = () => {
       <Flex
         justifyContent="space-between"
         flexDir={["column", "column", "row"]}
-        alignItems={"center"}
+        alignItems="center"
         width="100%"
         pl={[0, 0, 0, 0, 5]}
         pr={[0, 0, 0, 0, 5]}
@@ -266,7 +264,7 @@ const CreateNewNewsletter = () => {
         >
           <Flex mt={[3, 3, 0]}>
             <Button
-              rounded={"full"}
+              rounded="full"
               disabled={pageStatus !== "loaded"}
               text="Discard Draft"
               variant="link"
@@ -279,10 +277,10 @@ const CreateNewNewsletter = () => {
           </Flex>
           <Flex>
             <Button
-              rounded={"full"}
+              rounded="full"
               disabled={pageStatus !== "loaded"}
               text={
-                pageStatus == "saving" ? (
+                pageStatus === "saving" ? (
                   <Image src="/loader_black.gif" h="2rem" />
                 ) : (
                   "Save Newsletter"
@@ -302,7 +300,7 @@ const CreateNewNewsletter = () => {
               p="1rem 2rem"
             />
             <Button
-              rounded={"full"}
+              rounded="full"
               disabled={pageStatus !== "loaded"}
               text={
                 pageStatus === "publishing" ? (
@@ -328,7 +326,7 @@ const CreateNewNewsletter = () => {
           </Flex>
         </Flex>
       </Flex>
-      <Flex w="100%" flexWrap={"wrap"} mt={[5, 5, 7, 10, 10]}>
+      <Flex w="100%" flexWrap="wrap" mt={[5, 5, 7, 10, 10]}>
         <FormControl
           flex={["100%", "100%", "50%"]}
           pl={[0, 0, 0, 0, 5]}
@@ -391,6 +389,7 @@ const CreateNewNewsletter = () => {
             keywordsList.map((keyword, index) => (
               <Tag
                 size="sm"
+                // eslint-disable-next-line react/no-array-index-key
                 key={index + 1}
                 borderRadius={0}
                 variant="solid"
@@ -426,7 +425,7 @@ const CreateNewNewsletter = () => {
       <Flex
         flexDirection="row"
         justifyContent="center"
-        flexWrap={"wrap"}
+        flexWrap="wrap"
         width="100%"
       >
         <Flex

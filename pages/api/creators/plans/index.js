@@ -10,13 +10,13 @@ export default withIronSession(
       if (req.method === "POST") {
         // Add plan for the creator
 
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { planFee, planFeatures } = req.body;
+        const { planFee, planFeatures } = req.body;
 
         if (!(planFee && planFeatures)) throw new Error("Invalid request");
 
-        var plan = new SubscriptionPlan({
+        let plan = new SubscriptionPlan({
           planFee,
           planFeatures,
           planRZPid: null,
@@ -40,9 +40,8 @@ export default withIronSession(
           success: true,
           plan,
         });
-      } else {
-        throw new Error("Invalid request");
       }
+      throw new Error("Invalid request");
     } catch (error) {
       console.error(error);
       res.status(501).send({
