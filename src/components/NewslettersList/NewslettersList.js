@@ -98,12 +98,18 @@ const NewslettersList = () => {
           )}
         </Flex>
       ) : (
-        <Text color="bright.gray">
-          You haven&apos;t created any newsletters yet.{" "}
-          <Link href="/newsletters/new" as="/newsletters/new">
-            <ChakraLink textDecor="underline">Create One now.</ChakraLink>
-          </Link>
-        </Text>
+        <>
+          {isLoading ? (
+            <></>
+          ) : (
+            <Text color="bright.gray">
+              You haven&apos;t created any newsletters yet.{" "}
+              <Link href="/newsletters/new" as="/newsletters/new">
+                <ChakraLink textDecor="underline">Create One now.</ChakraLink>
+              </Link>
+            </Text>
+          )}
+        </>
       )}
     </Flex>
   );
