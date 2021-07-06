@@ -42,6 +42,9 @@
     "react/react-in-jsx-scope": "off",
     "arrow-body-style": "off",
     "no-underscore-dangle": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "no-restricted-syntax": ["off", "FunctionExpression"],
+    "no-prototype-builtins": "off",
+    "prefer-spread": "off"
   }
 }
