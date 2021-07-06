@@ -34,6 +34,7 @@ export const getIronConfig = () => ({
 export const checkAuthentication = async ({ req, res }) => {
   if (!(req.session && req.session.get("creator"))) {
     res.setHeader("Location", "/login");
+    // eslint-disable-next-line no-param-reassign
     res.statusCode = 302;
     res.end();
   }
