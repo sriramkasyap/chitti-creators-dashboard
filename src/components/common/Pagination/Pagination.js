@@ -7,7 +7,7 @@ import { noop } from "../../../utils";
 
 const Pagination = ({ limit, page, setPagination, totalCount }) => (
   <>
-    <Flex w="100%" mt={10} justifyContent="space-between">
+    <Flex w="100%" mt={10} justifyContent="space-between" alignItems="center">
       <Button
         disabled={page < 1}
         rounded="full"

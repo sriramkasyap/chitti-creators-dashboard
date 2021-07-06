@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex, Image, Text, Link as ChakraLink } from "@chakra-ui/react";
 
+import Link from "next/link";
 import Table from "../common/Table/Table";
 import Pagination from "../common/Pagination/Pagination";
 
@@ -68,35 +69,48 @@ const SubscribersList = ({
 
   return (
     <Flex flexDir="column" w={["", "100%"]}>
-      <Flex
-        flexDir="column"
-        justifyContent={isLoading ? "center" : "flex-start"}
-        alignItems="center"
-        h="auto"
-        w="100%"
-        overflow="auto"
-      >
-        {isLoading ? (
-          <Image src="/loader_black.gif" h="5rem" />
-        ) : (
-          <Table
-            columns={columns}
-            data={subscribers}
-            hiddenColumns={hiddenColumns}
-            size={("sm", "md")}
-          />
-        )}
+      {subscribers && subscribers.length > 0 ? (
+        <Flex
+          flexDir="column"
+          justifyContent={isLoading ? "center" : "flex-start"}
+          alignItems="center"
+          h="auto"
+          w="100%"
+          overflow="auto"
+        >
+          {isLoading ? (
+            <Image src="/loader_black.gif" h="5rem" />
+          ) : (
+            <Table
+              columns={columns}
+              data={subscribers}
+              hiddenColumns={hiddenColumns}
+              size={("sm", "md")}
+            />
+          )}
 
-        {totalCount > subscribers.length ? (
-          <Pagination
-            {...pagination}
-            totalCount={totalCount}
-            setPagination={setPagination}
-          />
-        ) : (
-          <></>
-        )}
-      </Flex>
+          {totalCount > subscribers.length ? (
+            <Pagination
+              {...pagination}
+              totalCount={totalCount}
+              setPagination={setPagination}
+            />
+          ) : (
+            <></>
+          )}
+        </Flex>
+      ) : (
+        <Text color="bright.gray">
+          You don&apos;t have any subscribers yet.{" "}
+          <Link href="/profile" as="/profile">
+            <ChakraLink textDecor="underline">Complete your Profile</ChakraLink>
+          </Link>{" "}
+          and{" "}
+          <Link href="/newsletters/new" as="/newsletters/new">
+            <ChakraLink textDecor="underline">Start writing now</ChakraLink>
+          </Link>
+        </Text>
+      )}
     </Flex>
   );
 };

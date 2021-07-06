@@ -39,7 +39,9 @@ const Dashboard = ({ isLoading, error, cards }) => {
       {/* Newsletters List Start */}
       <Flex flexDir="column" mt={10} w="100%">
         <Flex>
-          <Heading mb={5}>Newsletters List</Heading>
+          <Heading mt={10} mb={5}>
+            Newsletters List
+          </Heading>
         </Flex>
         <Flex w="100%" overflow="auto">
           <NewslettersList />

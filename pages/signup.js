@@ -55,7 +55,7 @@ const Signup = () => {
         router.replace("/");
       }
     } catch (err) {
-      setError(loginError);
+      setError(loginError && loginError.length > 1 ? loginError : err);
       setIsLoading(false);
       setFormData({
         fullName: "",
@@ -98,7 +98,7 @@ const Signup = () => {
         flexDir="column"
         alignItems="center"
         justifyContent={["space-evenly", "space-evenly", "unset"]}
-        p={[8, 8, 8, 8, "0 6rem"]}
+        p={[8, 8, 8, 8, "0 4rem", "0 6rem"]}
         w={["100vw", "100vw", "80vw", "80vw", "30vw"]}
         m={["auto", "auto", "auto", "auto", "3rem auto"]}
       >
@@ -129,10 +129,16 @@ const Signup = () => {
           alignItems="center"
           mt={[0, 0, 5]}
         >
-          <Text color="bright.gray" fontSize="xl" mb={1.5}>
+          <Text textAlign="center" color="bright.gray" fontSize="xl" mb={1.5}>
             Sign up as a Creator on
           </Text>
-          <Heading color="bright" fontSize="6xl" mb={5} letterSpacing="tight">
+          <Heading
+            textAlign="center"
+            color="bright"
+            fontSize="6xl"
+            mb={5}
+            letterSpacing="tight"
+          >
             Chitti.
           </Heading>
           {error && <ErrorAlert message={error} />}

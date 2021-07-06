@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo } from "react";
-import { Flex, Text, Image } from "@chakra-ui/react";
+import { Flex, Text, Image, Link as ChakraLink } from "@chakra-ui/react";
+import Link from "next/link";
 
 import Table from "../common/Table/Table";
 import Pagination from "../common/Pagination/Pagination";
@@ -68,33 +69,42 @@ const NewslettersList = () => {
 
   return (
     <Flex flexDir="column" w={["", "100%"]}>
-      <Flex
-        flexDir="column"
-        justifyContent={isLoading ? "center" : "flex-start"}
-        alignItems="center"
-        h="auto"
-        w="100%"
-      >
-        {isLoading ? (
-          <Image src="loader_black.gif" h="5rem" />
-        ) : (
-          <Table
-            columns={columns}
-            data={data}
-            size={("sm", "sm", "md", "lg")}
-          />
-        )}
+      {newsletters && newsletters.length > 0 ? (
+        <Flex
+          flexDir="column"
+          justifyContent={isLoading ? "center" : "flex-start"}
+          alignItems="center"
+          h="auto"
+          w="100%"
+        >
+          {isLoading ? (
+            <Image src="loader_black.gif" h="5rem" />
+          ) : (
+            <Table
+              columns={columns}
+              data={data}
+              size={("sm", "sm", "md", "lg")}
+            />
+          )}
 
-        {totalCount > newsletters.length ? (
-          <Pagination
-            {...pagination}
-            totalCount={totalCount}
-            setPagination={setPagination}
-          />
-        ) : (
-          <></>
-        )}
-      </Flex>
+          {totalCount > newsletters.length ? (
+            <Pagination
+              {...pagination}
+              totalCount={totalCount}
+              setPagination={setPagination}
+            />
+          ) : (
+            <></>
+          )}
+        </Flex>
+      ) : (
+        <Text color="bright.gray">
+          You haven&apos;t created any newsletters yet.{" "}
+          <Link href="/newsletters/new" as="/newsletters/new">
+            <ChakraLink textDecor="underline">Create One now.</ChakraLink>
+          </Link>
+        </Text>
+      )}
     </Flex>
   );
 };
