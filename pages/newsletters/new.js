@@ -283,7 +283,7 @@ const CreateNewNewsletter = () => {
                 pageStatus === "saving" ? (
                   <Image src="/loader_black.gif" h="2rem" />
                 ) : (
-                  "Save Newsletter"
+                  "Save as Draft"
                 )
               }
               variant="outline"
