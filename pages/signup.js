@@ -9,6 +9,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Link,
   Image,
 } from "@chakra-ui/react";
@@ -17,12 +18,32 @@ import Button from "../src/components/common/Button/Button";
 import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 
 import { AuthContext } from "../contexts/AuthContext";
-import { getIronConfig } from "../src/utils";
+import { getIronConfig, isEmpty, validateEmail } from "../src/utils";
+
+const DEFAULT_ERRORS = {
+  fullName: {
+    errorStatus: false,
+    errorText: "",
+  },
+  emailId: {
+    errorStatus: false,
+    errorText: "",
+  },
+  password: {
+    errorStatus: false,
+    errorText: "",
+  },
+  confirmPassword: {
+    errorStatus: false,
+    errorText: "",
+  },
+};
 
 const Signup = () => {
   const router = useRouter();
   const { loginError, userSignup } = useContext(AuthContext);
   const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState({ ...DEFAULT_ERRORS });
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -31,39 +52,84 @@ const Signup = () => {
     confirmPassword: "",
   });
 
+  const validate = () => {
+    const errorsObj = { ...formErrors };
+    const errorKeys = Object.keys(DEFAULT_ERRORS);
+
+    errorKeys.forEach((errorKey) => {
+      if (isEmpty(formData[errorKey])) {
+        errorsObj[errorKey].errorStatus = true;
+        errorsObj[errorKey].errorText = "This Field is Required!";
+      }
+    });
+
+    setFormErrors((prevState) => ({ ...prevState, ...errorsObj }));
+
+    if (
+      Object.keys(errorsObj).every(
+        (key) => errorsObj[key].errorStatus === false
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   const handleChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "emailId") {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setFormErrors({
+        ...formErrors,
+        [name]: {
+          errorStatus: !validateEmail(value),
+          errorText: "Invalid Email",
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setFormErrors({
+        ...formErrors,
+        [name]: { errorStatus: false, errorText: "" },
+      });
+    }
   };
 
   const handleSignup = async () => {
-    setIsLoading(true);
-    try {
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error("Password did not match");
-      } else {
-        await userSignup({
-          fullName: formData.fullName,
-          emailId: formData.emailId,
-          password: formData.password,
+    if (validate()) {
+      setIsLoading(true);
+      try {
+        if (formData.password !== formData.confirmPassword) {
+          setError("Password did not match");
+          setIsLoading(false);
+        } else {
+          await userSignup({
+            fullName: formData.fullName,
+            emailId: formData.emailId,
+            password: formData.password,
+          });
+          router.replace("/");
+        }
+      } catch (err) {
+        setError(loginError && loginError.length > 1 ? loginError : err);
+        setIsLoading(false);
+        setFormData({
+          fullName: "",
+          emailId: "",
+          password: "",
+          confirmPassword: "",
         });
-        router.replace("/");
+        router.replace("/signup");
       }
-    } catch (err) {
-      setError(loginError && loginError.length > 1 ? loginError : err);
-      setIsLoading(false);
-      setFormData({
-        fullName: "",
-        emailId: "",
-        password: "",
-        confirmPassword: "",
-      });
-      router.replace("/signup");
     }
   };
 
@@ -75,7 +141,7 @@ const Signup = () => {
         alignItems="center"
         backgroundColor="bright.fg"
         backgroundImage="url('word_cloud.png')"
-        backgroundSize="cover"
+        backgroundSize="contain"
         h={["40vh", "40vh", "30vh", "40vh", "100vh"]}
         w={["100vw", "100vw", "100vw", "100vw", "70vw"]}
       >
@@ -94,13 +160,14 @@ const Signup = () => {
         </Flex>
       </Flex>
       <Flex
-        h={["100vh", "100vh", "60vh"]}
+        h={["auto", "100vh", "auto", "auto", "100vh"]}
+        overflowY={["unset", "unset", "unset", "unset", "auto"]}
         flexDir="column"
         alignItems="center"
-        justifyContent={["space-evenly", "space-evenly", "unset"]}
+        justifyContent={["space-evenly", "space-evenly", "unset", "center"]}
         p={[8, 8, 8, 8, "0 4rem", "0 6rem"]}
         w={["100vw", "100vw", "80vw", "80vw", "30vw"]}
-        m={["auto", "auto", "auto", "auto", "3rem auto"]}
+        m="auto"
       >
         <Flex
           display={["flex", "flex", "none"]}
@@ -142,7 +209,11 @@ const Signup = () => {
             Chitti.
           </Heading>
           {error && <ErrorAlert message={error} />}
-          <FormControl id="fullName">
+          <FormControl
+            id="fullName"
+            isInvalid={formErrors.fullName.errorStatus}
+            mb={3}
+          >
             <FormLabel color="bright.fg">Full Name</FormLabel>
             <Input
               variant="outline"
@@ -150,15 +221,23 @@ const Signup = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={3}
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.fullName.errorStatus
+                ? formErrors.fullName.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl id="email">
+          <FormControl
+            id="email"
+            isInvalid={formErrors.emailId.errorStatus}
+            mb={3}
+          >
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
               variant="outline"
@@ -166,15 +245,23 @@ const Signup = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={3}
               type="email"
               name="emailId"
               value={formData.emailId}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.emailId.errorStatus
+                ? formErrors.emailId.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl id="password">
+          <FormControl
+            id="password"
+            isInvalid={formErrors.password.errorStatus}
+            mb={3}
+          >
             <FormLabel color="bright.fg">Password</FormLabel>
             <Input
               variant="outline"
@@ -182,15 +269,23 @@ const Signup = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={3}
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.password.errorStatus
+                ? formErrors.password.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl id="confirmPassword">
+          <FormControl
+            id="confirmPassword"
+            isInvalid={formErrors.confirmPassword.errorStatus}
+            mb={6}
+          >
             <FormLabel color="bright.fg">Confirm Password</FormLabel>
             <Input
               variant="outline"
@@ -198,12 +293,16 @@ const Signup = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={6}
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.confirmPassword.errorStatus
+                ? formErrors.confirmPassword.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
           <Button
@@ -217,6 +316,10 @@ const Signup = () => {
             }
             color="bright.bg"
             backgroundColor="bright.fg"
+            _hover={{
+              color: "bright.bg",
+              backgroundColor: "bright.fg",
+            }}
             fontWeight={400}
             onClick={handleSignup}
             p="1rem 2rem"
