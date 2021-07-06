@@ -216,12 +216,17 @@ const Profile = () => {
 
   const handlePlanUpdate = (newPlan) => {
     // Update plan state on component update
+
     const newPlans = plans.map((plan) => {
       if (plan._id === newPlan._id) return newPlan;
       return plan;
     });
 
-    setPlans(newPlans);
+    if (newPlans.filter(({ planFee }) => planFee === 0).length > 1) {
+      showNotification("You cannot create two Free plans");
+    } else {
+      setPlans(newPlans);
+    }
   };
 
   return (
@@ -426,6 +431,8 @@ const Profile = () => {
                 handlePlanUpdate={handlePlanUpdate}
                 handlePlanSave={savePlan}
                 plan={plan}
+                plans={plans}
+                setPlans={setPlans}
                 pageStatus={pageStatus}
               />
             ))}

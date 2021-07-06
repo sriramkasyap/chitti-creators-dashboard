@@ -21,20 +21,23 @@ const CreatorPlan = ({
 }) => {
   const handleFeatureAdd = () => {
     // Add a blank feature field to the plan
-    plan.planFeatures.push("");
-    handlePlanUpdate(plan);
+    const pland = { ...plan };
+    pland.planFeatures.push("");
+    handlePlanUpdate(pland);
   };
 
   const handleFeatureUpdate = (e) => {
     // Handle change in feature fields
-    plan.planFeatures[e.target.name] = e.target.value;
-    handlePlanUpdate(plan);
+    const pland = { ...plan };
+    pland.planFeatures[e.target.name] = e.target.value;
+    handlePlanUpdate(pland);
   };
 
   const handlePriceUpdate = (e) => {
     // Update Plan pricing
-    plan.planFee = parseFloat(e.target.value);
-    handlePlanUpdate(plan);
+    const pland = { ...plan };
+    pland.planFee = parseFloat(e.target.value) || 0;
+    handlePlanUpdate(pland);
   };
 
   return (
@@ -102,7 +105,7 @@ const CreatorPlan = ({
         <Flex w="100%" mt={2} flexDir="column" alignItems="center">
           {plan.planFeatures.length > 0 ? (
             plan.planFeatures.map((feature, f) => (
-              <Flex w="100%" alignItems="flex-end" key={f}>
+              <Flex w="100%" alignItems="flex-end" key={btoa(f)}>
                 <Text mr={4} mb={2} fontSize={[20]} lineHeight={1}>
                   {f + 1}.
                 </Text>
