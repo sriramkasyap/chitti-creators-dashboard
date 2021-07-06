@@ -100,16 +100,24 @@ const SubscribersList = ({
           )}
         </Flex>
       ) : (
-        <Text color="bright.gray">
-          You don&apos;t have any subscribers yet.{" "}
-          <Link href="/profile" as="/profile">
-            <ChakraLink textDecor="underline">Complete your Profile</ChakraLink>
-          </Link>{" "}
-          and{" "}
-          <Link href="/newsletters/new" as="/newsletters/new">
-            <ChakraLink textDecor="underline">Start writing now</ChakraLink>
-          </Link>
-        </Text>
+        <>
+          {isLoading ? (
+            <></>
+          ) : (
+            <Text color="bright.gray">
+              You don&apos;t have any subscribers yet.{" "}
+              <Link href="/profile" as="/profile">
+                <ChakraLink textDecor="underline">
+                  Complete your Profile
+                </ChakraLink>
+              </Link>{" "}
+              and{" "}
+              <Link href="/newsletters/new" as="/newsletters/new">
+                <ChakraLink textDecor="underline">Start writing now</ChakraLink>
+              </Link>
+            </Text>
+          )}
+        </>
       )}
     </Flex>
   );
