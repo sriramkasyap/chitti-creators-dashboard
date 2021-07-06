@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 
 import { Heading, Text } from "@chakra-ui/react";
 
@@ -26,6 +27,16 @@ const PageTitle = ({ display, pt }) => {
       {route === "/" ? <Text>My Dashboard</Text> : <Text>{pageTitle}</Text>}
     </Heading>
   );
+};
+
+PageTitle.propTypes = {
+  display: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Array)]),
+  pt: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+PageTitle.defaultProps = {
+  display: "",
+  pt: "",
 };
 
 export default PageTitle;

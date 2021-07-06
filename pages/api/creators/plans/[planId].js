@@ -10,10 +10,10 @@ export default withIronSession(
       if (req.method === "PUT") {
         // Update a plan
 
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { plan } = req.body;
-        var { planId } = req.query;
+        let { plan } = req.body;
+        const { planId } = req.query;
 
         // Creators should not be able to update these details
         delete plan.creator;
@@ -22,7 +22,7 @@ export default withIronSession(
         delete plan.planRZPid;
         delete plan.subscribers;
 
-        var planToUpdate = await SubscriptionPlan.findById(planId);
+        const planToUpdate = await SubscriptionPlan.findById(planId);
 
         if (!planToUpdate.creator.equals(creatorId))
           throw new Error("You don't have permissions to edit this plan");
@@ -42,24 +42,22 @@ export default withIronSession(
           success: true,
           plan,
         });
-      } else if (req.method === "GET") {
-        var { creatorId } = req.creator;
-
-        var { planId } = req.query;
+      }
+      if (req.method === "GET") {
+        const { planId } = req.query;
 
         if (!isValidObjectId(planId))
           throw new Error("The requested plan does not exist");
 
-        var plan = await SubscriptionPlan.findById(planId).lean();
+        const plan = await SubscriptionPlan.findById(planId).lean();
 
         if (plan && plan._id) {
           return res.send({
             success: true,
             plan,
           });
-        } else {
-          throw new Error("The requested plan does not exist");
         }
+        throw new Error("The requested plan does not exist");
       } else {
         throw new Error("Invalid request");
       }

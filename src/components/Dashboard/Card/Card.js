@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
 import "@fontsource/josefin-sans/600.css";
@@ -54,6 +55,10 @@ const Card = ({ card }) => {
       </Flex>
     </Box>
   );
+};
+
+Card.propTypes = {
+  card: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default Card;

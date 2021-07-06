@@ -9,6 +9,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Link,
   Image,
 } from "@chakra-ui/react";
@@ -17,34 +18,86 @@ import Button from "../src/components/common/Button/Button";
 import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 
 import { AuthContext } from "../contexts/AuthContext";
-import { getIronConfig } from "../src/utils";
+import { getIronConfig, isEmpty, validateEmail } from "../src/utils";
+
+const DEFAULT_ERRORS = {
+  emailId: {
+    errorStatus: false,
+    errorText: "",
+  },
+  password: {
+    errorStatus: false,
+    errorText: "",
+  },
+};
 
 const Login = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({ ...DEFAULT_ERRORS });
   const { loginError, userLogin, loggedInUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     emailId: "",
     password: "",
   });
 
+  const validate = () => {
+    const errorsObj = { ...formErrors };
+    const errorKeys = Object.keys(DEFAULT_ERRORS);
+
+    errorKeys.forEach((errorKey) => {
+      if (isEmpty(formData[errorKey])) {
+        errorsObj[errorKey].errorStatus = true;
+        errorsObj[errorKey].errorText = "This Field is Required!";
+      }
+    });
+
+    setFormErrors((prevState) => ({ ...prevState, ...errorsObj }));
+
+    if (
+      Object.keys(errorsObj).every(
+        (key) => errorsObj[key].errorStatus === false
+      )
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   const handleChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === "emailId") {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setFormErrors({
+        ...formErrors,
+        [name]: {
+          errorStatus: !validateEmail(value),
+          errorText: "Invalid Email",
+        },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setFormErrors({
+        ...formErrors,
+        [name]: { errorStatus: false, errorText: "" },
+      });
+    }
   };
 
   const handleLogin = async () => {
-    setIsLoading(true);
-    setError("");
-    setTimeout(async () => {
-      // Only to demostrate loading state. To be removed later
-
+    if (validate()) {
+      setIsLoading(true);
+      setError("");
       try {
         if (await userLogin(formData)) {
           router.replace("/");
@@ -58,7 +111,7 @@ const Login = () => {
           password: "",
         });
       }
-    }, 3000); // Only to demostrate loading state. To be removed later
+    }
   };
 
   useEffect(() => {
@@ -138,7 +191,11 @@ const Login = () => {
             Chitti.
           </Heading>
           {error && <ErrorAlert message={error} />}
-          <FormControl id="email">
+          <FormControl
+            id="email"
+            isInvalid={formErrors.emailId.errorStatus}
+            mb={3}
+          >
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
               variant="outline"
@@ -146,15 +203,23 @@ const Login = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={3}
               type="email"
               name="emailId"
               value={formData.emailId}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.emailId.errorStatus
+                ? formErrors.emailId.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
-          <FormControl id="password">
+          <FormControl
+            id="password"
+            isInvalid={formErrors.password.errorStatus}
+            mb={6}
+          >
             <FormLabel color="bright.fg">Password</FormLabel>
             <Input
               variant="outline"
@@ -162,21 +227,29 @@ const Login = () => {
               borderColor="bright.light"
               border="2px solid"
               borderRadius={0}
-              mb={6}
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
             />
+            <FormErrorMessage>
+              {formErrors.password.errorStatus
+                ? formErrors.password.errorText
+                : ""}
+            </FormErrorMessage>
           </FormControl>
 
           <Button
-            rounded={"full"}
+            rounded="full"
             text={
               isLoading ? <Image src="loader_white.gif" h="2.5rem" /> : "Login"
             }
             color="bright.bg"
             backgroundColor="bright.fg"
+            _hover={{
+              color: "bright.bg",
+              backgroundColor: "bright.fg",
+            }}
             fontWeight={400}
             onClick={handleLogin}
             p="1rem 2rem"

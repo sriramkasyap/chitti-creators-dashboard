@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PropTypes from "prop-types";
 import { Flex, Text, Icon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
@@ -14,7 +15,6 @@ const Navitems = ({ navItems }) => {
               <Flex
                 flexDir="row"
                 alignItems="center"
-                color="bright.gray"
                 mb={5}
                 _hover={{ color: "bright.bg" }}
                 cursor="pointer"
@@ -30,6 +30,10 @@ const Navitems = ({ navItems }) => {
         ))}
     </Flex>
   );
+};
+
+Navitems.propTypes = {
+  navItems: PropTypes.instanceOf(Array).isRequired,
 };
 
 export default Navitems;

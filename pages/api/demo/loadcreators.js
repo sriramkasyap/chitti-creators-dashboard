@@ -1,12 +1,12 @@
+import crypto from "crypto";
 import Creator from "../../../src/models/Creator";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { generateRandomString, ucFirst } from "../../../src/utils";
-import crypto from "crypto";
 
 export default async (req, res) => {
   // Load Creators
   try {
-    var { data } = await fetch(
+    const { data } = await fetch(
       "https://dummyapi.io/data/api/user?limit=10&page=7",
       {
         headers: {
@@ -15,14 +15,15 @@ export default async (req, res) => {
       }
     ).then((response) => response.json());
 
-    var hashedPass = crypto
+    const hashedPass = crypto
       .createHash("md5")
       .update(generateRandomString())
       .digest("hex");
 
-    var dataPromises = data.map(async (user) => {
-      return new Promise(async (resolve, reject) => {
-        var newPlan = new SubscriptionPlan({
+    const dataPromises = data.map(async (user) => {
+      // eslint-disable-next-line no-async-promise-executor
+      return new Promise(async (resolve) => {
+        const newPlan = new SubscriptionPlan({
           planFee: 0,
           planFeatures: [],
           planRZPid: null,
@@ -32,7 +33,7 @@ export default async (req, res) => {
           updatedAt: Date.now(),
         });
 
-        var newCreator = new Creator({
+        const newCreator = new Creator({
           emailId: user.email,
           password: hashedPass,
           registeredAt: Date.now(),
@@ -49,8 +50,8 @@ export default async (req, res) => {
           },
         });
 
-        var creator = await newCreator.save();
-        var plan = await newPlan.save();
+        let creator = await newCreator.save();
+        let plan = await newPlan.save();
 
         creator = await Creator.findByIdAndUpdate(
           creator._id,

@@ -2,25 +2,25 @@
 // POST /creators/login - login as a creator
 // PUT /creators/profile - Update creator profile
 
-import Creator from "../../../src/models/Creator";
 import crypto from "crypto";
-import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { withIronSession } from "next-iron-session";
+import Creator from "../../../src/models/Creator";
+import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { getIronConfig } from "../../../src/utils";
 
 export default withIronSession(async (req, res) => {
   if (req.method === "POST") {
     try {
-      var { fullName, emailId, password } = req.body;
+      const { fullName, emailId, password } = req.body;
 
       if (!(fullName && emailId && password)) {
         throw new Error("Invalid details submitted");
       }
 
-      var md5 = crypto.createHash("md5");
-      var hashedPass = md5.update(password).digest("hex");
+      const md5 = crypto.createHash("md5");
+      const hashedPass = md5.update(password).digest("hex");
 
-      var newPlan = new SubscriptionPlan({
+      const newPlan = new SubscriptionPlan({
         planFee: 0,
         planFeatures: [],
         planRZPid: null,
@@ -30,7 +30,7 @@ export default withIronSession(async (req, res) => {
         updatedAt: Date.now(),
       });
 
-      var newCreator = new Creator({
+      const newCreator = new Creator({
         emailId,
         password: hashedPass,
         registeredAt: Date.now(),
@@ -45,8 +45,8 @@ export default withIronSession(async (req, res) => {
         },
       });
 
-      var creator = await newCreator.save();
-      var plan = await newPlan.save();
+      let creator = await newCreator.save();
+      let plan = await newPlan.save();
 
       creator = await Creator.findByIdAndUpdate(
         creator._id,

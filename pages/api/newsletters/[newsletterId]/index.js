@@ -9,13 +9,13 @@ export default withIronSession(
       if (req.method === "PUT") {
         // Update a newsletter
 
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var { newsletter } = req.body;
+        const { newsletter } = req.body;
 
         const { newsletterId } = req.query;
 
-        var prevNewsletter = await Newsletter.findById(newsletterId);
+        const prevNewsletter = await Newsletter.findById(newsletterId);
         if (prevNewsletter.status !== "draft") {
           throw new Error("Only draft newsletters can be edited");
         }
@@ -24,7 +24,7 @@ export default withIronSession(
           throw new Error("You don't have permissions to edit this newsletter");
         }
 
-        var result = await Newsletter.findByIdAndUpdate(
+        const result = await Newsletter.findByIdAndUpdate(
           newsletterId,
           {
             $set: {
@@ -41,12 +41,11 @@ export default withIronSession(
           success: true,
           newsletter: result,
         });
-      } else {
-        return res.status(404).send({
-          error: true,
-          message: "Invalid Request",
-        });
       }
+      return res.status(404).send({
+        error: true,
+        message: "Invalid Request",
+      });
     } catch (error) {
       console.error(error);
       res.status(501).send({

@@ -19,7 +19,7 @@ const WideScreenSidebar = () => {
     >
       <Flex flexDir="column" as="nav" w="100%">
         <Header title="Chitti." />
-        <Divider w="80%" m={"0 auto"} border="1px" borderColor="bright.gray" />
+        <Divider w="80%" m="0 auto" border="1px" borderColor="bright.gray" />
         <Flex flexDir="row" justifyContent="center" alignItems="center" mt={22}>
           <Navitems navItems={navItems} />
         </Flex>

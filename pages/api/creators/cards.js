@@ -12,12 +12,12 @@ export default withIronSession(
   withCreatorAuth(async (req, res) => {
     try {
       if (req.method === "GET") {
-        var { creatorId } = req.creator;
+        const { creatorId } = req.creator;
 
-        var creator = await Creator.findById(creatorId);
+        const creator = await Creator.findById(creatorId);
         if (!creator) throw new Error("User not found");
 
-        var plans = await SubscriptionPlan.find({
+        const plans = await SubscriptionPlan.find({
           _id: {
             $in: creator.plans,
           },
@@ -26,8 +26,8 @@ export default withIronSession(
         if (!plans || plans.length < 1)
           throw new Error("You haven't created any plans");
 
-        var subscriberPromises = plans.map(async (plan) => {
-          var subscriberCount = await Subscriber.count({
+        const subscriberPromises = plans.map(async (plan) => {
+          const subscriberCount = await Subscriber.count({
             _id: {
               $in: plan.subscribers,
             },
@@ -40,14 +40,14 @@ export default withIronSession(
           };
         });
 
-        var newslettersSent = await Newsletters.count({
+        const newslettersSent = await Newsletters.count({
           creator: creatorId,
           status: "published",
         });
 
-        var subscribers = await Promise.all(subscriberPromises);
+        const subscribers = await Promise.all(subscriberPromises);
 
-        var subscribersByPlans = subscribers.reduce(
+        const subscribersByPlans = subscribers.reduce(
           (counts, { planFee, subscriberCount }) => {
             if (planFee > 0) {
               return {
@@ -55,13 +55,12 @@ export default withIronSession(
                 paidCount: counts.paidCount + subscriberCount,
                 paidFee: (counts.paidCount + subscriberCount) * planFee,
               };
-            } else {
-              return {
-                activeCount: counts.activeCount + subscriberCount,
-                paidCount: counts.paidCount,
-                paidFee: counts.paidFee,
-              };
             }
+            return {
+              activeCount: counts.activeCount + subscriberCount,
+              paidCount: counts.paidCount,
+              paidFee: counts.paidFee,
+            };
           },
           {
             activeCount: 0,
@@ -77,9 +76,8 @@ export default withIronSession(
           revenue: subscribersByPlans.paidFee,
           newslettersSent,
         });
-      } else {
-        throw new Error("Invalid Request");
       }
+      throw new Error("Invalid Request");
     } catch (error) {
       console.error(error);
       res.status(501).send({

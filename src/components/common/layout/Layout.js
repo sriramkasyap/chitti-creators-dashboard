@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 import { Flex, Box } from "@chakra-ui/react";
 
 import Sidebar from "../Sidebar/Sidebar";
@@ -22,6 +23,10 @@ const Layout = ({ children }) => {
       </Flex>
     </Box>
   );
+};
+
+Layout.propTypes = {
+  children: PropTypes.element.isRequired,
 };
 
 export default Layout;

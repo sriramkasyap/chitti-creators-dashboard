@@ -1,3 +1,5 @@
+export const fake = "";
+
 export const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
