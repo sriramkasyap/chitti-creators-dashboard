@@ -19,6 +19,14 @@ const CreatorPlan = ({
   handlePlanUpdate,
   handlePlanSave,
 }) => {
+  // Converting Plan Features to object for easy remove and update
+  const planFeatures = plan.planFeatures.reduce((obj, feature, index) => {
+    const featureId = btoa(plan._id) + btoa(index);
+    // eslint-disable-next-line no-param-reassign
+    obj[featureId] = { feature, featureId };
+    return obj;
+  }, {});
+
   const handleFeatureAdd = () => {
     // Add a blank feature field to the plan
     const pland = { ...plan };
@@ -29,7 +37,13 @@ const CreatorPlan = ({
   const handleFeatureUpdate = (e) => {
     // Handle change in feature fields
     const pland = { ...plan };
-    pland.planFeatures[e.target.name] = e.target.value;
+    planFeatures[e.target.name] = {
+      feature: e.target.value,
+      featureId: planFeatures[e.target.name].featureId,
+    };
+    pland.planFeatures = Object.values(planFeatures).map(
+      ({ feature }) => feature
+    );
     handlePlanUpdate(pland);
   };
 
@@ -37,6 +51,16 @@ const CreatorPlan = ({
     // Update Plan pricing
     const pland = { ...plan };
     pland.planFee = parseFloat(e.target.value) || 0;
+    handlePlanUpdate(pland);
+  };
+
+  const handleFeatureRemove = (featureId) => {
+    // Remove Plan Feature
+    delete planFeatures[featureId];
+    const pland = { ...plan };
+    pland.planFeatures = Object.values(planFeatures).map(
+      ({ feature }) => feature
+    );
     handlePlanUpdate(pland);
   };
 
@@ -60,6 +84,7 @@ const CreatorPlan = ({
         borderColor="bright.gray"
         borderRadius={5}
         p={5}
+        h="100%"
       >
         <Text textAlign="center" mb={5} fontSize={25} fontWeight="semibold">
           {plan.planFee === 0 ? "Free Plan" : "Paid Plan"}
@@ -103,9 +128,14 @@ const CreatorPlan = ({
         />
         <Text fontWeight="semibold">Features</Text>
         <Flex w="100%" mt={2} flexDir="column" alignItems="center">
-          {plan.planFeatures.length > 0 ? (
-            plan.planFeatures.map((feature, f) => (
-              <Flex w="100%" alignItems="flex-end" key={btoa(f)}>
+          {Object.values(planFeatures).length > 0 ? (
+            Object.values(planFeatures).map(({ feature, featureId }, f) => (
+              <Flex
+                w="100%"
+                alignItems="flex-end"
+                key={featureId}
+                pos="relative"
+              >
                 <Text mr={4} mb={2} fontSize={[20]} lineHeight={1}>
                   {f + 1}.
                 </Text>
@@ -120,7 +150,18 @@ const CreatorPlan = ({
                   placeholder="Add your plan features here"
                   value={feature}
                   onChange={handleFeatureUpdate}
-                  name={f}
+                  name={featureId}
+                />
+                <Button
+                  text="X"
+                  backgroundColor="transparent"
+                  position="absolute"
+                  color="bright.light"
+                  _hover={{
+                    color: "bright.gray",
+                  }}
+                  right={0}
+                  onClick={() => handleFeatureRemove(featureId)}
                 />
               </Flex>
             ))

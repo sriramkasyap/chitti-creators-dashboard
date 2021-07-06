@@ -55,16 +55,6 @@ const Profile = () => {
     ) {
       return true;
     }
-    console.log(
-      fullName,
-      shortBio,
-      longBio,
-      displayPicture,
-      fullName.length > 0,
-      shortBio.length > 0,
-      longBio.length > 0,
-      displayPicture.length > 0
-    );
     console.log(fullName, shortBio, longBio, displayPicture);
     if (displayPicture) {
       showNotification("Please fill all the details");
@@ -417,12 +407,7 @@ const Profile = () => {
           )}
         </Flex>
 
-        <Flex
-          flexDir={["column", "column", "row"]}
-          mt={5}
-          alignItems="center"
-          w="100%"
-        >
+        <Flex flexDir={["column", "column", "row"]} mt={5} w="100%">
           {plans &&
             plans.length > 0 &&
             plans.map((plan) => (

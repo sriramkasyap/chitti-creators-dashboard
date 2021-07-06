@@ -45,6 +45,13 @@
     "consistent-return": "off",
     "no-restricted-syntax": ["off", "FunctionExpression"],
     "no-prototype-builtins": "off",
-    "prefer-spread": "off"
+    "prefer-spread": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["accu"]
+      }
+    ]
   }
 }
