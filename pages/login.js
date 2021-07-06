@@ -17,7 +17,7 @@ import Button from "../src/components/common/Button/Button";
 import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
 
 import { AuthContext } from "../contexts/AuthContext";
-import { getIronConfig } from "../src/utils";
+import { getIronConfig, validateEmail } from "../src/utils";
 
 const Login = () => {
   const router = useRouter();
@@ -42,23 +42,19 @@ const Login = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     setError("");
-    setTimeout(async () => {
-      // Only to demostrate loading state. To be removed later
-
-      try {
-        if (await userLogin(formData)) {
-          router.replace("/");
-        } else {
-          setIsLoading(false);
-        }
-      } catch (err) {
-        setError(loginError);
-        setFormData({
-          emailId: "",
-          password: "",
-        });
+    try {
+      if (await userLogin(formData)) {
+        router.replace("/");
+      } else {
+        setIsLoading(false);
       }
-    }, 3000); // Only to demostrate loading state. To be removed later
+    } catch (err) {
+      setError(loginError);
+      setFormData({
+        emailId: "",
+        password: "",
+      });
+    }
   };
 
   useEffect(() => {
@@ -180,6 +176,9 @@ const Login = () => {
             fontWeight={400}
             onClick={handleLogin}
             p="1rem 2rem"
+            disabled={
+              !(validateEmail(formData.emailId) && formData.password.length > 0)
+            }
           />
         </Flex>
         <Flex
