@@ -30,8 +30,9 @@ export default withIronSession(
           .limit(limit)
           .skip(limit * page);
 
-        const totalCount = await Newsletter.count({
+        const totalCount = await Newsletter.countDocuments({
           creator: creatorId,
+          ...(status && { status }),
         });
 
         return res.send({
