@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { isValidObjectId } from "mongoose";
 
 export default function withCreatorAuth(handler) {
