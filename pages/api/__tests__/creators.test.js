@@ -17,7 +17,7 @@ beforeAll(() => {
 });
 
 describe("Creators API", () => {
-  test("Creator Signup", async () => {
+  test("Creator Signup - Valid", async () => {
     const dummyData = {
       fullName: "Tester",
       emailId: "test@test.com",
@@ -64,6 +64,90 @@ describe("Creators API", () => {
       },
     });
   });
+  test("Creator Signup - Without Full Name", async () => {
+    const dummyData = {
+      emailId: "test@test.com",
+      password: "test@123",
+    };
+
+    await testApiHandler({
+      handler: endpoint,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(dummyData),
+        });
+
+        const resBody = await response.json();
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Creator Signup - Without Email ID", async () => {
+    const dummyData = {
+      fullName: "Tester",
+      password: "test@123",
+    };
+
+    await testApiHandler({
+      handler: endpoint,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(dummyData),
+        });
+
+        const resBody = await response.json();
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Creator Signup - Without Password", async () => {
+    const dummyData = {
+      fullName: "Tester",
+      emailId: "test@test.com",
+    };
+
+    await testApiHandler({
+      handler: endpoint,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json", // Must use correct content type
+          },
+          body: JSON.stringify(dummyData),
+        });
+
+        const resBody = await response.json();
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
 });
 
 afterAll(() => {
