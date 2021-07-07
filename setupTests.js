@@ -7,7 +7,7 @@ process.env.SENDGRID_DASHBOARD_KEY =
 
 process.env.VERCEL_URL = "http://localhost:3000";
 
-process.env.MONGO_DB = "chitti";
+process.env.MONGO_DB = "chitti-tests";
 
 process.env.AUTH_COOKIE_NAME = "epsilon";
 
