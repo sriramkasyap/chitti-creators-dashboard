@@ -7,6 +7,7 @@ const withDB = (handler) => async (req, res) => {
   }
   // Use new db connection
   await mongoose.connect(process.env.MONGO_URL, {
+    dbName: process.env.MONGO_DB,
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true,
