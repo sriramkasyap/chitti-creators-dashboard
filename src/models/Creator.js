@@ -1,10 +1,4 @@
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_URL, {
-  dbName: process.env.MONGO_DB,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+const { models, Schema, model } = require("mongoose");
 
 /**
  * CREATOR
@@ -22,7 +16,7 @@ mongoose.connect(process.env.MONGO_URL, {
  * [NewsletterCategories]
  */
 
-const CreatorSchema = new mongoose.Schema({
+const CreatorSchema = new Schema({
   emailId: { type: String, index: true, unique: true },
   password: String,
   registeredAt: Date,
@@ -36,11 +30,10 @@ const CreatorSchema = new mongoose.Schema({
   },
   plans: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "SubscriptionPlan",
     },
   ],
 });
 
-module.exports =
-  mongoose.models.Creator || mongoose.model("Creator", CreatorSchema);
+module.exports = models.Creator || model("Creator", CreatorSchema);

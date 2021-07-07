@@ -1,7 +1,8 @@
+import withDB from "../../../src/middleware/withDB";
 import Subscriber from "../../../src/models/Subscriber";
 import { ucFirst } from "../../../src/utils";
 
-export default async (req, res) => {
+export default withDB(async (req, res) => {
   try {
     let { data } = await fetch("https://dummyapi.io/data/api/user?limit=50", {
       headers: {
@@ -48,4 +49,4 @@ export default async (req, res) => {
       message: error.message,
     });
   }
-};
+});
