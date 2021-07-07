@@ -1,9 +1,10 @@
 import crypto from "crypto";
+import withDB from "../../../src/middleware/withDB";
 import Creator from "../../../src/models/Creator";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { generateRandomString, ucFirst } from "../../../src/utils";
 
-export default async (req, res) => {
+export default withDB(async (req, res) => {
   // Load Creators
   try {
     const { data } = await fetch(
@@ -95,4 +96,4 @@ export default async (req, res) => {
       message: error.message,
     });
   }
-};
+});
