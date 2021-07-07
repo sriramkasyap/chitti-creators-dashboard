@@ -2,6 +2,15 @@ import { testApiHandler } from "next-test-api-route-handler";
 import mongoose from "mongoose";
 import * as signup from "../creators/signup";
 import * as login from "../creators/login";
+import * as getCreator from "../creators";
+
+let sessionCookie = "";
+
+const dummyData = {
+  fullName: "Tester",
+  emailId: "test@test.com",
+  password: "test@123",
+};
 
 async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections);
@@ -19,12 +28,6 @@ beforeAll(() => {
 
 describe("Creators API", () => {
   test("Creator Signup - Valid Data", async () => {
-    const dummyData = {
-      fullName: "Tester",
-      emailId: "test@test.com",
-      password: "test@123",
-    };
-
     await testApiHandler({
       handler: signup,
       test: async ({ fetch }) => {
@@ -78,7 +81,7 @@ describe("Creators API", () => {
   });
 
   test("Creator Signup - Without Full Name", async () => {
-    const dummyData = {
+    const dummyData1 = {
       emailId: "test@test.com",
       password: "test@123",
     };
@@ -91,7 +94,7 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json", // Must use correct content type
           },
-          body: JSON.stringify(dummyData),
+          body: JSON.stringify(dummyData1),
         });
 
         // Test Response Status
@@ -114,7 +117,7 @@ describe("Creators API", () => {
   });
 
   test("Creator Signup - Without Email ID", async () => {
-    const dummyData = {
+    const dummyData1 = {
       fullName: "Tester",
       password: "test@123",
     };
@@ -127,7 +130,7 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json", // Must use correct content type
           },
-          body: JSON.stringify(dummyData),
+          body: JSON.stringify(dummyData1),
         });
 
         // Test Response Status
@@ -150,7 +153,7 @@ describe("Creators API", () => {
   });
 
   test("Creator Signup - Without Password", async () => {
-    const dummyData = {
+    const dummyData1 = {
       fullName: "Tester",
       emailId: "test@test.com",
     };
@@ -163,7 +166,7 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json", // Must use correct content type
           },
-          body: JSON.stringify(dummyData),
+          body: JSON.stringify(dummyData1),
         });
         // Test Response Status
         expect(response).toHaveProperty("status");
@@ -185,7 +188,7 @@ describe("Creators API", () => {
   });
 
   test("Creator Login - Correct Credentials", async () => {
-    const dummyData = {
+    const dummyData1 = {
       emailId: "test@test.com",
       password: "test@123",
     };
@@ -197,8 +200,9 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify(dummyData),
+          body: JSON.stringify(dummyData1),
         });
+
         // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(200);
@@ -212,6 +216,8 @@ describe("Creators API", () => {
         );
         expect(headers.get("set-cookie")).toContain("HttpOnly");
 
+        sessionCookie = headers.get("set-cookie");
+
         // Test Response  Body
         const resBody = await response.json();
         expect(resBody.success).toBeDefined();
@@ -221,7 +227,7 @@ describe("Creators API", () => {
           _id: expect.any(String),
           emailId: dummyData.emailId,
           profile: {
-            fullName: expect.any(String),
+            fullName: dummyData.fullName,
           },
           plans: expect.any(Array),
         });
@@ -238,7 +244,7 @@ describe("Creators API", () => {
   });
 
   test("Creator Login - Incorrect Credentials", async () => {
-    const dummyData = {
+    const dummyData1 = {
       emailId: "test@test.com",
       password: "test@124", // Wrong Password
     };
@@ -250,7 +256,7 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json",
           },
-          body: JSON.stringify(dummyData),
+          body: JSON.stringify(dummyData1),
         });
         // Test Response Status
         expect(response).toHaveProperty("status");
@@ -267,6 +273,50 @@ describe("Creators API", () => {
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toBeDefined();
         expect(resBody.message.toLowerCase()).toContain("incorrect");
+      },
+    });
+  });
+
+  test("Get Creator", async () => {
+    await testApiHandler({
+      handler: getCreator,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.creator).toBeDefined();
+        expect(resBody.creator).toMatchObject({
+          _id: expect.any(String),
+          emailId: dummyData.emailId,
+          profile: {
+            fullName: dummyData.fullName,
+          },
+          plans: expect.any(Array),
+        });
+        expect(resBody.creator.password).toBeUndefined();
+        expect(resBody.creator.plans).toHaveLength(1);
+        expect(resBody.creator.plans[0]).toMatchObject({
+          _id: expect.any(String),
+          planFee: 0,
+          planFeatures: [],
+          planRZPid: null,
+        });
       },
     });
   });
