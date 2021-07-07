@@ -88,6 +88,7 @@ export const showNotification = (message) => {
   const id = "active-notification-toast";
   if (!toast.isActive(id)) {
     toast({
+      id: "active-notification-toast",
       position: "bottom-right",
       variant: "left-accent",
       render: () => <Notification message={message} />,

@@ -30,7 +30,12 @@ const Footer = ({ onClose }) => {
           _hover={{ textDecor: "none" }}
           _focus={{ boxShadow: "none" }}
         >
-          <Flex flexDir="row" alignItems="center" onClick={onClose}>
+          <Flex
+            flexDir="row"
+            alignItems="center"
+            onClick={onClose}
+            cursor="pointer"
+          >
             <Flex>
               <Avatar name={fullName} src={displayPicture} h={45} w={45} />
             </Flex>
@@ -49,7 +54,11 @@ const Footer = ({ onClose }) => {
       </Flex>
       <Flex>
         <Link href="logout" as="/logout" _focus={{ boxShadow: "none" }}>
-          <Text color="bright.gray" _hover={{ color: "bright.bg" }}>
+          <Text
+            color="bright.gray"
+            _hover={{ color: "bright.bg" }}
+            cursor="pointer"
+          >
             Logout
           </Text>
         </Link>

@@ -216,6 +216,7 @@ const Signup = () => {
           >
             <FormLabel color="bright.fg">Full Name</FormLabel>
             <Input
+              data-testid="full-name"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -240,6 +241,7 @@ const Signup = () => {
           >
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
+              data-testid="email"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -264,6 +266,7 @@ const Signup = () => {
           >
             <FormLabel color="bright.fg">Password</FormLabel>
             <Input
+              data-testid="password"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -288,6 +291,7 @@ const Signup = () => {
           >
             <FormLabel color="bright.fg">Confirm Password</FormLabel>
             <Input
+              data-testid="confirm-password"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -306,6 +310,7 @@ const Signup = () => {
           </FormControl>
 
           <Button
+            data-testid="create-account"
             rounded="full"
             text={
               isLoading ? (

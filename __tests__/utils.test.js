@@ -33,12 +33,6 @@ describe("Common Util functions", () => {
     );
   });
 
-  test("Date Format", () => {
-    expect(getFormattedDate("2021-07-06T04:57:01.960+00:00")).toBe(
-      "06-07-2021 10:27:01"
-    );
-  });
-
   test("Emailer is generated from body", () => {
     const receivedOutput = tablifyEmailer("<p>Hello World</p>");
 
