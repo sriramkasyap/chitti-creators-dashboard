@@ -1,6 +1,6 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import mongoose from "mongoose";
-import * as endpoint from "../creators/signup";
+import * as signup from "../creators/signup";
 
 async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections);
@@ -25,7 +25,7 @@ describe("Creators API", () => {
     };
 
     await testApiHandler({
-      handler: endpoint,
+      handler: signup,
       test: async ({ fetch }) => {
         const response = await fetch({
           method: "POST",
@@ -35,9 +35,21 @@ describe("Creators API", () => {
           body: JSON.stringify(dummyData),
         });
 
-        const resBody = await response.json();
+        // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(true);
+        expect(headers.get("set-cookie")).toContain(
+          process.env.AUTH_COOKIE_NAME
+        );
+        expect(headers.get("set-cookie")).toContain("HttpOnly");
+
+        // Test Response  Body
+        const resBody = await response.json();
         expect(resBody.success).toBeDefined();
         expect(resBody.success).toEqual(true);
         expect(resBody.creator).toBeDefined();
@@ -57,13 +69,13 @@ describe("Creators API", () => {
         expect(resBody.creator.plans[0]).toMatchObject({
           _id: expect.any(String),
           planFee: 0,
-          subscribers: [],
           planFeatures: [],
           planRZPid: null,
         });
       },
     });
   });
+
   test("Creator Signup - Without Full Name", async () => {
     const dummyData = {
       emailId: "test@test.com",
@@ -71,7 +83,7 @@ describe("Creators API", () => {
     };
 
     await testApiHandler({
-      handler: endpoint,
+      handler: signup,
       test: async ({ fetch }) => {
         const response = await fetch({
           method: "POST",
@@ -81,9 +93,17 @@ describe("Creators API", () => {
           body: JSON.stringify(dummyData),
         });
 
-        const resBody = await response.json();
+        // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
         expect(resBody.error).toBeDefined();
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toBeDefined();
@@ -99,7 +119,7 @@ describe("Creators API", () => {
     };
 
     await testApiHandler({
-      handler: endpoint,
+      handler: signup,
       test: async ({ fetch }) => {
         const response = await fetch({
           method: "POST",
@@ -109,9 +129,17 @@ describe("Creators API", () => {
           body: JSON.stringify(dummyData),
         });
 
-        const resBody = await response.json();
+        // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
         expect(resBody.error).toBeDefined();
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toBeDefined();
@@ -127,7 +155,7 @@ describe("Creators API", () => {
     };
 
     await testApiHandler({
-      handler: endpoint,
+      handler: signup,
       test: async ({ fetch }) => {
         const response = await fetch({
           method: "POST",
@@ -136,10 +164,17 @@ describe("Creators API", () => {
           },
           body: JSON.stringify(dummyData),
         });
-
-        const resBody = await response.json();
+        // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
         expect(resBody.error).toBeDefined();
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toBeDefined();
