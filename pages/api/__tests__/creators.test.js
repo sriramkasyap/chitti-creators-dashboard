@@ -12,11 +12,18 @@ async function removeAllCollections() {
 }
 
 beforeAll(() => {
+  // Reset Database before testing
   removeAllCollections();
 });
 
 describe("Creators API", () => {
   test("Creator Signup", async () => {
+    const dummyData = {
+      fullName: "Tester",
+      emailId: "test@test.com",
+      password: "test@123",
+    };
+
     await testApiHandler({
       handler: endpoint,
       test: async ({ fetch }) => {
@@ -25,23 +32,41 @@ describe("Creators API", () => {
           headers: {
             "content-type": "application/json", // Must use correct content type
           },
-          body: JSON.stringify({
-            fullName: "Tester",
-            emailId: "test@test.com",
-            password: "test@123",
-          }),
+          body: JSON.stringify(dummyData),
         });
 
         const resBody = await response.json();
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(200);
-        expect(resBody).toMatchObject({ success: true });
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.creator).toBeDefined();
+        expect(resBody.creator).toMatchObject({
+          _id: expect.any(String),
+          emailId: dummyData.emailId,
+          profile: {
+            fullName: dummyData.fullName,
+            shortBio: null,
+            longBio: null,
+            displayPicture: null,
+          },
+          plans: expect.any(Array),
+        });
+        expect(resBody.creator.password).toBeUndefined();
+        expect(resBody.creator.plans).toHaveLength(1);
+        expect(resBody.creator.plans[0]).toMatchObject({
+          _id: expect.any(String),
+          planFee: 0,
+          subscribers: [],
+          planFeatures: [],
+          planRZPid: null,
+        });
       },
     });
   });
 });
 
 afterAll(() => {
-  removeAllCollections();
+  // Close connection to Mongo database
   mongoose.connection.close();
 });
