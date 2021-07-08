@@ -2,6 +2,7 @@ import { withIronSession } from "next-iron-session";
 import withCreatorAuth from "../../../src/middleware/withCreatorAuth";
 import withDB from "../../../src/middleware/withDB";
 import Creator from "../../../src/models/Creator";
+import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { getIronConfig } from "../../../src/utils";
 
 // Update Creator profile
@@ -32,7 +33,21 @@ export default withDB(
             {
               new: true,
             }
+          ).lean();
+
+          const plans = await SubscriptionPlan.find(
+            {
+              _id: {
+                $in: creator.plans,
+              },
+            },
+            {
+              subscribers: 0,
+            }
           );
+
+          result.plans = plans;
+          delete result.password;
 
           res.send({
             success: true,

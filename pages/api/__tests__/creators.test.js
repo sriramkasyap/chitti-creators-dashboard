@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import * as signup from "../creators/signup";
 import * as login from "../creators/login";
 import * as getCreator from "../creators";
+import * as profile from "../creators/profile";
 
 let sessionCookie = "";
 
@@ -320,6 +321,61 @@ describe("Creators API", () => {
       },
     });
   });
+
+  test("Update Creator profile", async () => {
+    await testApiHandler({
+      handler: profile,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            profile: {
+              fullName: "Tester 007",
+            },
+          }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.creator).toBeDefined();
+        expect(resBody.creator).toMatchObject({
+          _id: expect.any(String),
+          emailId: dummyData.emailId,
+          profile: {
+            fullName: "Tester 007",
+          },
+          plans: expect.any(Array),
+        });
+        expect(resBody.creator.password).toBeUndefined();
+        expect(resBody.creator.plans).toHaveLength(1);
+        expect(resBody.creator.plans[0]).toMatchObject({
+          _id: expect.any(String),
+          planFee: 0,
+          planFeatures: [],
+          planRZPid: null,
+        });
+      },
+    });
+  });
+
+  // test("Get Creator plans", () => {});
+  // test("Create new plan", () => {});
+  // test("Update creator plan", () => {});
+  // test("Get Creator dashboard data", () => {});
 });
 
 afterAll(() => {
