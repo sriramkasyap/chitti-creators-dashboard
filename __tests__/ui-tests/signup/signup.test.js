@@ -1,3 +1,4 @@
+import router from "next/router";
 import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
@@ -29,14 +30,16 @@ describe("Test Signup form", () => {
     expect(getByTestId("create-account")).toBeInTheDocument();
   });
 
-  it("should check input values submit form", async () => {
-    // const TestComponent = () => {
-    //   const { userSignup } = useContext(AuthContext);
-    //   return <Signup />;
-    // };
-    const userSignup = jest.fn();
+  it("should check input values and submit form", () => {
+    const contextValue = {
+      loggedInUser: { profile: { fullName: "", displayPicture: null } },
+      loginError: "",
+      userSignup: jest.fn(),
+      fetchMe: jest.fn(),
+    };
+
     const { getByTestId } = render(
-      <AuthContext.Provider value={{ userSignup }}>
+      <AuthContext.Provider value={contextValue} router={router}>
         <Signup />
       </AuthContext.Provider>
     );
@@ -61,12 +64,39 @@ describe("Test Signup form", () => {
 
     fireEvent.click(getByTestId("create-account"));
 
-    // await waitFor(() =>
-    //   expect(userSignup).toHaveBeenCalledWith({
-    //     fullName: "John Doe",
-    //     emailId: "john@doe.com",
-    //     password: "123456",
-    //   })
-    // );
+    expect(contextValue.userSignup).toHaveBeenCalledTimes(1);
+  });
+
+  it("should check empty input value", () => {
+    const contextValue = {
+      loggedInUser: { profile: { fullName: "", displayPicture: null } },
+      loginError: "",
+      userSignup: jest.fn(),
+      fetchMe: jest.fn(),
+    };
+
+    const { getByTestId } = render(
+      <AuthContext.Provider value={contextValue} router={router}>
+        <Signup />
+      </AuthContext.Provider>
+    );
+
+    fireEvent.change(getByTestId("full-name"), {
+      target: { value: "" },
+    });
+
+    fireEvent.change(getByTestId("email"), {
+      target: { value: "" },
+    });
+
+    fireEvent.change(getByTestId("password"), { target: { value: "" } });
+
+    fireEvent.change(getByTestId("confirm-password"), {
+      target: { value: "" },
+    });
+
+    fireEvent.click(getByTestId("create-account"));
+
+    expect(contextValue.userSignup).not.toBeCalled();
   });
 });
