@@ -322,6 +322,28 @@ describe("Creators API", () => {
     });
   });
 
+  test("Get Creator - Without Token", async () => {
+    await testApiHandler({
+      handler: getCreator,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("logged in");
+      },
+    });
+  });
+
   test("Update Creator profile", async () => {
     await testApiHandler({
       handler: profile,
@@ -368,6 +390,36 @@ describe("Creators API", () => {
           planFeatures: [],
           planRZPid: null,
         });
+      },
+    });
+  });
+
+  test("Update Creator Profile - Without Token", async () => {
+    await testApiHandler({
+      handler: profile,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            profile: {
+              fullName: "Tester 007",
+            },
+          }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("logged in");
       },
     });
   });
