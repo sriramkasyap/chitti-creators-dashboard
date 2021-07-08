@@ -6,6 +6,7 @@ import * as getCreator from "../creators";
 import * as profile from "../creators/profile";
 import * as plans from "../creators/plans";
 import * as PlanActions from "../creators/plans/[planId]";
+import * as GetCreatorCards from "../creators/cards";
 
 let sessionCookie = "";
 
@@ -687,7 +688,62 @@ describe("Creators API", () => {
     });
   });
 
-  // test("Get Creator dashboard data", () => {});
+  test("Get Creator dashboard data", async () => {
+    await testApiHandler({
+      handler: GetCreatorCards,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.success).toEqual(true);
+        expect(resBody.activeSubscribers).toEqual(expect.any(Number));
+        expect(resBody.totalPaidSubscribers).toEqual(expect.any(Number));
+        expect(resBody.revenue).toEqual(expect.any(Number));
+        expect(resBody.newslettersSent).toEqual(expect.any(Number));
+      },
+    });
+  });
+
+  test("Get Creator dashboard data - Without Auth", async () => {
+    await testApiHandler({
+      handler: GetCreatorCards,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toContain("logged in");
+      },
+    });
+  });
 });
 
 afterAll(() => {
