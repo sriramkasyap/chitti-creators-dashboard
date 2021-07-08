@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
 import { testApiHandler } from "next-test-api-route-handler";
 import mongoose from "mongoose";
-import * as signup from "../creators/signup";
-import * as login from "../creators/login";
-import * as getCreator from "../creators";
-import * as profile from "../creators/profile";
-import * as plans from "../creators/plans";
-import * as PlanActions from "../creators/plans/[planId]";
-import * as GetCreatorCards from "../creators/cards";
+import * as signup from "../../pages/api/creators/signup";
+import * as login from "../../pages/api/creators/login";
+import * as getCreator from "../../pages/api/creators";
+import * as profile from "../../pages/api/creators/profile";
+import * as plans from "../../pages/api/creators/plans";
+import * as PlanActions from "../../pages/api/creators/plans/[planId]";
+import * as GetCreatorCards from "../../pages/api/creators/cards";
 
 async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections);
