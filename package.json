@@ -65,6 +65,22 @@
     },
     "setupFiles": [
       "<rootDir>/setupTests.js"
-    ]
+    ],
+    "globals": {
+      "sessionCookie": "",
+      "dummyData": {
+        "fullName": "Tester",
+        "emailId": "test@test.com",
+        "password": "test@123"
+      },
+      "planData": {
+        "planFee": 190,
+        "planFeatures": [
+          "Hello, this is a plan feature",
+          "This is a new Feature"
+        ]
+      },
+      "planId": ""
+    }
   }
 }

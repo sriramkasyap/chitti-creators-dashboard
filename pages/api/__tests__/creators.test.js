@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { testApiHandler } from "next-test-api-route-handler";
 import mongoose from "mongoose";
 import * as signup from "../creators/signup";
@@ -7,21 +8,6 @@ import * as profile from "../creators/profile";
 import * as plans from "../creators/plans";
 import * as PlanActions from "../creators/plans/[planId]";
 import * as GetCreatorCards from "../creators/cards";
-
-let sessionCookie = "";
-
-const dummyData = {
-  fullName: "Tester",
-  emailId: "test@test.com",
-  password: "test@123",
-};
-
-const planData = {
-  planFee: 190,
-  planFeatures: ["Hello, this is a plan feature", "This is a new Feature"],
-};
-
-let planId = "";
 
 async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections);
