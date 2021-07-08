@@ -5,6 +5,7 @@ import * as login from "../creators/login";
 import * as getCreator from "../creators";
 import * as profile from "../creators/profile";
 import * as plans from "../creators/plans";
+import * as PlanActions from "../creators/plans/[planId]";
 
 let sessionCookie = "";
 
@@ -13,6 +14,13 @@ const dummyData = {
   emailId: "test@test.com",
   password: "test@123",
 };
+
+const planData = {
+  planFee: 190,
+  planFeatures: ["Hello, this is a plan feature", "This is a new Feature"],
+};
+
+let planId = "";
 
 async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections);
@@ -426,7 +434,7 @@ describe("Creators API", () => {
   });
 
   test("Create new plan", async () => {
-    const planData = {
+    const planData1 = {
       planFee: 10,
       planFeatures: ["Hello, this is a plan feature"],
     };
@@ -439,7 +447,138 @@ describe("Creators API", () => {
             Cookie: sessionCookie,
             "content-type": "application/json",
           },
-          body: JSON.stringify(planData),
+          body: JSON.stringify(planData1),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.plan).toBeDefined();
+        expect(resBody.plan).toMatchObject({
+          _id: expect.any(String),
+          planFee: planData1.planFee,
+          planFeatures: planData1.planFeatures,
+          planRZPid: null,
+        });
+
+        planId = resBody.plan._id;
+      },
+    });
+  });
+
+  test("Create new plan - Without Token", async () => {
+    const planData1 = {
+      planFee: 10,
+      planFeatures: ["Hello, this is a plan feature"],
+    };
+    await testApiHandler({
+      handler: plans,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(planData1),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("logged in");
+      },
+    });
+  });
+
+  test("Create new plan - Missing Params 1", async () => {
+    const planData1 = {
+      planFeatures: ["Hello, this is a plan feature"],
+    };
+    await testApiHandler({
+      handler: plans,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(planData1),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Create new plan - Missing Params 2", async () => {
+    const planData1 = {
+      planFee: 10,
+    };
+    await testApiHandler({
+      handler: plans,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(planData1),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Update creator plan", async () => {
+    await testApiHandler({
+      handler: PlanActions,
+      params: { planId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            plan: planData,
+          }),
         });
 
         // Test Response Status
@@ -465,97 +604,89 @@ describe("Creators API", () => {
     });
   });
 
-  test("Create new plan - Without Token", async () => {
-    const planData = {
-      planFee: 10,
-      planFeatures: ["Hello, this is a plan feature"],
+  test("Update creator plan - Missing Params 1", async () => {
+    const planData1 = {
+      planFeatures: ["Hello, this is a plan feature", "This is a new Feature"],
     };
     await testApiHandler({
-      handler: plans,
+      handler: PlanActions,
+      params: { planId },
       test: async ({ fetch }) => {
         const response = await fetch({
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(planData),
-        });
-
-        // Test Response Status
-        expect(response).toHaveProperty("status");
-        expect(response.status).toEqual(401);
-
-        // Test Response  Body
-        const resBody = await response.json();
-        expect(resBody.error).toBeDefined();
-        expect(resBody.error).toEqual(true);
-        expect(resBody.message).toBeDefined();
-        expect(resBody.message.toLowerCase()).toContain("logged in");
-      },
-    });
-  });
-
-  test("Create new plan - Missing Params 1", async () => {
-    const planData = {
-      planFeatures: ["Hello, this is a plan feature"],
-    };
-    await testApiHandler({
-      handler: plans,
-      test: async ({ fetch }) => {
-        const response = await fetch({
-          method: "POST",
+          method: "PUT",
           headers: {
             Cookie: sessionCookie,
             "content-type": "application/json",
           },
-          body: JSON.stringify(planData),
+          body: JSON.stringify({
+            plan: planData1,
+          }),
         });
 
         // Test Response Status
         expect(response).toHaveProperty("status");
-        expect(response.status).toEqual(501);
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
 
         // Test Response  Body
         const resBody = await response.json();
-        expect(resBody.error).toBeDefined();
-        expect(resBody.error).toEqual(true);
-        expect(resBody.message).toBeDefined();
-        expect(resBody.message.toLowerCase()).toContain("invalid");
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.plan).toBeDefined();
+        expect(resBody.plan).toMatchObject({
+          _id: expect.any(String),
+          planFee: planData.planFee,
+          planFeatures: planData1.planFeatures,
+          planRZPid: null,
+        });
       },
     });
   });
 
-  test("Create new plan - Missing Params 2", async () => {
-    const planData = {
-      planFee: 10,
+  test("Update creator plan - Can't set Razorpay plan id manually", async () => {
+    const planData1 = {
+      planRZPid: "plan_wojdvoaejfsvouabf",
     };
     await testApiHandler({
-      handler: plans,
+      handler: PlanActions,
+      params: { planId },
       test: async ({ fetch }) => {
         const response = await fetch({
-          method: "POST",
+          method: "PUT",
           headers: {
             Cookie: sessionCookie,
             "content-type": "application/json",
           },
-          body: JSON.stringify(planData),
+          body: JSON.stringify({
+            plan: planData1,
+          }),
         });
 
         // Test Response Status
         expect(response).toHaveProperty("status");
-        expect(response.status).toEqual(501);
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
 
         // Test Response  Body
         const resBody = await response.json();
-        expect(resBody.error).toBeDefined();
-        expect(resBody.error).toEqual(true);
-        expect(resBody.message).toBeDefined();
-        expect(resBody.message.toLowerCase()).toContain("invalid");
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.plan).toBeDefined();
+        expect(resBody.plan).toMatchObject({
+          _id: expect.any(String),
+          planFee: planData.planFee,
+          planRZPid: null,
+        });
       },
     });
   });
 
-  // test("Update creator plan", () => {});
   // test("Get Creator dashboard data", () => {});
 });
 
