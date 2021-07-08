@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
-import Signup from "../../signup";
+import Signup from "../../../pages/signup";
 import AuthProvider, { AuthContext } from "../../../contexts/AuthContext";
 
 describe("Test Signup initial render", () => {
