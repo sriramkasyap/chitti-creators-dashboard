@@ -90,8 +90,60 @@ describe("Testing Newsletters API", () => {
         // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(501);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
       },
     });
   });
 
+  test("Create newsletter - Without Auth", async () => {
+    await testApiHandler({
+      handler: Newsletters,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ newsletter: dummyNewsletter }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("logged in");
+      },
+    });
+  });
+
+  // test("Update newsletter", async () => {});
+
+  // test("Update newsletter - Already Published", async () => {});
+
+  // test("Update newsletter - Missing Params", async () => {});
+
+  // test("Update newsletter - Without Auth", async () => {});
+
+  // test("Publish newsletter", async () => {});
+
+  // test("Publish newsletter - Already Published", async () => {});
+
+  // test("Publish newsletter - Missing Params", async () => {});
+
+  // test("Publish newsletter - Without Auth", async () => {});
+
+  // test("Get Creator's Newsletters", async () => {});
+
+  // test("Get Creator's Newsletters - Without Auth", async () => {});
 });
