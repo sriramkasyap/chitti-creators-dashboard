@@ -2,5 +2,5 @@
 import dotenv from "dotenv";
 
 dotenv.config({
-  path: "./.env.tests",
+  path: "./.env.test.local",
 });
