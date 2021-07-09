@@ -1,6 +1,6 @@
 {
   "name": "creators-dashboard",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -80,7 +80,15 @@
           "This is a new Feature"
         ]
       },
-      "planId": ""
+      "planId": "",
+      "dummyNewsletter": {
+        "reference": "My First Newsletter",
+        "emailSubject": "Heloo Reader!",
+        "keywords": [
+          "hello"
+        ],
+        "body": "<p>Welcome to Chitti</p>"
+      }
     }
   }
 }
