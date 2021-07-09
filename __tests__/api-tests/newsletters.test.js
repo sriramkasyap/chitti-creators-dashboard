@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import { testApiHandler } from "next-test-api-route-handler";
 import * as Newsletters from "../../pages/api/newsletters/index";
+import * as NewsletterByID from "../../pages/api/newsletters/[newsletterId]/index";
 import * as login from "../../pages/api/creators/login";
 
 describe("Testing Newsletters API", () => {
@@ -68,6 +69,8 @@ describe("Testing Newsletters API", () => {
           keywords: dummyNewsletter.keywords,
           body: dummyNewsletter.body,
         });
+
+        newsletterId = resBody.newsletter._id;
       },
     });
   });
@@ -127,15 +130,101 @@ describe("Testing Newsletters API", () => {
     });
   });
 
-  // test("Update newsletter", async () => {});
+  test("Update newsletter", async () => {
+    const dummyNewsletter1 = { keywords: ["new", "keywords"] };
+    await testApiHandler({
+      handler: NewsletterByID,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ newsletter: dummyNewsletter1 }),
+        });
 
-  // test("Update newsletter - Already Published", async () => {});
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
 
-  // test("Update newsletter - Missing Params", async () => {});
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.newsletter).toBeDefined();
+        expect(resBody.newsletter).toMatchObject({
+          _id: expect.any(String),
+          reference: dummyNewsletter.reference,
+          emailSubject: dummyNewsletter.emailSubject,
+          keywords: dummyNewsletter1.keywords,
+          body: dummyNewsletter.body,
+        });
+      },
+    });
+  });
 
-  // test("Update newsletter - Without Auth", async () => {});
+  test("Update newsletter - Without Auth", async () => {
+    const dummyNewsletter1 = { keywords: ["new", "keywords"] };
+    await testApiHandler({
+      handler: NewsletterByID,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie.replace("e", "f"),
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ newsletter: dummyNewsletter1 }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message).toContain("logged in");
+      },
+    });
+  });
+
+  test("Update newsletter - Incorrect Auth", async () => {
+    const dummyNewsletter1 = { keywords: ["new", "keywords"] };
+    await testApiHandler({
+      handler: NewsletterByID,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ newsletter: dummyNewsletter1 }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message).toContain("logged in");
+      },
+    });
+  });
 
   // test("Publish newsletter", async () => {});
+
+  // test("Update newsletter - Already Published", async () => {});
 
   // test("Publish newsletter - Already Published", async () => {});
 

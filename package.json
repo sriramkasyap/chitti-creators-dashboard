@@ -81,6 +81,7 @@
         ]
       },
       "planId": "",
+      "newsletterId": "",
       "dummyNewsletter": {
         "reference": "My First Newsletter",
         "emailSubject": "Heloo Reader!",
