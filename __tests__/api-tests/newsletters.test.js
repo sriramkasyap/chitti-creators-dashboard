@@ -2,6 +2,7 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import * as Newsletters from "../../pages/api/newsletters/index";
 import * as NewsletterByID from "../../pages/api/newsletters/[newsletterId]/index";
+import * as publish from "../../pages/api/newsletters/[newsletterId]/publish";
 import * as login from "../../pages/api/creators/login";
 
 describe("Testing Newsletters API", () => {
@@ -35,7 +36,9 @@ describe("Testing Newsletters API", () => {
         );
         expect(headers.get("set-cookie")).toContain("HttpOnly");
 
+        const resBody = await response.json();
         sessionCookie = headers.get("set-cookie");
+        planId = resBody.creator.plans[0]._id;
       },
     });
   });
@@ -68,6 +71,8 @@ describe("Testing Newsletters API", () => {
           emailSubject: dummyNewsletter.emailSubject,
           keywords: dummyNewsletter.keywords,
           body: dummyNewsletter.body,
+          status: "draft",
+          createdAt: expect.anything(),
         });
 
         newsletterId = resBody.newsletter._id;
@@ -160,6 +165,9 @@ describe("Testing Newsletters API", () => {
           emailSubject: dummyNewsletter.emailSubject,
           keywords: dummyNewsletter1.keywords,
           body: dummyNewsletter.body,
+          status: "draft",
+          createdAt: expect.anything(),
+          lastSavedAt: expect.anything(),
         });
       },
     });
@@ -174,7 +182,6 @@ describe("Testing Newsletters API", () => {
         const response = await fetch({
           method: "PUT",
           headers: {
-            Cookie: sessionCookie.replace("e", "f"),
             "content-type": "application/json",
           },
           body: JSON.stringify({ newsletter: dummyNewsletter1 }),
@@ -203,6 +210,7 @@ describe("Testing Newsletters API", () => {
         const response = await fetch({
           method: "PUT",
           headers: {
+            Cookie: sessionCookie.replace("f", "g").replace("a", "b"),
             "content-type": "application/json",
           },
           body: JSON.stringify({ newsletter: dummyNewsletter1 }),
@@ -222,15 +230,155 @@ describe("Testing Newsletters API", () => {
     });
   });
 
-  // test("Publish newsletter", async () => {});
+  test("Publish newsletter", async () => {
+    await testApiHandler({
+      handler: publish,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ planId }),
+        });
 
-  // test("Update newsletter - Already Published", async () => {});
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
 
-  // test("Publish newsletter - Already Published", async () => {});
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.newsletter).toBeDefined();
+        expect(resBody.newsletter).toMatchObject({
+          _id: expect.any(String),
+          reference: dummyNewsletter.reference,
+          emailSubject: dummyNewsletter.emailSubject,
+          body: dummyNewsletter.body,
+          status: "published",
+          createdAt: expect.anything(),
+          lastSavedAt: expect.anything(),
+          sentAt: expect.anything(),
+          recipients: expect.anything(),
+        });
+      },
+    });
+  });
 
-  // test("Publish newsletter - Missing Params", async () => {});
+  test("Publish newsletter - Already Published", async () => {
+    await testApiHandler({
+      handler: publish,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ planId }),
+        });
 
-  // test("Publish newsletter - Without Auth", async () => {});
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message).toContain("draft");
+      },
+    });
+  });
+
+  test("Update newsletter - Already Published", async () => {
+    const dummyNewsletter1 = { keywords: ["new", "keywords"] };
+    await testApiHandler({
+      handler: NewsletterByID,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ newsletter: dummyNewsletter1 }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message).toContain("draft");
+      },
+    });
+  });
+
+  test("Publish newsletter - Missing Params", async () => {
+    await testApiHandler({
+      handler: publish,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({}),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Publish newsletter - Without Auth", async () => {
+    await testApiHandler({
+      handler: publish,
+      params: { newsletterId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ planId }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(401);
+
+        // Test Response Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("logged in");
+      },
+    });
+  });
 
   // test("Get Creator's Newsletters", async () => {});
 

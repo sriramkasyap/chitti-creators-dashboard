@@ -11,4 +11,7 @@ describe("Environment Variables", () => {
   test("Mongo DB", () => {
     expect(process.env.MONGO_DB).toBeDefined();
   });
+  test("Sendgrid Key", () => {
+    expect(process.env.SENDGRID_DASHBOARD_KEY).toBeDefined();
+  });
 });
