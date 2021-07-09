@@ -198,6 +198,7 @@ const Login = () => {
           >
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
+              data-testid="email"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -222,6 +223,7 @@ const Login = () => {
           >
             <FormLabel color="bright.fg">Password</FormLabel>
             <Input
+              data-testid="password"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -240,6 +242,7 @@ const Login = () => {
           </FormControl>
 
           <Button
+            data-testid="login-button"
             rounded="full"
             text={
               isLoading ? <Image src="loader_white.gif" h="2.5rem" /> : "Login"
