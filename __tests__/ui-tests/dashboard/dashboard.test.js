@@ -59,7 +59,7 @@ describe("Test props", () => {
 
     rerender(
       <NewslettersProvider newsletterStatus={{ status: "draft" }}>
-        <Dashboard cards={cards} isLoading={true} error="" />
+        <Dashboard cards={cards} isLoading error="" />
       </NewslettersProvider>
     );
 
