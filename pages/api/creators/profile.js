@@ -14,6 +14,7 @@ export default withDB(
           const { creatorId } = req.creator;
 
           const { profile } = req.body;
+          console.log("myp", profile);
           if (!profile) throw new Error("Invalid request");
 
           const creator = await Creator.findById(creatorId);
@@ -55,7 +56,7 @@ export default withDB(
           });
         } catch (error) {
           console.error(error);
-          res.send({
+          res.status(501).send({
             error: true,
             message: error.message,
           });

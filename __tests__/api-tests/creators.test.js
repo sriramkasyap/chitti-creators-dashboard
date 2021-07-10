@@ -240,7 +240,41 @@ describe("Creators API", () => {
     });
   });
 
-  test("Creator Login - Incorrect Credentials", async () => {
+  test("Creator Login - Incorrect Email Id", async () => {
+    const dummyData1 = {
+      emailId: "test@test1.com",
+      password: "test@123", // Wrong Password
+    };
+    await testApiHandler({
+      handler: login,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(dummyData1),
+        });
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("incorrect");
+      },
+    });
+  });
+
+  test("Creator Login - Incorrect Password", async () => {
     const dummyData1 = {
       emailId: "test@test.com",
       password: "test@124", // Wrong Password
@@ -270,6 +304,91 @@ describe("Creators API", () => {
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toBeDefined();
         expect(resBody.message.toLowerCase()).toContain("incorrect");
+      },
+    });
+  });
+
+  test("Creator Login - No Credentials", async () => {
+    await testApiHandler({
+      handler: login,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({}),
+        });
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Creator Login - Incorrect Method", async () => {
+    await testApiHandler({
+      handler: login,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+        });
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Creator Login - Already Logged in", async () => {
+    await testApiHandler({
+      handler: login,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+        expect(headers.has("set-cookie")).toEqual(false);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
       },
     });
   });
@@ -314,6 +433,31 @@ describe("Creators API", () => {
           planFeatures: [],
           planRZPid: null,
         });
+      },
+    });
+  });
+
+  test("Get Creator - Invalid Method", async () => {
+    await testApiHandler({
+      handler: getCreator,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
       },
     });
   });
@@ -386,6 +530,64 @@ describe("Creators API", () => {
           planFeatures: [],
           planRZPid: null,
         });
+      },
+    });
+  });
+
+  test("Update Creator Profile - Invalid Method", async () => {
+    await testApiHandler({
+      handler: profile,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            profile: {
+              fullName: "Tester 007",
+            },
+          }),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(404);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Update Creator Profile - Invalid Data", async () => {
+    await testApiHandler({
+      handler: profile,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "PUT",
+          headers: {
+            Cookie: sessionCookie,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({}),
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
       },
     });
   });
@@ -541,6 +743,98 @@ describe("Creators API", () => {
         // Test Response Status
         expect(response).toHaveProperty("status");
         expect(response.status).toEqual(501);
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message.toLowerCase()).toContain("invalid");
+      },
+    });
+  });
+
+  test("Get Single plan", async () => {
+    await testApiHandler({
+      handler: PlanActions,
+      params: { planId },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(200);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.success).toBeDefined();
+        expect(resBody.success).toEqual(true);
+        expect(resBody.plan).toBeDefined();
+        expect(resBody.plan).toMatchObject({
+          _id: planId,
+        });
+      },
+    });
+  });
+
+  test("Get Single plan - Invalid Id", async () => {
+    await testApiHandler({
+      handler: PlanActions,
+      params: { planId: planId.replace("a", "b").replace("c", "g") },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "GET",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toBeDefined();
+        expect(resBody.message).toContain("does not exist");
+      },
+    });
+  });
+
+  test("Get Single plan - Invalid Method", async () => {
+    await testApiHandler({
+      handler: PlanActions,
+      params: { planId: planId.replace("a", "b").replace("c", "g") },
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
 
         // Test Response  Body
         const resBody = await response.json();
@@ -727,6 +1021,34 @@ describe("Creators API", () => {
         expect(resBody.error).toBeDefined();
         expect(resBody.error).toEqual(true);
         expect(resBody.message).toContain("logged in");
+      },
+    });
+  });
+
+  test("Get Creator dashboard data - Invalid Method", async () => {
+    await testApiHandler({
+      handler: GetCreatorCards,
+      test: async ({ fetch }) => {
+        const response = await fetch({
+          method: "POST",
+          headers: {
+            Cookie: sessionCookie,
+          },
+        });
+
+        // Test Response Status
+        expect(response).toHaveProperty("status");
+        expect(response.status).toEqual(501);
+
+        // Test Response  Headers
+        const { headers } = response;
+        expect(headers).toBeDefined();
+
+        // Test Response  Body
+        const resBody = await response.json();
+        expect(resBody.error).toBeDefined();
+        expect(resBody.error).toEqual(true);
+        expect(resBody.message).toContain("Invalid");
       },
     });
   });
