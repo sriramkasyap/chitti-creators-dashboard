@@ -38,6 +38,7 @@ import {
 import Newsletter from "../../src/models/Newsletter";
 import PublishModal from "../../src/components/common/PublishModal/PublishModal";
 import Button from "../../src/components/common/Button/Button";
+import withDB from "../../src/middleware/withDB";
 
 const RichTextEditor = dynamic(
   () => import("../../src/components/common/RichTextEditor/RichTextEditor"),
@@ -436,52 +437,56 @@ const EditNewsletter = ({ newsletter }) => {
   );
 };
 
-export const getServerSideProps = withIronSession(async (ctx) => {
-  const { props } = await checkAuthentication(ctx);
+export const getServerSideProps = withDB(
+  withIronSession(async (ctx) => {
+    const { props } = await checkAuthentication(ctx);
 
-  const { req, res } = ctx;
+    const { req, res } = ctx;
 
-  const { newsletterId } = ctx.query;
+    const { newsletterId } = ctx.query;
 
-  if (!isValidObjectId(newsletterId)) {
-    res.statusCode = 404;
-    return res.end();
-  }
-
-  const newsletter = await Newsletter.findById(newsletterId).lean();
-  const creator = req.session.get("creator");
-
-  if (!newsletter.creator.equals(creator.creatorId)) {
-    res.statusCode = 401;
-    return res.end();
-  }
-
-  if (newsletter && newsletter._id) {
-    if (newsletter.status === "published") {
-      res.setHeader("Location", "/newsletters");
-      res.statusCode = 302;
+    if (!isValidObjectId(newsletterId)) {
+      res.statusCode = 404;
       return res.end();
     }
-    const newsletterIdString = newsletter._id.toString();
-    delete newsletter._id;
-    newsletter.createdAt = newsletter.createdAt.toString();
-    newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
-    newsletter.sentAt = newsletter.sentAt ? newsletter.sentAt.toString() : null;
-    newsletter.creator = newsletter.creator.toString();
-    newsletter.recipients = newsletter.recipients.length;
-    return {
-      props: {
-        ...props,
-        newsletter: {
-          ...newsletter,
-          newsletterId: newsletterIdString,
+
+    const newsletter = await Newsletter.findById(newsletterId).lean();
+    const creator = req.session.get("creator");
+
+    if (!newsletter.creator.equals(creator.creatorId)) {
+      res.statusCode = 401;
+      return res.end();
+    }
+
+    if (newsletter && newsletter._id) {
+      if (newsletter.status === "published") {
+        res.setHeader("Location", "/newsletters");
+        res.statusCode = 302;
+        return res.end();
+      }
+      const newsletterIdString = newsletter._id.toString();
+      delete newsletter._id;
+      newsletter.createdAt = newsletter.createdAt.toString();
+      newsletter.lastSavedAt = newsletter.lastSavedAt.toString();
+      newsletter.sentAt = newsletter.sentAt
+        ? newsletter.sentAt.toString()
+        : null;
+      newsletter.creator = newsletter.creator.toString();
+      newsletter.recipients = newsletter.recipients.length;
+      return {
+        props: {
+          ...props,
+          newsletter: {
+            ...newsletter,
+            newsletterId: newsletterIdString,
+          },
         },
-      },
-    };
-  }
-  res.statusCode = 404;
-  return res.end();
-}, getIronConfig());
+      };
+    }
+    res.statusCode = 404;
+    return res.end();
+  }, getIronConfig())
+);
 
 EditNewsletter.propTypes = {
   newsletter: PropTypes.instanceOf(Object).isRequired,
