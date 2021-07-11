@@ -68,7 +68,7 @@ export default withDB(
             };
           });
 
-          const totalCount = await Subscriber.countDocuments({
+          const totalCount = await Subscriber.estimatedDocumentCount({
             subscriptions: {
               $in: creator.plans,
             },
