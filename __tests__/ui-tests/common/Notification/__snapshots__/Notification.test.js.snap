@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button initial render should match the snapshot 1`] = `
+exports[`Notification initial render should match the snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
@@ -33,23 +33,21 @@ Object {
       />
     </div>
     <div>
-      <button
-        class="chakra-button css-s68ssc"
-        data-testid="chakra-btn"
-        type="button"
+      <div
+        class="css-czlhl8"
+        data-testid="notification"
       >
-        
-      </button>
+        Some text
+      </div>
     </div>
   </body>,
   "container": <div>
-    <button
-      class="chakra-button css-s68ssc"
-      data-testid="chakra-btn"
-      type="button"
+    <div
+      class="css-czlhl8"
+      data-testid="notification"
     >
-      
-    </button>
+      Some text
+    </div>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],

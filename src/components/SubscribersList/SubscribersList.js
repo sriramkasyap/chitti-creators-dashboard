@@ -79,7 +79,11 @@ const SubscribersList = ({
           overflow="auto"
         >
           {isLoading ? (
-            <Image src="/loader_black.gif" h="5rem" />
+            <Image
+              data-testid="loading-image"
+              src="/loader_black.gif"
+              h="5rem"
+            />
           ) : (
             <Table
               columns={columns}
@@ -104,7 +108,7 @@ const SubscribersList = ({
           {isLoading ? (
             <></>
           ) : (
-            <Text color="bright.gray">
+            <Text data-testid="no-subscribers-data" color="bright.gray">
               You don&apos;t have any subscribers yet.{" "}
               <Link href="/profile" as="/profile">
                 <ChakraLink textDecor="underline">

@@ -188,6 +188,7 @@ Object {
             >
               <p
                 class="chakra-text css-6q2090"
+                data-testid="no-newsletters-data"
               >
                 You haven't created any newsletters yet.
                  
@@ -341,6 +342,7 @@ Object {
           >
             <p
               class="chakra-text css-6q2090"
+              data-testid="no-newsletters-data"
             >
               You haven't created any newsletters yet.
                

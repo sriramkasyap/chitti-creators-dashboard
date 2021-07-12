@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
-import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
+import Alert from "../src/components/common/Alert/Alert";
 
 import { AuthContext } from "../contexts/AuthContext";
 import { getIronConfig, isEmpty, validateEmail } from "../src/utils";
@@ -208,7 +208,7 @@ const Signup = () => {
           >
             Chitti.
           </Heading>
-          {error && <ErrorAlert message={error} />}
+          {error && <Alert message={error} status="error" />}
           <FormControl
             id="fullName"
             isInvalid={formErrors.fullName.errorStatus}
