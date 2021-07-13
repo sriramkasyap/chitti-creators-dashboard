@@ -7,6 +7,7 @@ const Card = ({ card }) => {
   const { title, total, icon } = card;
   return (
     <Box
+      data-testid="card"
       rounded={25}
       w={["100%", "100%", 350, 480, 350]}
       h={[125, 150, 160, 180, 180]}

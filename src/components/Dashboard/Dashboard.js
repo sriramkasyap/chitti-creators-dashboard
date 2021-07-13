@@ -25,7 +25,7 @@ const Dashboard = ({ isLoading, error, cards }) => {
         w="100%"
       >
         {isLoading ? (
-          <Image src="loader_black.gif" h="5rem" />
+          <Image data-testid="loading_image" src="loader_black.gif" h="5rem" />
         ) : (
           <>
             {cards?.map((card) => (

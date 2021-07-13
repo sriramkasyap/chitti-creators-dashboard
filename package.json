@@ -1,9 +1,10 @@
 {
   "name": "creators-dashboard",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test": "jest --watchAll --silent --detectOpenHandles --verbose --env=jsdom --coverage",
     "build": "next build",
     "start": "next start"
   },
@@ -32,7 +33,12 @@
     "sass": "^1.35.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^8.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^27.0.6",
+    "dotenv": "^10.0.0",
     "eslint": "^7.30.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -41,6 +47,50 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-react-hooks": "1.7.0",
-    "prettier": "^2.3.2"
+    "jest": "^27.0.6",
+    "next-test-api-route-handler": "^2.0.1",
+    "prettier": "^2.3.2",
+    "sinon": "^11.1.1"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "setupFiles": [
+      "<rootDir>/setupTests.js"
+    ],
+    "globals": {
+      "sessionCookie": "",
+      "dummyData": {
+        "fullName": "Tester",
+        "emailId": "test@test.com",
+        "password": "test@123"
+      },
+      "planData": {
+        "planFee": 190,
+        "planFeatures": [
+          "Hello, this is a plan feature",
+          "This is a new Feature"
+        ]
+      },
+      "planId": "",
+      "newsletterId": "",
+      "dummyNewsletter": {
+        "reference": "My First Newsletter",
+        "emailSubject": "Heloo Reader!",
+        "keywords": [
+          "hello"
+        ],
+        "body": "<p>Welcome to Chitti</p>"
+      }
+    }
   }
 }

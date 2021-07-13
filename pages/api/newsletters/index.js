@@ -52,6 +52,15 @@ export default withDB(
 
           const { newsletter } = req.body;
 
+          if (
+            !newsletter ||
+            !newsletter.reference ||
+            !newsletter.emailSubject ||
+            !newsletter.keywords ||
+            !newsletter.body
+          )
+            throw new Error("Invalid Request");
+
           const createdLetter = new Newsletter({
             ...newsletter,
             createdAt: Date.now(),

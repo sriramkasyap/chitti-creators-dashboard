@@ -5,6 +5,7 @@ import { noop } from "../../../utils";
 
 const Button = ({ text, rounded, variant, className, onClick, ...rest }) => (
   <ChakraButton
+    data-testid="chakra-btn"
     rounded={rounded}
     variant={variant}
     className={className}

@@ -1,0 +1,412 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Dashboard initial render should match the snapshot 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div
+      id="chakra-toast-portal"
+    >
+      <ul
+        id="chakra-toast-manager-top"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column; margin: 0px auto;"
+      />
+      <ul
+        id="chakra-toast-manager-top-left"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column;"
+      />
+      <ul
+        id="chakra-toast-manager-top-right"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column;"
+      />
+      <ul
+        id="chakra-toast-manager-bottom-left"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column;"
+      />
+      <ul
+        id="chakra-toast-manager-bottom"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column; margin: 0px auto;"
+      />
+      <ul
+        id="chakra-toast-manager-bottom-right"
+        style="position: fixed; z-index: 5500; pointer-events: none; display: flex; flex-direction: column;"
+      >
+        <li
+          class="chakra-toast"
+          style="display: flex; flex-direction: column; align-items: flex-end; opacity: 0; transform: translateX(24px) translateZ(0);"
+        >
+          <div
+            class="chakra-toast__inner"
+            data-reach-alert="true"
+            style="pointer-events: auto; max-width: 560px; min-width: 300px; margin: 0.5rem;"
+          >
+            <div
+              class="css-z9p4wz"
+              data-testid="notification"
+            >
+              fetch is not defined
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div
+        class="css-i5rilr"
+      >
+        <div
+          class="css-1pnafc6"
+        >
+          <div
+            class="css-1c4iv7r"
+            data-testid="card"
+          >
+            <div
+              class="css-z1mrsk"
+            >
+              <div
+                class="css-122cpje"
+              >
+                <img
+                  alt="user.png"
+                  class="chakra-image__placeholder css-1hv94z9"
+                />
+                <p
+                  class="chakra-text css-1a5s68p"
+                >
+                  500
+                </p>
+              </div>
+              <p
+                class="chakra-text css-9lx1ak"
+              >
+                Active Subscribers
+              </p>
+            </div>
+          </div>
+          <div
+            class="css-1c4iv7r"
+            data-testid="card"
+          >
+            <div
+              class="css-z1mrsk"
+            >
+              <div
+                class="css-122cpje"
+              >
+                <img
+                  alt="user.png"
+                  class="chakra-image__placeholder css-1hv94z9"
+                />
+                <p
+                  class="chakra-text css-1a5s68p"
+                >
+                  300
+                </p>
+              </div>
+              <p
+                class="chakra-text css-9lx1ak"
+              >
+                Paid Subscribers
+              </p>
+            </div>
+          </div>
+          <div
+            class="css-1c4iv7r"
+            data-testid="card"
+          >
+            <div
+              class="css-z1mrsk"
+            >
+              <div
+                class="css-122cpje"
+              >
+                <img
+                  alt="money.png"
+                  class="chakra-image__placeholder css-1hv94z9"
+                />
+                <p
+                  class="chakra-text css-1a5s68p"
+                >
+                  <span>
+                    ₹1500
+                  </span>
+                </p>
+              </div>
+              <p
+                class="chakra-text css-9lx1ak"
+              >
+                Revenue (per month)
+              </p>
+            </div>
+          </div>
+          <div
+            class="css-1c4iv7r"
+            data-testid="card"
+          >
+            <div
+              class="css-z1mrsk"
+            >
+              <div
+                class="css-122cpje"
+              >
+                <img
+                  alt="envelope.png"
+                  class="chakra-image__placeholder css-1hv94z9"
+                />
+                <p
+                  class="chakra-text css-1a5s68p"
+                >
+                  29
+                </p>
+              </div>
+              <p
+                class="chakra-text css-9lx1ak"
+              >
+                Newsletters Sent
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-rfsj4c"
+        >
+          <div
+            class="css-k008qs"
+          >
+            <h2
+              class="chakra-heading css-1pubr08"
+            >
+              Newsletters List
+            </h2>
+          </div>
+          <div
+            class="css-zplcq1"
+          >
+            <div
+              class="css-h53f3m"
+            >
+              <p
+                class="chakra-text css-6q2090"
+                data-testid="no-newsletters-data"
+              >
+                You haven't created any newsletters yet.
+                 
+                <a
+                  class="chakra-link css-1081t4c"
+                >
+                  Create One now.
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="css-i5rilr"
+    >
+      <div
+        class="css-1pnafc6"
+      >
+        <div
+          class="css-1c4iv7r"
+          data-testid="card"
+        >
+          <div
+            class="css-z1mrsk"
+          >
+            <div
+              class="css-122cpje"
+            >
+              <img
+                alt="user.png"
+                class="chakra-image__placeholder css-1hv94z9"
+              />
+              <p
+                class="chakra-text css-1a5s68p"
+              >
+                500
+              </p>
+            </div>
+            <p
+              class="chakra-text css-9lx1ak"
+            >
+              Active Subscribers
+            </p>
+          </div>
+        </div>
+        <div
+          class="css-1c4iv7r"
+          data-testid="card"
+        >
+          <div
+            class="css-z1mrsk"
+          >
+            <div
+              class="css-122cpje"
+            >
+              <img
+                alt="user.png"
+                class="chakra-image__placeholder css-1hv94z9"
+              />
+              <p
+                class="chakra-text css-1a5s68p"
+              >
+                300
+              </p>
+            </div>
+            <p
+              class="chakra-text css-9lx1ak"
+            >
+              Paid Subscribers
+            </p>
+          </div>
+        </div>
+        <div
+          class="css-1c4iv7r"
+          data-testid="card"
+        >
+          <div
+            class="css-z1mrsk"
+          >
+            <div
+              class="css-122cpje"
+            >
+              <img
+                alt="money.png"
+                class="chakra-image__placeholder css-1hv94z9"
+              />
+              <p
+                class="chakra-text css-1a5s68p"
+              >
+                <span>
+                  ₹1500
+                </span>
+              </p>
+            </div>
+            <p
+              class="chakra-text css-9lx1ak"
+            >
+              Revenue (per month)
+            </p>
+          </div>
+        </div>
+        <div
+          class="css-1c4iv7r"
+          data-testid="card"
+        >
+          <div
+            class="css-z1mrsk"
+          >
+            <div
+              class="css-122cpje"
+            >
+              <img
+                alt="envelope.png"
+                class="chakra-image__placeholder css-1hv94z9"
+              />
+              <p
+                class="chakra-text css-1a5s68p"
+              >
+                29
+              </p>
+            </div>
+            <p
+              class="chakra-text css-9lx1ak"
+            >
+              Newsletters Sent
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-rfsj4c"
+      >
+        <div
+          class="css-k008qs"
+        >
+          <h2
+            class="chakra-heading css-1pubr08"
+          >
+            Newsletters List
+          </h2>
+        </div>
+        <div
+          class="css-zplcq1"
+        >
+          <div
+            class="css-h53f3m"
+          >
+            <p
+              class="chakra-text css-6q2090"
+              data-testid="no-newsletters-data"
+            >
+              You haven't created any newsletters yet.
+               
+              <a
+                class="chakra-link css-1081t4c"
+              >
+                Create One now.
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

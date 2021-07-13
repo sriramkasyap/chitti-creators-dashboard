@@ -46,16 +46,14 @@ const Subscribers = () => {
   }, [pagination]);
 
   return (
-    <>
-      <SubscribersList
-        subscribers={subscribers}
-        isLoading={loading}
-        error={error}
-        totalCount={totalCount}
-        pagination={pagination}
-        setPagination={setPagination}
-      />
-    </>
+    <SubscribersList
+      subscribers={subscribers}
+      isLoading={loading}
+      error={error}
+      totalCount={totalCount}
+      pagination={pagination}
+      setPagination={setPagination}
+    />
   );
 };
 

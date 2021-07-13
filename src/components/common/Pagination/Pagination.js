@@ -6,37 +6,37 @@ import Button from "../Button/Button";
 import { noop } from "../../../utils";
 
 const Pagination = ({ limit, page, setPagination, totalCount }) => (
-  <>
-    <Flex w="100%" mt={10} justifyContent="space-between" alignItems="center">
-      <Button
-        disabled={page < 1}
-        rounded="full"
-        variant="outline"
-        text="< Previous"
-        onClick={() => {
-          setPagination({
-            limit,
-            page: page - 1,
-          });
-        }}
-      />
-      <Text>
-        Page {page + 1} of {Math.ceil(totalCount / limit)}
-      </Text>
-      <Button
-        onClick={() => {
-          setPagination({
-            limit,
-            page: page + 1,
-          });
-        }}
-        disabled={page >= Math.floor(totalCount / limit)}
-        rounded="full"
-        variant="outline"
-        text="Next >"
-      />
-    </Flex>
-  </>
+  <Flex w="100%" mt={10} justifyContent="space-between" alignItems="center">
+    <Button
+      data-testid="prev-btn"
+      disabled={page < 1}
+      rounded="full"
+      variant="outline"
+      text="< Previous"
+      onClick={() => {
+        setPagination({
+          limit,
+          page: page - 1,
+        });
+      }}
+    />
+    <Text>
+      Page {page + 1} of {Math.ceil(totalCount / limit)}
+    </Text>
+    <Button
+      data-testid="next-btn"
+      onClick={() => {
+        setPagination({
+          limit,
+          page: page + 1,
+        });
+      }}
+      disabled={page >= Math.floor(totalCount / limit)}
+      rounded="full"
+      variant="outline"
+      text="Next >"
+    />
+  </Flex>
 );
 
 Pagination.propTypes = {
