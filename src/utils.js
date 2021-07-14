@@ -82,7 +82,7 @@ export const getFormattedDate = (date) => {
   if (month < 10) {
     month = `0${month}`;
   }
-  return `${dt}-${month}-${year} ${time}`;
+  return `${dt}-${month}-${year} ${time}`.toUpperCase();
 };
 
 export const showNotification = (message) => {
