@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading, Image } from "@chakra-ui/react";
 
 import Card from "./Card/Card";
 import NewslettersList from "../NewslettersList/NewslettersList";
@@ -24,9 +24,15 @@ const Dashboard = ({ isLoading, error, cards }) => {
         alignItems="center"
         w="100%"
       >
-        {cards?.map((card) => (
-          <Card key={card.id} card={card} isLoading={isLoading} />
-        ))}
+        {isLoading ? (
+          <Image data-testid="loading_image" src="loader_black.gif" h="5rem" />
+        ) : (
+          <>
+            {cards?.map((card) => (
+              <Card key={card.id} card={card} isLoading={isLoading} />
+            ))}
+          </>
+        )}
       </Flex>
       {/* Dashboard Card End */}
 
