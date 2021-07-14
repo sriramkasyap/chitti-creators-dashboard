@@ -6,7 +6,7 @@ const ckEditorStyles = `
  */
 
 * {
-    font-family: Quicksand
+    font-family: 'Quicksand', 'Roboto';
 }
 
 /* ckeditor5-highlight/theme/highlight.css */
