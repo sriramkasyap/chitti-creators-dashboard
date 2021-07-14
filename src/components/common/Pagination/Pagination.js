@@ -1,40 +1,48 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, IconButton, Text } from "@chakra-ui/react";
+import { GrLinkNext, GrLinkPrevious } from "react-icons/gr";
 
-import Button from "../Button/Button";
 import { noop } from "../../../utils";
 
 const Pagination = ({ limit, page, setPagination, totalCount }) => (
   <Flex w="100%" mt={10} justifyContent="space-between" alignItems="center">
-    <Button
+    <IconButton
+      aria-label="Previous Page"
       data-testid="prev-btn"
       disabled={page < 1}
+      fontSize="2xl"
+      size="lg"
+      variant="ghost"
       rounded="full"
-      variant="outline"
-      text="< Previous"
+      icon={<GrLinkPrevious />}
       onClick={() => {
         setPagination({
           limit,
           page: page - 1,
         });
       }}
+      _focus={{ boxShadow: "none" }}
     />
     <Text>
       Page {page + 1} of {Math.ceil(totalCount / limit)}
     </Text>
-    <Button
+    <IconButton
+      aria-label="Next Page"
       data-testid="next-btn"
+      disabled={page >= Math.floor(totalCount / limit)}
+      fontSize="2xl"
+      size="lg"
+      variant="ghost"
+      rounded="full"
+      icon={<GrLinkNext />}
       onClick={() => {
         setPagination({
           limit,
           page: page + 1,
         });
       }}
-      disabled={page >= Math.floor(totalCount / limit)}
-      rounded="full"
-      variant="outline"
-      text="Next >"
+      _focus={{ boxShadow: "none" }}
     />
   </Flex>
 );
