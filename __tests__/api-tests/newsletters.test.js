@@ -315,7 +315,7 @@ describe("Testing Newsletters API", () => {
     await testApiHandler({
       handler: publish,
       params: {
-        newsletterId: newsletterId.replace("a", "c").replace("g", "k"),
+        newsletterId: newsletterId.split("").reverse().join(""),
       },
       test: async ({ fetch }) => {
         const response = await fetch({
@@ -355,7 +355,7 @@ describe("Testing Newsletters API", () => {
             "content-type": "application/json",
           },
           body: JSON.stringify({
-            planId: planId.replace("a", "c").replace("g", "k"),
+            planId: planId.split("").reverse().join(""),
           }),
         });
 
@@ -377,7 +377,7 @@ describe("Testing Newsletters API", () => {
     await testApiHandler({
       handler: publish,
       params: {
-        newsletterId: newsletterId.replace("a", "c").replace("g", "k"),
+        newsletterId: newsletterId.split("").reverse().join(""),
       },
       test: async ({ fetch }) => {
         const response = await fetch({
