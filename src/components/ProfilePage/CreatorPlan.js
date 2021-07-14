@@ -210,6 +210,10 @@ const CreatorPlan = ({
             backgroundColor: "bright.bg",
             color: "bright.fg",
           }}
+          _active={{
+            backgroundColor: "bright.bg",
+            color: "bright.fg",
+          }}
           p="1rem 2rem"
           fontWeight="normal"
           onClick={() => handlePlanSave(plan._id)}

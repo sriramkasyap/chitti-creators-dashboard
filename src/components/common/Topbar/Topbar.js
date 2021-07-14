@@ -45,6 +45,11 @@ const Topbar = ({ isTopbarDisplay }) => {
               color: "bright.bg",
               borderColor: "bright.fg",
             }}
+            _active={{
+              backgroundColor: "bright.fg",
+              color: "bright.bg",
+              borderColor: "bright.fg",
+            }}
           />
         </Flex>
       </Flex>
