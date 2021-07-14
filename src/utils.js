@@ -3,7 +3,9 @@ import Notification from "./components/common/Notification/Notification";
 
 import theme from "../theme";
 
-export const noop = () => {};
+export const noop = () => {
+  // Dummy Function. No Action Taken
+};
 
 export const ucFirst = (word) => {
   return word[0].toUpperCase() + word.slice(1, word.length);
@@ -14,7 +16,7 @@ export const generateRandomString = (length = 6, numbers = false) => {
   const characters = numbers
     ? "1234567890"
     : "abcdefghijklmnopqrstuvwxyz0123456789";
-  for (let i = 0; i < length; i + 1) {
+  for (let i = 0; i < length; i += 1) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
@@ -34,6 +36,7 @@ export const getIronConfig = () => ({
 export const checkAuthentication = async ({ req, res }) => {
   if (!(req.session && req.session.get("creator"))) {
     res.setHeader("Location", "/login");
+    // eslint-disable-next-line no-param-reassign
     res.statusCode = 302;
     res.end();
   }
@@ -87,6 +90,7 @@ export const showNotification = (message) => {
   const id = "active-notification-toast";
   if (!toast.isActive(id)) {
     toast({
+      id: "active-notification-toast",
       position: "bottom-right",
       variant: "left-accent",
       render: () => <Notification message={message} />,
@@ -201,11 +205,11 @@ export const isEmpty = (value) => {
     return false;
   }
   if (typeof value === "object") {
-    if (value instanceof Object) {
-      return Object.keys(value).length === 0;
-    }
     if (value instanceof Array) {
       return value.length === 0;
+    }
+    if (value instanceof Object) {
+      return Object.keys(value).length === 0;
     }
   }
   return false;

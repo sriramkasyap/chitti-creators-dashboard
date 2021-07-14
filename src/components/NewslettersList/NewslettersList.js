@@ -78,7 +78,11 @@ const NewslettersList = () => {
           w="100%"
         >
           {isLoading ? (
-            <Image src="loader_black.gif" h="5rem" />
+            <Image
+              data-testid="loading-image"
+              src="loader_black.gif"
+              h="5rem"
+            />
           ) : (
             <Table
               columns={columns}
@@ -102,7 +106,7 @@ const NewslettersList = () => {
           {isLoading ? (
             <></>
           ) : (
-            <Text color="bright.gray">
+            <Text data-testid="no-newsletters-data" color="bright.gray">
               You haven&apos;t created any newsletters yet.{" "}
               <Link href="/newsletters/new" as="/newsletters/new">
                 <ChakraLink textDecor="underline">Create One now.</ChakraLink>

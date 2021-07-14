@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { Box } from "@chakra-ui/react";
 
 const Notification = ({ message }) => (
-  <Box color="white" p={3} bg="bright.fg">
+  <Box data-testid="notification" color="white" p={3} bg="bright.fg">
     {message}
   </Box>
 );

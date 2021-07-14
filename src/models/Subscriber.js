@@ -1,12 +1,4 @@
-// To be deleted after frontend deployment
-
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_URL, {
-  dbName: process.env.MONGO_DB,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+const { models, Schema, model } = require("mongoose");
 
 /**
  * SUBSCRIBER
@@ -20,18 +12,17 @@ mongoose.connect(process.env.MONGO_URL, {
  *
  */
 
-const SubscriberSchema = mongoose.Schema({
+const SubscriberSchema = Schema({
   name: String,
   email: { type: String, index: true, unique: true },
   registeredAt: Date,
   subscriptions: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "SubscriptionPlan",
     },
   ],
   payments: [Object],
 });
 
-export default mongoose.models.Subscriber ||
-  mongoose.model("Subscriber", SubscriberSchema);
+export default models.Subscriber || model("Subscriber", SubscriberSchema);

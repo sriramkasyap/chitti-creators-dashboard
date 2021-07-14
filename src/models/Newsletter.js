@@ -1,10 +1,4 @@
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO_URL, {
-  dbName: process.env.MONGO_DB,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+const { models, Schema, model, ObjectId } = require("mongoose");
 
 /**
  * NEWSLETTER
@@ -23,18 +17,17 @@ mongoose.connect(process.env.MONGO_URL, {
  *
  */
 
-const newsletterSchema = mongoose.Schema({
+const newsletterSchema = Schema({
   reference: String,
   emailSubject: String,
   body: String,
   keywords: [String],
   status: { type: String, index: true },
-  creator: { type: mongoose.ObjectId, index: true },
+  creator: { type: ObjectId, index: true },
   createdAt: Date,
   lastSavedAt: Date,
   sentAt: Date,
-  recipients: [mongoose.ObjectId],
+  recipients: [ObjectId],
 });
 
-module.exports =
-  mongoose.models.Newsletter || mongoose.model("Newsletter", newsletterSchema);
+module.exports = models.Newsletter || model("Newsletter", newsletterSchema);

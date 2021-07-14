@@ -1,18 +1,14 @@
 import crypto from "crypto";
+import withDB from "../../../src/middleware/withDB";
 import Creator from "../../../src/models/Creator";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 import { generateRandomString, ucFirst } from "../../../src/utils";
 
-export default async (req, res) => {
+export default withDB(async (req, res) => {
   // Load Creators
   try {
-    const { data } = await fetch(
-      "https://dummyapi.io/data/api/user?limit=10&page=7",
-      {
-        headers: {
-          "app-id": "60cf03b08eb6a1260f81ff55",
-        },
-      }
+    const { results } = await fetch(
+      "https://randomuser.me/api/?results=50"
     ).then((response) => response.json());
 
     const hashedPass = crypto
@@ -20,7 +16,7 @@ export default async (req, res) => {
       .update(generateRandomString())
       .digest("hex");
 
-    const dataPromises = data.map(async (user) => {
+    const dataPromises = results.map(async (user) => {
       // eslint-disable-next-line no-async-promise-executor
       return new Promise(async (resolve) => {
         const newPlan = new SubscriptionPlan({
@@ -40,12 +36,12 @@ export default async (req, res) => {
           lastLoginAt: Date.now(),
           plans: [],
           profile: {
-            fullName: `${ucFirst(user.title)}. ${user.firstName} ${
-              user.lastName
+            fullName: `${ucFirst(user.name.title)}. ${user.name.first} ${
+              user.name.last
             }`,
             shortBio: null,
             longBio: null,
-            displayPicture: null,
+            displayPicture: user.picture.large,
             categories: [],
           },
         });
@@ -95,4 +91,4 @@ export default async (req, res) => {
       message: error.message,
     });
   }
-};
+});

@@ -5,3 +5,32 @@
 #nprogress .peg {
   box-shadow: 5px 5px 10px #7e7e7e80, 5px 5px 5px #7e7e7e80 !important;
 }
+
+// Scrollbar Customization Start
+::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #252525;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+
+  &:horizontal {
+    border-width: 6px 4px;
+  }
+
+  /* Handle on hover */
+  &:hover {
+    background-color: #25252580;
+  }
+}
+// Scrollbar Customization End

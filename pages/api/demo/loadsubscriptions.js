@@ -1,7 +1,8 @@
+import withDB from "../../../src/middleware/withDB";
 import Subscriber from "../../../src/models/Subscriber";
 import SubscriptionPlan from "../../../src/models/SubscriptionPlan";
 
-export default async (req, res) => {
+export default withDB(async (req, res) => {
   const subscribers = await Subscriber.find();
   const plans = await SubscriptionPlan.find();
   const subPromises = subscribers.map(async (user) => {
@@ -27,4 +28,4 @@ export default async (req, res) => {
       r,
     });
   });
-};
+});

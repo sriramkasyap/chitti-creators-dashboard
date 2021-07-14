@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 
 import Button from "../src/components/common/Button/Button";
-import ErrorAlert from "../src/components/common/ErrorAlert/ErrorAlert";
+import Alert from "../src/components/common/Alert/Alert";
 
 import { AuthContext } from "../contexts/AuthContext";
 import { getIronConfig, isEmpty, validateEmail } from "../src/utils";
@@ -190,7 +190,7 @@ const Login = () => {
           <Heading color="bright" fontSize="6xl" mb={5} letterSpacing="tight">
             Chitti.
           </Heading>
-          {error && <ErrorAlert message={error} />}
+          {error && <Alert message={error} status="error" />}
           <FormControl
             id="email"
             isInvalid={formErrors.emailId.errorStatus}
@@ -198,6 +198,7 @@ const Login = () => {
           >
             <FormLabel color="bright.fg">Email address</FormLabel>
             <Input
+              data-testid="email"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -222,6 +223,7 @@ const Login = () => {
           >
             <FormLabel color="bright.fg">Password</FormLabel>
             <Input
+              data-testid="password"
               variant="outline"
               focusBorderColor="bright.fg"
               borderColor="bright.light"
@@ -240,6 +242,7 @@ const Login = () => {
           </FormControl>
 
           <Button
+            data-testid="login-button"
             rounded="full"
             text={
               isLoading ? <Image src="loader_white.gif" h="2.5rem" /> : "Login"

@@ -1,3 +1,4 @@
+
 # Chitti
 
 ---
@@ -21,3 +22,57 @@ Audiences who are interested in specific creators often end up paying directly (
 Unlike Wordpress or Medium, Chitti doesn't charge anything upfront. We only make money when creators do. Also, creators’ content reaches the audience directly, eliminating the need to visit the creators’ website / blog every time there is new content.
 
 Unlike Social Media, the audience and creators are actually connected directly to each other, without all the unnecessary noise and clutter of the platform.
+
+---------------------------
+
+
+# Implementation
+
+This is a [Next.js](https://nextjs.org/) project. You will need the following components before you can implement this system
+- A MongoDB server, running locally or on cloud
+- A SendGrid Account, for sending emails
+
+
+## System Requirements
+
+Following system requirements need to be met in order for this application to run
+ - Node.js 12.0 or later
+ - MacOS, Windows (including WSL), and Linux are supported
+ 
+
+## Environment
+
+Following environment variables need to be set for the application to run
+- `MONGO_URL` : MongoDB URL string
+- `MONGO_DB`: MongoDB database name
+- `APPLICATION_SECRET`: A random string at least 15 characters long, used to encrypt user sessions
+- `SENDGRID_DASHBOARD_KEY`: API key for the SendGrid account 
+- `VERCEL_URL`: Your local preview URL (Usually `http://localhost:3000`)
+
+
+## Running Locally
+
+First, run the development server:
+```bash
+yarn dev
+```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+
+## Testing
+
+Run the following command on terminal to run the tests
+```bash
+yarn test
+```
+
+
+## Deploying 
+
+The easiest way to deploy this app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+This project is currently deployed on Vercel. You can visit it on https://chitti-creators-dashboard.vercel.app/
+
+-------------------------------------------

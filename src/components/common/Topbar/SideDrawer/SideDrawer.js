@@ -31,6 +31,8 @@ const SideDrawer = () => {
         color="bright.gray"
         backgroundColor="bright.fg"
         _focus={{ boxShadow: "none" }}
+        _hover={{ backgroundColor: "transparent" }}
+        _active={{ backgroundColor: "transparent" }}
       />
       <Drawer
         isOpen={isOpen}
