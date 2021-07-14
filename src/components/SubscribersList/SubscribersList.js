@@ -93,21 +93,17 @@ const SubscribersList = ({
             />
           )}
 
-          {totalCount > subscribers.length ? (
+          {totalCount > subscribers.length && (
             <Pagination
               {...pagination}
               totalCount={totalCount}
               setPagination={setPagination}
             />
-          ) : (
-            <></>
           )}
         </Flex>
       ) : (
         <>
-          {isLoading ? (
-            <></>
-          ) : (
+          {!isLoading && (
             <Text data-testid="no-subscribers-data" color="bright.gray">
               You don&apos;t have any subscribers yet.{" "}
               <Link href="/profile" as="/profile">

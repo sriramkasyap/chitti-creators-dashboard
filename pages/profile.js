@@ -371,6 +371,10 @@ const Profile = () => {
             backgroundColor: "transparent",
             color: "bright.fg",
           }}
+          _active={{
+            backgroundColor: "transparent",
+            color: "bright.fg",
+          }}
         />
       </Flex>
       <Divider
@@ -382,7 +386,7 @@ const Profile = () => {
       <Flex flexDir="column" mt={6} ml={[0, 0, 3, 5, 8]}>
         <Flex w="100%" alignItems="center">
           <Heading>Subscription Plans</Heading>
-          {plans && plans.length < 2 ? (
+          {plans && plans.length < 2 && (
             <Button
               rounded="full"
               text={
@@ -402,8 +406,6 @@ const Profile = () => {
                 color: "bright.bg",
               }}
             />
-          ) : (
-            <></>
           )}
         </Flex>
 

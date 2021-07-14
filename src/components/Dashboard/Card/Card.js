@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 
 import "@fontsource/josefin-sans/600.css";
 
-const Card = ({ card }) => {
+const Card = ({ card, isLoading }) => {
   const { title, total, icon } = card;
   return (
     <Box
@@ -40,7 +40,7 @@ const Card = ({ card }) => {
             mt={4}
             lineHeight={1}
           >
-            {total}
+            <Skeleton isLoaded={!isLoading}>{total}</Skeleton>
           </Text>
         </Flex>
         <Text
@@ -51,7 +51,7 @@ const Card = ({ card }) => {
           mr={5}
           mb={[3, 3, 3, 3, 5]}
         >
-          {title}
+          <Skeleton isLoaded={!isLoading}>{title}</Skeleton>
         </Text>
       </Flex>
     </Box>
@@ -60,6 +60,11 @@ const Card = ({ card }) => {
 
 Card.propTypes = {
   card: PropTypes.instanceOf(Object).isRequired,
+  isLoading: PropTypes.bool,
+};
+
+Card.defaultProps = {
+  isLoading: false,
 };
 
 export default Card;

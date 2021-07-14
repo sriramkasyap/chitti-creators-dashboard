@@ -256,6 +256,11 @@ const EditNewsletter = ({ newsletter }) => {
               color: "bright.fg",
               borderColor: "bright.fg",
             }}
+            _active={{
+              bg: "transparent",
+              color: "bright.fg",
+              borderColor: "bright.fg",
+            }}
             borderColor="bright.light"
             color="bright.fg"
             onClick={handleSaveDraft}
@@ -277,6 +282,11 @@ const EditNewsletter = ({ newsletter }) => {
             ml={[2, 2, 2, 5]}
             backgroundColor="bright.fg"
             _hover={{
+              bg: "transparent",
+              color: "bright.fg",
+              borderColor: "bright.fg",
+            }}
+            _active={{
               bg: "transparent",
               color: "bright.fg",
               borderColor: "bright.fg",

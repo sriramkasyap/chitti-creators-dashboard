@@ -91,21 +91,17 @@ const NewslettersList = () => {
             />
           )}
 
-          {totalCount > newsletters.length ? (
+          {totalCount > newsletters.length && (
             <Pagination
               {...pagination}
               totalCount={totalCount}
               setPagination={setPagination}
             />
-          ) : (
-            <></>
           )}
         </Flex>
       ) : (
         <>
-          {isLoading ? (
-            <></>
-          ) : (
+          {!isLoading && (
             <Text data-testid="no-newsletters-data" color="bright.gray">
               You haven&apos;t created any newsletters yet.{" "}
               <Link href="/newsletters/new" as="/newsletters/new">

@@ -8,10 +8,10 @@ import {
   Text,
   Flex,
   Image,
-  Button,
   ModalFooter,
 } from "@chakra-ui/react";
 
+import Button from "../Button/Button";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import PlanSelector from "./PlanSelector/PlanSelector";
 
@@ -75,6 +75,13 @@ const PublishModal = ({
 
           <ModalFooter justifyContent="center" flexDir="column">
             <Button
+              text={
+                pageStatus === "publishing" ? (
+                  <Image src="/loader_white.gif" h="2rem" />
+                ) : (
+                  "Start Sending"
+                )
+              }
               color="bright.bg"
               bgColor="bright.fg"
               fontWeight="light"
@@ -84,34 +91,30 @@ const PublishModal = ({
               _focus={{
                 outline: "none",
               }}
+              _hover={{
+                bg: "transparent",
+                color: "bright.fg",
+                borderColor: "bright.fg",
+              }}
               onClick={publishNewsletter}
               disabled={
                 pageStatus !== "loaded" ||
                 selectedPlan === null ||
                 selectedPlan === undefined
               }
-            >
-              {pageStatus === "publishing" ? (
-                <Image src="/loader_white.gif" h="2rem" />
-              ) : (
-                "Start Sending"
-              )}
-            </Button>
+            />
             <Button
+              text="Cancel"
               color="bright.gray"
-              variant="ghost"
+              variant="link"
               fontWeight="light"
               textDecoration="underline"
               p={0}
+              mt={3}
               fontSize={12}
               onClick={onClose}
-              _focus={{
-                outline: "none",
-              }}
               disabled={pageStatus !== "loaded"}
-            >
-              Cancel
-            </Button>
+            />
           </ModalFooter>
         </ModalContent>
       </Modal>

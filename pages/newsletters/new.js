@@ -294,6 +294,10 @@ const CreateNewNewsletter = () => {
                 bg: "bright.gray",
                 color: "bright.bg",
               }}
+              _active={{
+                bg: "bright.gray",
+                color: "bright.bg",
+              }}
               color="bright.fg"
               onClick={handleSaveDraft}
               fontSize={[12, 14, 16]}
@@ -314,6 +318,11 @@ const CreateNewNewsletter = () => {
               ml={[2, 2, 2, 5]}
               backgroundColor="bright.fg"
               _hover={{
+                bg: "transparent",
+                color: "bright.fg",
+                borderColor: "bright.fg",
+              }}
+              _active={{
                 bg: "transparent",
                 color: "bright.fg",
                 borderColor: "bright.fg",
