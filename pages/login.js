@@ -97,15 +97,18 @@ const Login = () => {
   const handleLogin = async () => {
     if (validate()) {
       setIsLoading(true);
-      setError("");
       try {
         if (await userLogin(formData)) {
           router.replace("/");
         } else {
           setIsLoading(false);
+          setFormData({
+            emailId: "",
+            password: "",
+          });
         }
       } catch (err) {
-        setError(loginError);
+        setIsLoading(false);
         setFormData({
           emailId: "",
           password: "",
@@ -115,7 +118,9 @@ const Login = () => {
   };
 
   useEffect(() => {
-    setError(loginError);
+    if (loginError) {
+      setError(loginError);
+    }
   }, [loginError]);
 
   useEffect(() => {
