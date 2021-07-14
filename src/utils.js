@@ -119,7 +119,7 @@ export const tablifyEmailer = (body) => {
     </head>
 
     <body
-      style="background-color: #e1e1e1; font-family: Quicksand; padding: 20px"
+      style="background-color: #e1e1e1; font-family: 'Quicksand', 'Roboto'; padding: 20px"
     >
       <table
         style="
@@ -152,7 +152,7 @@ export const tablifyEmailer = (body) => {
               style="
                 text-align: center;
                 color: #e1e1e1;
-                font-family: Quicksand;
+                font-family: 'Quicksand', 'Roboto';
                 font-size: 14px;
                 line-height: 1;
                 margin: 0;
