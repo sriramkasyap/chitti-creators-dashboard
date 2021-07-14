@@ -42,7 +42,8 @@ export default withDB(
             fullName,
             shortBio: null,
             longBio: null,
-            displayPicture: null,
+            displayPicture:
+              "https://res.cloudinary.com/chitti/image/upload/v1625153666/displayPictures/exo4wokokwruqb62xtcj.jpg",
             categories: [],
           },
         });
