@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { withIronSession } from "next-iron-session";
 import { useRouter } from "next/router";
 import {
@@ -111,13 +111,23 @@ const Signup = () => {
         if (formData.password !== formData.confirmPassword) {
           setError("Password did not match");
           setIsLoading(false);
-        } else {
+        } else if (
           await userSignup({
             fullName: formData.fullName,
             emailId: formData.emailId,
             password: formData.password,
-          });
+          })
+        ) {
+          setError("");
           router.replace("/");
+        } else {
+          setIsLoading(false);
+          setFormData({
+            fullName: "",
+            emailId: "",
+            password: "",
+            confirmPassword: "",
+          });
         }
       } catch (err) {
         setError(loginError && loginError.length > 1 ? loginError : err);
@@ -128,10 +138,15 @@ const Signup = () => {
           password: "",
           confirmPassword: "",
         });
-        router.replace("/signup");
       }
     }
   };
+
+  useEffect(() => {
+    if (loginError) {
+      setError(loginError);
+    }
+  }, [loginError]);
 
   return (
     <Flex flexDir={["column", "column", "column", "column", "row-reverse"]}>

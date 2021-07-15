@@ -99,6 +99,7 @@ const Login = () => {
       setIsLoading(true);
       try {
         if (await userLogin(formData)) {
+          setError("");
           router.replace("/");
         } else {
           setIsLoading(false);
