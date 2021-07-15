@@ -61,7 +61,7 @@ describe("Creators API", () => {
             fullName: dummyData.fullName,
             shortBio: null,
             longBio: null,
-            displayPicture: null,
+            displayPicture: expect.any(String),
           },
           plans: expect.any(Array),
         });

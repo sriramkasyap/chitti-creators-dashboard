@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "test": "jest --watchAll --silent --detectOpenHandles --verbose --env=jsdom --coverage",
+    "test": "jest --silent --detectOpenHandles --verbose --env=jsdom --coverage --watchAll --runInBand",
     "build": "next build",
     "start": "next start"
   },
