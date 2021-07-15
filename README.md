@@ -56,7 +56,10 @@ First, clone this repository to your local machine
 ```bash
 git clone https://github.com/sriramkasyap/chitti-creators-dashboard.git
 ```
-
+Open the project folder in terminal and install required dependencies:
+```bash
+yarn install
+```
 
 run the development server:
 ```bash
