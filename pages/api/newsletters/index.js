@@ -32,7 +32,7 @@ export default withDB(
             .limit(limit)
             .skip(limit * page);
 
-          const totalCount = await Newsletter.estimatedDocumentCount({
+          const totalCount = await Newsletter.countDocuments({
             creator: creatorId,
             ...(status && { status }),
           });
