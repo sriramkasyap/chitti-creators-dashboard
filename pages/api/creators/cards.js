@@ -29,7 +29,7 @@ export default withDB(
             throw new Error("You haven't created any plans");
 
           const subscriberPromises = plans.map(async (plan) => {
-            const subscriberCount = await Subscriber.estimatedDocumentCount({
+            const subscriberCount = await Subscriber.countDocuments({
               _id: {
                 $in: plan.subscribers,
               },
@@ -42,7 +42,7 @@ export default withDB(
             };
           });
 
-          const newslettersSent = await Newsletters.estimatedDocumentCount({
+          const newslettersSent = await Newsletters.countDocuments({
             creator: creatorId,
             status: "published",
           });
