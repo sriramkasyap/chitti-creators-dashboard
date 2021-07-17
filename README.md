@@ -84,8 +84,6 @@ The easiest way to deploy this app is to use the [Vercel Platform](https://verce
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-This project is currently deployed on Vercel. You can visit [Chitti Dashboard App](https://n3-epsilon-chitti.vercel.app)
-
 ## Screenshots
 
 ### Login Page
