@@ -53,7 +53,7 @@ Following environment variables need to be set for the application to run
 First, clone this repository to your local machine
 
 ```bash
-git clone https://github.com/sriramkasyap/chitti-creators-dashboard.git
+git clone https://github.com/pesto-students/n3-epsilon-chitti.git
 ```
 
 Open the project folder in terminal and install required dependencies:
@@ -84,6 +84,36 @@ The easiest way to deploy this app is to use the [Vercel Platform](https://verce
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-This project is currently deployed on Vercel. You can visit it on https://n3-epsilon-chitti.vercel.app/
+## Screenshots
 
----
+### Login Page
+
+![Login Page](./src/assets/screenshots/login.png "Login Page")
+
+### Signup Page
+
+![Signup Page](./src/assets/screenshots/signup.png "Signup Page")
+
+### Dashboard Home Page
+
+![Dashboard Home Page](./src/assets/screenshots/dashboard_home.png "Dashboard Home Page")
+
+### Dashboard Newsletters Page
+
+![Dashboard Newsletters Page](./src/assets/screenshots/dashboard_newsletters.png "Dashboard Newsletters Page")
+
+### Dashboard Subscribers Page
+
+![Dashboard Subscribers Page](./src/assets/screenshots/dashboard_subscribers.png "Dashboard Subscribers Page")
+
+### Dashboard MyProfile Page
+
+![Dashboard MyProfile Page](./src/assets/screenshots/dashboard_myprofile.png "Dashboard MyProfile Page")
+
+### Create Newsletter Page
+
+![Create Newsletter Page](./src/assets/screenshots/create_newsletter.png "Create Newsletter Page")
+
+### Edit Newsletter Page
+
+![Edit Newsletter Page](./src/assets/screenshots/edit_newsletter.png "Edit Newsletter Page")

@@ -21,7 +21,11 @@ export default withDB(async (req, res) => {
       return new Promise(async (resolve) => {
         const newPlan = new SubscriptionPlan({
           planFee: 0,
-          planFeatures: [],
+          planFeatures: [
+            "One Newsletter every month",
+            "Includes paid promotions",
+            "My Content, directly delivered",
+          ],
           planRZPid: null,
           creator: null,
           subscribers: [],
@@ -39,8 +43,21 @@ export default withDB(async (req, res) => {
             fullName: `${ucFirst(user.name.title)}. ${user.name.first} ${
               user.name.last
             }`,
-            shortBio: null,
-            longBio: null,
+            shortBio: `Hi, I am ${ucFirst(user.name.title)}. ${
+              user.name.first
+            } ${
+              user.name.last
+            }. I work as a tech consultant. I regularly write about Computers, Microprocessors and Software. Do subscribe to my newsletter to read more.
+            Peace.`,
+            longBio: `
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            `,
             displayPicture: user.picture.large,
             categories: [],
           },
