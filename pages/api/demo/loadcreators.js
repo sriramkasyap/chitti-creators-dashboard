@@ -21,7 +21,11 @@ export default withDB(async (req, res) => {
       return new Promise(async (resolve) => {
         const newPlan = new SubscriptionPlan({
           planFee: 0,
-          planFeatures: [],
+          planFeatures: [
+            "One Newsletter every month",
+            "Includes paid promotions",
+            "My Content, directly delivered",
+          ],
           planRZPid: null,
           creator: null,
           subscribers: [],
