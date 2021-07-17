@@ -41,13 +41,16 @@ export default withDB(
               name: 1,
               email: 1,
               subscriptions: 1,
+              registeredAt: 1,
               _id: 0,
             }, // Project only required fields
             {
               limit,
               skip: page * limit,
             } // Limit as per pagination request
-          ).lean(true);
+          )
+            .sort({ registeredAt: -1 })
+            .lean(true);
 
           subscribers = subscribers.map((sub) => {
             // Determine the subscription type
