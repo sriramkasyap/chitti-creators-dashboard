@@ -173,7 +173,7 @@ const Profile = () => {
   const handleDisplayPictureUpload = () => {
     setStatus("uploading");
     const imageToUpload = displayPictureRef.current.files[0];
-    if (imageToUpload.size > 2000000) {
+    if (imageToUpload.size > 20000000) {
       // File size is greater than 20MB
       showNotification("File Size has to be smaller than 20 MB.");
       setStatus("loaded");
