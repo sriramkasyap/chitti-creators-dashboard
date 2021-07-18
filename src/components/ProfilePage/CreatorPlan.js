@@ -127,7 +127,7 @@ const CreatorPlan = ({
           borderColor="bright.light"
         />
         <Text fontWeight="semibold">Features</Text>
-        <Flex w="100%" mt={2} flexDir="column" alignItems="center">
+        <Flex w="100%" mt={2} mb={10} flexDir="column" alignItems="center">
           {Object.values(planFeatures).length > 0 ? (
             Object.values(planFeatures).map(({ feature, featureId }, f) => (
               <Flex
@@ -201,7 +201,7 @@ const CreatorPlan = ({
           }
           variant="solid"
           size="md"
-          mt={10}
+          mt={"auto"}
           color="bright.bg"
           backgroundColor="bright.fg"
           border="1px solid"
